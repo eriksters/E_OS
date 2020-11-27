@@ -1,7 +1,11 @@
 # Prerequisites
 *.d
 
+# User/IDE specifics
+E_OS.uvguix.*
+
 # Object files
+Objects/
 *.o
 *.ko
 *.obj
