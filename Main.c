@@ -34,8 +34,17 @@ void SystemCoreClockConfigure( void ) {
 
 // Main
 
+
+
+extern void Sys_Call( void );
+ 
 int main() {
 	SystemCoreClockConfigure();
+	
+	SysTick_Config(20000);
+	
+	//	Trigger System Call
+	Sys_Call();
 	
 	for (;;) {
 		printf("Hello world\n");
