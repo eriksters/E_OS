@@ -74,7 +74,7 @@ typedef struct {
 	uint32_t currentTask;
 } os_control;
 
-static os_control control;
+os_control control;
 os_Registers* task_queue[MAX_TASK_COUNT];
 
 extern void Sys_Call( os_Registers* );
@@ -85,24 +85,14 @@ void os_start( void );
 void os_release( void );
 extern void os_switch( os_Registers* current_task, os_Registers* target_task);
 void os_task_end( void );
+void os_dispatch( os_Registers* reg);
 
 void os_task_end( void ) {								//	TODO
 	printf("Task end\n");
 }
 
-void SVC_Handler( void );
-void SVC_Handler( void ) {
-	__set_CONTROL(0x3);											//	Thread mode uses PSP and has Unprivileged Access Level
-	__ASM(
-		"MOV 	r0, lr\n"
-		"AND	r0, #0xFFFFFFF0 \n"
-		"ORR	r0, #0x0000000D \n"
-		"MOV	lr, r0\n"
-		"MOV	r0, sp\n"
-		"MSR 	PSP, r0"
-	);
-	
-}
+extern void SVC_Handler( void );
+
 
 //	Initialize task
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
@@ -118,7 +108,7 @@ void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
 	stackedRegisters->R12 = 0x0;
 	stackedRegisters->LR = (uint32_t) &os_task_end;
 	stackedRegisters->PC = (uint32_t) func;
-	stackedRegisters->xPSR = 0;
+	stackedRegisters->xPSR = 0x01000000;
 	
 	regs->SP = ( uint32_t ) stack;
 	
