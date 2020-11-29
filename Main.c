@@ -43,11 +43,10 @@ void SysTick_Handler( void ) {
 	printf("In SysTick_Handler\n");
 }
 
+#define TASK_STACK_SIZE		0x200
+#define MAX_TASK_COUNT 		10
+
 typedef struct {
-	uint32_t R0;
-	uint32_t R1;
-	uint32_t R2;
-	uint32_t R3;
 	uint32_t R4;
 	uint32_t R5;
 	uint32_t R6;
@@ -56,19 +55,27 @@ typedef struct {
 	uint32_t R9;
 	uint32_t R10;
 	uint32_t R11;
-	uint32_t R12;
 	uint32_t SP;
+} os_Registers;
+
+typedef struct {
+	uint32_t R0;
+	uint32_t R1;
+	uint32_t R2;
+	uint32_t R3;
+	uint32_t R12;
 	uint32_t LR;
 	uint32_t PC;
 	uint32_t xPSR;
-} os_Registers;
+} os_stackedReg;
 
-#define TASK_STACK_SIZE		0x200
-#define MAX_TASK_COUNT 		10
+typedef struct {
+	uint32_t taskCount;
+	uint32_t currentTask;
+} os_control;
 
+static os_control control;
 os_Registers* task_queue[MAX_TASK_COUNT];
-static uint32_t taskCount;
-static uint32_t currentTask = 0;
 
 extern void Sys_Call( os_Registers* );
 extern void SwitchPSP( void );
@@ -77,23 +84,33 @@ extern void start_task( os_Registers* regs );
 extern void os_start( void );
 void os_release( void );
 extern void os_switch( os_Registers* current_task, os_Registers* target_task);
-//  void os_addToQueue( os_Registers* regs);
+void os_task_end( void );
+
+void os_task_end( void ) {								//	TODO
+	printf("Task end\n");
+}
 
 
-//	Initialize task's banked registers
+//	Initialize task
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
 	
-	regs->PC = ( uint32_t ) func;
+	stack += (TASK_STACK_SIZE - sizeof( os_stackedReg ));
 	
-	regs->LR = ( uint32_t ) func;				//	TODO - Task End
+	os_stackedReg* stackedRegisters = ( os_stackedReg* ) stack;
 	
-	regs->xPSR = 0x01000000;						//	Always in Thumb state
+	stackedRegisters->R0 = 0x11223344;			//	TODO: task parameters
+	stackedRegisters->R1 = 0x0;
+	stackedRegisters->R2 = 0x0;
+	stackedRegisters->R3 = 0x0;
+	stackedRegisters->R12 = 0x0;
+	stackedRegisters->LR = (uint32_t) &os_task_end;
+	stackedRegisters->PC = (uint32_t) func;
+	stackedRegisters->xPSR = 0;
 	
-	stack += TASK_STACK_SIZE;
 	regs->SP = ( uint32_t ) stack;
 	
-	task_queue[taskCount] = regs;
-	taskCount++;
+	task_queue[control.taskCount] = regs;
+	control.taskCount++;
 }
 
 void os_release( void ){
@@ -102,14 +119,14 @@ void os_release( void ){
 	
 	os_Registers* target_regs;
 	os_Registers* current_regs;
-	if (currentTask == 0) {
+	if (control.currentTask == 0) {
 		target_regs = task_queue[1];
 		current_regs = task_queue[0];
-		currentTask = 1;
+		control.currentTask = 1;
 	} else {
 		target_regs = task_queue[0];
 		current_regs = task_queue[1];
-		currentTask = 0;
+		control.currentTask = 0;
 	}
 	
 	os_switch(current_regs, target_regs);
@@ -157,9 +174,6 @@ int main() {
 	
 	//	Switch to PSP
 	//  SwitchPSP();
-	
-	NVIC_EnableIRQ(EXTI0_IRQn);
-	NVIC_SetPendingIRQ(EXTI0_IRQn);
 	
 	init_task(&t1_func, t1_stack, &t1_reg);
 	init_task(&t2_func, t2_stack, &t2_reg);
