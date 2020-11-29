@@ -2,10 +2,10 @@
 				AREA 	|.text|, CODE, READONLY
 				
 				EXPORT 	Sys_Call
-				EXPORT 	SVC_Handler
+;				EXPORT 	SVC_Handler
 				EXPORT	SwitchPSP
 				EXPORT  start_task
-				EXPORT	os_start
+;				EXPORT	os_start
 				EXPORT	os_switch
 					
 os_switch		PROC							;	r0 = pointer to current task, r1 = pointer to target task
@@ -36,15 +36,15 @@ os_switch		PROC							;	r0 = pointer to current task, r1 = pointer to target tas
 	
 				ENDP
 
-os_start		PROC
-	
-				EXTERN	task_queue			
-				LDR		r0, =task_queue			;	Queue
-				LDR		r0, [r0]				; 	First Task In Queue
-				
-				B		os_dispatch
-				
-				ENDP
+;os_start		PROC
+;	
+;				EXTERN	task_queue			
+;				LDR		r0, =task_queue			;	Queue
+;				LDR		r0, [r0]				; 	First Task In Queue
+;				
+;				B		os_dispatch
+;				
+;				ENDP
 				
 os_dispatch 	PROC							;	r0 = task to load
 	
@@ -140,11 +140,11 @@ SwitchPSP		PROC
 				ENDP
 				
 
-SVC_Handler		PROC
-	
-				;	Disable all exceptions (except NMI and HardFault)
-				MOV		r0, #0x0
-				MSR		primask, r0
+;SVC_Handler		PROC
+;	
+;				;	Disable all exceptions (except NMI and HardFault)
+;				MOV		r0, #0x0
+;				MSR		primask, r0
 				
 				;	Assert that this is a -RELEASE- call
 				;	TODO
@@ -162,14 +162,14 @@ SVC_Handler		PROC
 				
 				
 				
-				EXTERN	t1_reg
-				LDR		r0, =t1_reg
-				PUSH	{lr}
-				BL		Reg_Store
+;				EXTERN	t1_reg
+;				LDR		r0, =t1_reg
+;				PUSH	{lr}
+;				BL		Reg_Store
 				
-				POP		{lr}
-				BX		lr
-				ENDP
+;				POP		{lr}
+;				BX		lr
+;				ENDP
 					
 Sys_Call		PROC
 				SVC		#0xAA

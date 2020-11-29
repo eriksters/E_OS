@@ -81,7 +81,7 @@ extern void Sys_Call( os_Registers* );
 extern void SwitchPSP( void );
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs );
 extern void start_task( os_Registers* regs );
-extern void os_start( void );
+void os_start( void );
 void os_release( void );
 extern void os_switch( os_Registers* current_task, os_Registers* target_task);
 void os_task_end( void );
@@ -90,6 +90,19 @@ void os_task_end( void ) {								//	TODO
 	printf("Task end\n");
 }
 
+void SVC_Handler( void );
+void SVC_Handler( void ) {
+	__set_CONTROL(0x3);											//	Thread mode uses PSP and has Unprivileged Access Level
+	__ASM(
+		"MOV 	r0, lr\n"
+		"AND	r0, #0xFFFFFFF0 \n"
+		"ORR	r0, #0x0000000D \n"
+		"MOV	lr, r0\n"
+		"MOV	r0, sp\n"
+		"MSR 	PSP, r0"
+	);
+	
+}
 
 //	Initialize task
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
@@ -111,6 +124,10 @@ void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
 	
 	task_queue[control.taskCount] = regs;
 	control.taskCount++;
+}
+
+void os_start( void ) { 
+	__ASM("SVC #0x0");
 }
 
 void os_release( void ){
@@ -170,18 +187,15 @@ void t2_func( void ) {
 int main() {
 	//	Clock setup
 	SystemCoreClockConfigure();
-	// SysTick_Config(0x00FFFFFF);
+	/* SysTick_Config(0x00FFFFFF); */
 	
-	//	Switch to PSP
-	//  SwitchPSP();
 	
 	init_task(&t1_func, t1_stack, &t1_reg);
 	init_task(&t2_func, t2_stack, &t2_reg);
 	
 	os_start();
 	
-	//  start_task(&t1_reg);
-	
+	//	os_start();
 	
 	//	Trigger System Call
 	Sys_Call(&t1_reg);
