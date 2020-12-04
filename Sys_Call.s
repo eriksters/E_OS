@@ -20,10 +20,10 @@ SVC_Handler		PROC
 				MOV		r0, sp
 				MSR 	PSP, r0
 				
-				IMPORT	control
-				IMPORT	task_queue
+				IMPORT	os_Control
+				IMPORT	os_Task_Queue
 				
-				LDR		r0, =task_queue
+				LDR		r0, =os_Task_Queue
 				LDR		r0, [r0]
 		;		LDR		r1, =control
 		;		LDR		r1, [r1]

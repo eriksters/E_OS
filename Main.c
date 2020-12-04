@@ -1,6 +1,8 @@
 #include "stm32f10x.h"
 #include <stdio.h>
 
+#include "EOS.h"
+
 /* Slightly modified version of Clock Setup from example project */
 void SystemCoreClockConfigure( void );
 void SystemCoreClockConfigure( void ) {
@@ -43,6 +45,8 @@ void SysTick_Handler( void ) {
 	printf("In SysTick_Handler\n");
 }
 
+/*
+
 #define TASK_STACK_SIZE		0x200
 #define MAX_TASK_COUNT 		10
 
@@ -74,9 +78,12 @@ typedef struct {
 	uint32_t currentTask;
 } os_control;
 
-os_control control;
-os_Registers* task_queue[MAX_TASK_COUNT];
+*/
 
+// os_control control;
+// os_Registers* task_queue[MAX_TASK_COUNT];
+
+/*
 extern void Sys_Call( os_Registers* );
 extern void SwitchPSP( void );
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs );
@@ -86,14 +93,18 @@ void os_release( void );
 extern void os_switch( os_Registers* current_task, os_Registers* target_task);
 void os_task_end( void );
 void os_dispatch( os_Registers* reg);
+*/
 
+/*
 void os_task_end( void ) {								//	TODO
 	printf("Task end\n");
 }
+*/
+
 
 extern void SVC_Handler( void );
 
-
+/*
 //	Initialize task
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
 	
@@ -115,11 +126,15 @@ void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs) {
 	task_queue[control.taskCount] = regs;
 	control.taskCount++;
 }
+*/
 
+/*
 void os_start( void ) { 
 	__ASM("SVC #0x0");
 }
+*/
 
+/*
 void os_release( void ){
 	
 	printf("OS release\n");
@@ -138,15 +153,15 @@ void os_release( void ){
 	
 	os_switch(current_regs, target_regs);
 }
+*/
 
 
-
-os_Registers t1_reg;
-uint8_t t1_stack[TASK_STACK_SIZE];
+static os_Registers_t t1_reg;
+static os_TaskStack_t t1_stack;
 void t1_func( void ) __attribute__((noreturn)); 
 
-os_Registers t2_reg;
-uint8_t t2_stack[TASK_STACK_SIZE];
+static os_Registers_t t2_reg;
+static os_Registers_t t2_stack;
 void t2_func( void ) __attribute__((noreturn));
 
 
@@ -158,7 +173,7 @@ void t1_func( void ) {
 				__NOP();
 			}
 		}
-		os_release();
+		// os_release();
 	}
 }
 
@@ -170,7 +185,7 @@ void t2_func( void ) {
 				__NOP();
 			}
 		}
-		os_release();
+		// os_release();
 	}
 }
 
@@ -179,16 +194,15 @@ int main() {
 	SystemCoreClockConfigure();
 	/* SysTick_Config(0x00FFFFFF); */
 	
+	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
 	
-	init_task(&t1_func, t1_stack, &t1_reg);
-	init_task(&t2_func, t2_stack, &t2_reg);
+	// init_task(&t1_func, t1_stack, &t1_reg);
+	// init_task(&t2_func, t2_stack, &t2_reg);
 	
-	os_start();
-	
-	//	os_start();
+	// os_start();
 	
 	//	Trigger System Call
-	Sys_Call(&t1_reg);
+	// Sys_Call(&t1_reg);
 	
 	for (;;) {
 		printf("Hello world\n");
