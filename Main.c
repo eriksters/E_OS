@@ -83,8 +83,10 @@ typedef struct {
 // os_control control;
 // os_Registers* task_queue[MAX_TASK_COUNT];
 
+
+extern void Sys_Call( void );
+
 /*
-extern void Sys_Call( os_Registers* );
 extern void SwitchPSP( void );
 void init_task( void ( *func )( void ), uint8_t* stack, os_Registers* regs );
 extern void start_task( os_Registers* regs );
@@ -195,6 +197,8 @@ int main() {
 	/* SysTick_Config(0x00FFFFFF); */
 	
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
+	
+	Sys_Call();
 	
 	// init_task(&t1_func, t1_stack, &t1_reg);
 	// init_task(&t2_func, t2_stack, &t2_reg);

@@ -398,6 +398,11 @@
               <FileType>1</FileType>
               <FilePath>.\EOS.c</FilePath>
             </File>
+            <File>
+              <FileName>EOS_Dispatcher.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\EOS_Dispatcher.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -412,6 +417,11 @@
               <FileName>EOS_Data.h</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_Data.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Dispatcher.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Dispatcher.h</FilePath>
             </File>
           </Files>
         </Group>

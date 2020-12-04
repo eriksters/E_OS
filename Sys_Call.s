@@ -2,40 +2,40 @@
 				AREA 	|.text|, CODE, READONLY
 				
 				EXPORT 	Sys_Call
-				EXPORT 	SVC_Handler
+;				EXPORT 	SVC_Handler
 				EXPORT	SwitchPSP
 				EXPORT  start_task
 ;				EXPORT	os_start
 				EXPORT	os_switch
 				EXPORT 	os_dispatch
 
-SVC_Handler		PROC
+; SVC_Handler		PROC
 				
-				MOV		r0, 0x3
-				MSR		CONTROL, r0
-				MOV 	r0, lr
-				AND		r0, #0xFFFFFFF0 
-				ORR		r0, #0xD
-				PUSH 	{r0}
-				MOV		r0, sp
-				MSR 	PSP, r0
+		;		MOV		r0, 0x3
+		;		MSR		CONTROL, r0
+		;		MOV 	r0, lr
+		;		AND		r0, #0xFFFFFFF0 
+		;		ORR		r0, #0xD
+		;		PUSH 	{r0}
+		;		MOV		r0, sp
+		;		MSR 	PSP, r0
 				
-				IMPORT	os_Control
-				IMPORT	os_Task_Queue
-				
-				LDR		r0, =os_Task_Queue
-				LDR		r0, [r0]
+		;		IMPORT	os_Control
+		;		IMPORT	os_Task_Queue
+		;		
+		;		LDR		r0, =os_Task_Queue
+		;		LDR		r0, [r0]
 		;		LDR		r1, =control
 		;		LDR		r1, [r1]
 		;		ADD		r0, r0, r1
 				
 				; os_dispatch(task_queue[control.currentTask]);
 				
-				BL		os_dispatch
+		;		BL		os_dispatch
 	
-				POP	{pc}
+		;		POP	{pc}
 
-				ENDP
+		;		ENDP
 					
 
 os_dispatch		PROC							;	r0 - pointer to desired task registers

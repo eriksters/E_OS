@@ -1,4 +1,6 @@
 #include "EOS.h"
+#include "EOS_Dispatcher.h"
+#include "stm32f10x.h"
 
 void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb ) {
 	
@@ -28,7 +30,19 @@ void os_DeleteTask ( os_Registers_t * tcb ) {
 }
 
 void os_Start ( void ) {
-
+	
+	//	Set System to use PSP in thread mode
+	__set_CONTROL(0x03);
+	
+	//	Select which task to run next
+	//	TODO Replace with scheduler
+	
+	if (os_Control.currentTask == 0) 
+		os_Control.currentTask = 1;
+	else 
+		os_Control.currentTask = 0;
+	
+	os_Reg_Restore();
 }
 
 void os_Release ( void ) {
