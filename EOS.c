@@ -2,6 +2,10 @@
 #include "EOS_Dispatcher.h"
 #include "stm32f10x.h"
 
+void os_Start_f( void );
+void os_Release_f ( void );
+void os_TaskEnd_f ( void );
+
 void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb ) {
 	
 	//	Stack is descending, so Stack Pointer must be set to end of the memory block
