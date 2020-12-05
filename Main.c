@@ -175,7 +175,7 @@ void t1_func( void ) {
 				__NOP();
 			}
 		}
-		// os_release();
+		os_Release();
 	}
 }
 
@@ -198,7 +198,7 @@ int main() {
 	
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
 	
-	Sys_Call();
+	os_Start();
 	
 	// init_task(&t1_func, t1_stack, &t1_reg);
 	// init_task(&t2_func, t2_stack, &t2_reg);
