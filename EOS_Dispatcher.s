@@ -19,15 +19,9 @@ os_Reg_Restore	PROC
 				PUSH 	{r0}					;	Set EXC_RETURN to return to thread mode and use PSP
 				
 				IMPORT	os_Control
-				IMPORT	os_Task_Queue
 				
-				LDR		r0, =os_Task_Queue
-				LDR		r0, [r0]				;	Load address of task register struct
-		;		LDR		r1, =control
-		;		LDR		r1, [r1]
-		;		ADD		r0, r0, r1
-				
-		; os_dispatch(task_queue[control.currentTask]);
+				LDR		r0, =os_Control
+				LDR		r0, [r1, #0x04]			;	Load address of Task Register struct
 				
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]

@@ -15,17 +15,6 @@
  *								TypeDefs				 				 *
  ******************************************/
  
- /*--------------- General ---------------*/
- 
-typedef struct {
-	uint32_t taskCount;
-	uint32_t currentTask;
-} os_Control_t;
- 
-typedef struct {
-	uint32_t placeholder[(OS_TASK_STACK_SIZE / 4)];
-} os_TaskStack_t;
- 
  /*--------- Architecture Specific -------*/
  
 typedef struct {
@@ -50,6 +39,19 @@ typedef struct {
 	uint32_t PC;
 	uint32_t xPSR;
 } os_StackedReg_t;
+
+
+ /*--------------- General ---------------*/
+ 
+typedef struct {
+	uint32_t taskCount;
+	os_Registers_t* currentTask;
+} os_Control_t;
+ 
+typedef struct {
+	uint32_t placeholder[(OS_TASK_STACK_SIZE / 4)];
+} os_TaskStack_t;
+
  
 
  /*******************************************

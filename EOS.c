@@ -37,10 +37,10 @@ void os_Start ( void ) {
 	//	Select which task to run next
 	//	TODO Replace with scheduler
 	
-	if (os_Control.currentTask == 0) 
-		os_Control.currentTask = 1;
+	if (os_Control.currentTask == os_Task_Queue[0]) 
+		os_Control.currentTask = os_Task_Queue[1];
 	else 
-		os_Control.currentTask = 0;
+		os_Control.currentTask = os_Task_Queue[0];
 	
 	os_Reg_Restore();
 }
