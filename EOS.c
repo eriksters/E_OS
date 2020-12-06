@@ -2,9 +2,20 @@
 #include "EOS_Dispatcher.h"
 #include "stm32f10x.h"
 
+#include <stdio.h>
+
 void os_Start_f( void );
-void os_Release_f ( void );
-void os_TaskEnd_f ( void );
+void os_Release_f( void );
+void os_TaskEnd_f( void );
+
+void os_Switch_f( void );
+
+void os_Switch_f( void ) {
+	if ( os_Control.currentTask == os_Task_Queue[0])
+		os_Control.currentTask = os_Task_Queue[1];
+	else
+		os_Control.currentTask = os_Task_Queue[0];
+}
 
 void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb ) {
 	
@@ -38,23 +49,33 @@ void os_Start ( void ) {
 }
 
 void os_Start_f( void ) {
+	
+	printf("OS Start \n");
+	
 	//	Set System to use PSP in thread mode
-	__set_CONTROL(0x03);
+	__set_CONTROL(0x02);
 	
 	//	Select which task to run first
-	
 	os_Control.currentTask = os_Task_Queue[0];
 	
 	os_Reg_Restore();
 }
+
 
 void os_Release ( void ) {
 	__asm("SVC #0x01");
 }
 
 void os_Release_f ( void ) {
-
+	printf("OS Release\n");
+	
+	os_Reg_Save();
+	
+	os_Switch_f();
+	
+	os_Reg_Restore();
 }
+
 
 void os_TaskEnd ( void ) {
 	__asm("SVC #0x02");

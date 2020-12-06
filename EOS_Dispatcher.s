@@ -6,18 +6,19 @@
 	
 				IMPORT	os_Control
 				IMPORT 	os_Start_f
+				IMPORT	os_Release_f
 	
 	
 SVC_Handler		PROC
 			
-				CMP		lr, #0xFFFFFFF9			
-				BNE		Is_Started
+				CMP		lr, #0xFFFFFFF9			;	Check which SP was used when calling SVC
+				BNE		Used_PSP
 				MOV		r0, sp
 				B		Has_SP
 				
 				
 				;	----	Find ID of SVC Call		-----
-Is_Started		MRS		r0, PSP
+Used_PSP		MRS		r0, PSP
 
 Has_SP			ADD		r0, #0x18
 				LDR		r1, [r0]				; 	Stacked SP
@@ -26,13 +27,16 @@ Has_SP			ADD		r0, #0x18
 				LDRH	r0, [r1]
 				AND		r0, #0xFF				; 	Get rid of all other bits that are not call ID
 			
+				MOV		r1, #0xFFFFFFFD
+				PUSH	{r1}
 				
 				CMP		r0, #0x00
-				BEQ		os_Start_f
+				BLEQ	os_Start_f
 				
 				CMP		r0, #0x01
+				BLEQ	os_Release_f
 				
-				BL		os_Reg_Save 
+				POP		{pc}
 				
 				ENDP
 	
@@ -61,11 +65,11 @@ os_Reg_Save		PROC
 	
 os_Reg_Restore	PROC
 				
-				MOV 	r0, #0xFFFFFFFD 
-				PUSH 	{r0}					;	Set EXC_RETURN to return to thread mode and use PSP
+		;		MOV 	r0, #0xFFFFFFFD 
+		;		PUSH 	{r0}					;	Set EXC_RETURN to return to thread mode and use PSP
 				
 				LDR		r0, =os_Control
-				LDR		r0, [r1, #0x04]			;	Load address of Task Register struct
+				LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
 				
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
@@ -78,7 +82,7 @@ os_Reg_Restore	PROC
 				LDR		r0, [r0, #0x20]
 				MSR		PSP, r0
 				
-				POP	{pc}
+				BX		lr
 				
 				
 				

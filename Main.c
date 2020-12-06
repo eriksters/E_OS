@@ -51,8 +51,9 @@ static os_TaskStack_t t1_stack;
 void t1_func( void ) __attribute__((noreturn)); 
 
 static os_Registers_t t2_reg;
-static os_Registers_t t2_stack;
+static os_TaskStack_t t2_stack;
 void t2_func( void ) __attribute__((noreturn));
+
 
 
 void t1_func( void ) {
@@ -75,7 +76,7 @@ void t2_func( void ) {
 				__NOP();
 			}
 		}
-		// os_release();
+		os_Release();
 	}
 }
 
@@ -86,8 +87,11 @@ int main() {
 	SystemCoreClockConfigure();
 	/* SysTick_Config(0x00FFFFFF); */
 	
+	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
+	os_CreateTask(&t2_func, &t2_stack, &t2_reg);
 	
+	printf("Starting OS\n");
 	os_Start();
 	
 	for (;;) {
