@@ -389,11 +389,6 @@
               <FilePath>.\Main.c</FilePath>
             </File>
             <File>
-              <FileName>Sys_Call.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\Sys_Call.s</FilePath>
-            </File>
-            <File>
               <FileName>EOS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS.c</FilePath>
