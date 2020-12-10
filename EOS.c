@@ -9,6 +9,7 @@ void os_Release_f( void );
 void os_TaskEnd_f( void );
 
 void os_Switch_f( void );
+void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 
 void os_Switch_f( void ) {
 	if ( os_Control.currentTask == os_Task_Queue[0])
@@ -16,6 +17,27 @@ void os_Switch_f( void ) {
 	else
 		os_Control.currentTask = os_Task_Queue[0];
 }
+
+
+void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
+	uint16_t* SCN_p = (uint16_t*) stackedRegisters->PC;
+	
+	uint16_t SCN = *(--SCN_p);
+	SCN &= 0xFF;
+	
+	switch (SCN) {
+		
+		case 0:
+			os_Start_f();
+			break;
+		
+		case 1:
+			os_Release_f();
+			break;
+		
+	}
+}
+
 
 void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb ) {
 	

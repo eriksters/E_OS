@@ -7,35 +7,25 @@
 				IMPORT	os_Control
 				IMPORT 	os_Start_f
 				IMPORT	os_Release_f
+				IMPORT  SVC_Handler_f
 	
 	
 SVC_Handler		PROC
 				
-				AND		r0, lr, #0xFFFFFFFB		;	Check which stack was used for stacking
+				AND		r0, lr, #0x4				;	Check which stack was used for stacking
 				CMP		r0, #0x4
 				BEQ		Used_PSP
-				MOV		r0, sp
+				MRS		r0, MSP
 				B		Has_SP
 Used_PSP		MRS		r0, PSP
 
 
-				;	----	Find ID of SVC Call		-----
+				;	----	Do the rest of the ISR in C 	-----
 
-Has_SP			ADD		r0, #0x18
-				LDR		r1, [r0]				; 	Stacked SP
-				
-				SUB		r1, #0x2				; 	SVC instruction address
-				LDRH	r0, [r1]
-				AND		r0, #0xFF				; 	Get rid of all other bits that are not call ID
-			
-				MOV		r1, #0xFFFFFFFD
+Has_SP			MOV		r1, #0xFFFFFFFD
 				PUSH	{r1}
 				
-				CMP		r0, #0x00
-				BLEQ	os_Start_f
-				
-				CMP		r0, #0x01
-				BLEQ	os_Release_f
+				BL		SVC_Handler_f
 				
 				POP		{pc}
 				
