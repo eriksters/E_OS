@@ -10,15 +10,16 @@
 	
 	
 SVC_Handler		PROC
-			
-				CMP		lr, #0xFFFFFFF9			;	Check which SP was used when calling SVC
-				BNE		Used_PSP
+				
+				AND		r0, lr, #0xFFFFFFFB		;	Check which stack was used for stacking
+				CMP		r0, #0x4
+				BEQ		Used_PSP
 				MOV		r0, sp
 				B		Has_SP
-				
-				
-				;	----	Find ID of SVC Call		-----
 Used_PSP		MRS		r0, PSP
+
+
+				;	----	Find ID of SVC Call		-----
 
 Has_SP			ADD		r0, #0x18
 				LDR		r1, [r0]				; 	Stacked SP
