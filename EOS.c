@@ -20,12 +20,12 @@ void os_Switch_f( void ) {
 
 
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
-	uint16_t* SCN_p = (uint16_t*) stackedRegisters->PC;
+	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
 	
-	uint16_t SCN = *(--SCN_p);
-	SCN &= 0xFF;
+	uint16_t SCI = *(--SCI_p);
+	SCI &= 0xFF;
 	
-	switch (SCN) {
+	switch (SCI) {
 		
 		case 0:
 			os_Start_f();
