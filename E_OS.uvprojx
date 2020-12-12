@@ -398,6 +398,11 @@
               <FileType>2</FileType>
               <FilePath>.\EOS_Dispatcher.s</FilePath>
             </File>
+            <File>
+              <FileName>EOS_Scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Scheduler.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -417,6 +422,11 @@
               <FileName>EOS_Dispatcher.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Dispatcher.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Scheduler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Scheduler.h</FilePath>
             </File>
           </Files>
         </Group>

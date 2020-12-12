@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "EOS.h"
+#include "EOS_Scheduler.h"
 
 /* Slightly modified version of Clock Setup from example project */
 void SystemCoreClockConfigure( void );
@@ -86,6 +87,9 @@ int main() {
 	
 	SystemCoreClockConfigure();
 	/* SysTick_Config(0x00FFFFFF); */
+	
+	os_Queue_init();
+	os_Qeueue_TEST();
 	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
