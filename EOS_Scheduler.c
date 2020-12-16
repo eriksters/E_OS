@@ -47,15 +47,55 @@ uint32_t* queue_add( uint32_t* E ) {
 
 
 void os_Qeueue_TEST( void ) {
-	for (int i = 0; i < 20; i++) {
-		queue_add( (uint32_t*) (0x12345670 + i) );
+	volatile uint32_t* q = 0;
+	
+	
+	
+	for (int i = 0; i < 3; i++) {
+		q = queue_add( (uint32_t*) (++q) );
 	}
+	
+	for ( int i = 0; i < 3; i++) {
+		q = queue_remove();
+	} 
+	
+	for (int i = 0; i < 3; i++) {
+		q = queue_add( (uint32_t*) (0x12345670 + i) );
+	}
+	
+	for ( int i = 0; i < 7; i++) {
+		q = queue_remove();
+	}
+
+	for (int i = 0; i < 10; i++) {
+		q = queue_add( (uint32_t*) (0x12345670 + i) );
+	}
+
+	for ( int i = 0; i < 3; i++) {
+		q = queue_remove();
+	} 	
+	
 }
 
 
 
 uint32_t* queue_remove( void ) {
-	return 0;
+	
+	if ( tq.size == 0 ) {
+		return 0;
+	}
+	
+	uint32_t* ret = tq.q[tq.head];
+	
+	tq.head++;
+	if ( tq.head == tq.max_size ) {
+		tq.head = 0;
+	}
+	
+	tq.size--;
+	
+	return ret;
+	
 }
 
 
