@@ -1,4 +1,7 @@
 #include "EOS_Scheduler.h"
+#include "EOS.h"
+
+extern os_Control_t os_Control;
 
 int os_queue_isFull( void );
 
@@ -71,3 +74,20 @@ uint32_t* queue_peek( void ) {
 	return tq.q[tq.head];
 }
 
+
+
+void os_Switch( void ) {
+	
+	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
+	
+	//	Do nothing if there are no other tasks to run
+	if (nextTask == 0) {
+		return;
+	}
+	
+	//	Add previous task to the end of the queue
+	queue_add((uint32_t*) os_Control.currentTask);
+	
+	//	Set next task as current task
+	os_Control.currentTask = nextTask;
+}

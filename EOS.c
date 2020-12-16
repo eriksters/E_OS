@@ -1,6 +1,7 @@
 #include "EOS.h"
 #include "EOS_Dispatcher.h"
 #include "stm32f10x.h"
+#include "EOS_Scheduler.h"
 
 #include <stdio.h>
 
@@ -11,14 +12,6 @@ void os_TaskEnd_f( void );
 void os_Switch_f( void );
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 
-void os_Switch_f( void ) {
-	if ( os_Control.currentTask == os_Task_Queue[0])
-		os_Control.currentTask = os_Task_Queue[1];
-	else
-		os_Control.currentTask = os_Task_Queue[0];
-}
-
-
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
 	
@@ -27,13 +20,17 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	
 	switch (SCI) {
 		
+		//	Start
 		case 0:
 			os_Start_f();
 			break;
 		
+		//	Release 
 		case 1:
 			os_Release_f();
 			break;
+		
+		
 		
 	}
 }
@@ -58,7 +55,9 @@ void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers
 	
 	tcb->SP = ( uint32_t ) stackedRegisters;
 	
-	os_Task_Queue[os_Control.taskCount] = tcb;
+	
+	queue_add( (uint32_t*) tcb );
+	//os_Task_Queue[os_Control.taskCount] = tcb;
 	os_Control.taskCount++;
 }
 
@@ -74,12 +73,21 @@ void os_Start_f( void ) {
 	
 	printf("OS Start \n");
 	
+	//	TODO: 
+	//	Select which task to run first
+	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
+	
+	//	Do not start if no tasks have been created
+	if ( nextTask == 0 ) {
+		return;
+	}
+	
+	os_Control.currentTask = nextTask;
+	
 	//	Set System to use PSP in thread mode
 	__set_CONTROL(0x02);
 	
-	//	Select which task to run first
-	os_Control.currentTask = os_Task_Queue[0];
-	
+	//	Start the OS
 	os_Reg_Restore();
 }
 
@@ -93,7 +101,7 @@ void os_Release_f ( void ) {
 	
 	os_Reg_Save();
 	
-	os_Switch_f();
+	os_Switch();
 	
 	os_Reg_Restore();
 }

@@ -89,7 +89,6 @@ int main() {
 	/* SysTick_Config(0x00FFFFFF); */
 	
 	os_Queue_init();
-	os_Qeueue_TEST();
 	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
