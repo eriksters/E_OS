@@ -9,9 +9,14 @@ void os_Start_f( void );
 void os_Release_f( void );
 void os_TaskEnd_f( void );
 
-void os_Switch_f( void );
-void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
+void os_TriggerPendSV( void );
+void os_TriggerPendSV( void ) {
+	SCB->ICSR |= 0x1 << 28;
+	__DSB();
+	__ISB();
+} 
 
+void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
 	
@@ -99,11 +104,15 @@ void os_Release ( void ) {
 void os_Release_f ( void ) {
 	printf("OS Release\n");
 	
+	/*
 	os_Reg_Save();
 	
-	os_Switch();
+	os_Switch_f();
 	
 	os_Reg_Restore();
+	*/
+	
+	os_TriggerPendSV();
 }
 
 

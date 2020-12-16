@@ -15,6 +15,10 @@ typedef struct {
 
 static queue_t tq;
 
+uint32_t* os_getCurrentTask( void ) {
+	return (uint32_t*) os_Control.currentTask;
+}
+
 void os_Queue_init( void ) {
 	tq.size = 0;
 	tq.head = 0;
@@ -76,13 +80,13 @@ uint32_t* queue_peek( void ) {
 
 
 
-void os_Switch( void ) {
+uint32_t os_Switch_f( void ) {
 	
 	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
 	
 	//	Do nothing if there are no other tasks to run
 	if (nextTask == 0) {
-		return;
+		return 1;
 	}
 	
 	//	Add previous task to the end of the queue
@@ -90,4 +94,6 @@ void os_Switch( void ) {
 	
 	//	Set next task as current task
 	os_Control.currentTask = nextTask;
+	
+	return 0;
 }

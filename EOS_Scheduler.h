@@ -8,7 +8,9 @@
 
 void os_Queue_init( void );
 
-void os_Switch( void );
+uint32_t os_Switch_f( void );
+
+uint32_t* os_getCurrentTask( void );
 
 //	Add element to queue. Returns inserted element if successful, NULL if queue already full
 uint32_t* queue_add( uint32_t* E );

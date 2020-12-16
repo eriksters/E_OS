@@ -3,12 +3,30 @@
 				EXPORT	os_Reg_Restore
 				EXPORT	os_Reg_Save
 				EXPORT  SVC_Handler
+				EXPORT	PendSV_Handler
 	
 				IMPORT	os_Control
 				IMPORT 	os_Start_f
 				IMPORT	os_Release_f
 				IMPORT  SVC_Handler_f
+				IMPORT  os_Switch_f
+				IMPORT  os_getCurrentTask
+
+
+PendSV_Handler	PROC
 	
+				PUSH	{lr}
+				
+				BL		os_Reg_Save
+				BL		os_Switch_f
+				CMP		r0, #0x1
+				BEQ		PendSV_EXIT
+				BL		os_Reg_Restore
+				
+PendSV_EXIT		POP		{pc}
+	
+				ENDP
+				
 	
 SVC_Handler		PROC
 				
@@ -34,8 +52,10 @@ Has_SP			MOV		r1, #0xFFFFFFFD
 	
 os_Reg_Save		PROC
 				
-				LDR		r0, =os_Control
-				LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
+				PUSH	{lr}
+				
+				BL		os_getCurrentTask
+			;	LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
 				
 				STR		r4, [r0]
 				STR		r5, [r0, #0x4]
@@ -49,7 +69,8 @@ os_Reg_Save		PROC
 				MRS		r1, PSP
 				STR		r1, [r0, #0x20]
 				
-				BX		lr
+				
+				POP		{pc}
 				
 				ENDP
 
@@ -59,8 +80,12 @@ os_Reg_Restore	PROC
 		;		MOV 	r0, #0xFFFFFFFD 
 		;		PUSH 	{r0}					;	Set EXC_RETURN to return to thread mode and use PSP
 				
-				LDR		r0, =os_Control
-				LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
+				PUSH	{lr}
+				
+				BL		os_getCurrentTask
+				
+		;		LDR		r0, =os_Control
+		;		LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
 				
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
@@ -73,7 +98,7 @@ os_Reg_Restore	PROC
 				LDR		r0, [r0, #0x20]
 				MSR		PSP, r0
 				
-				BX		lr
+				POP		{pc}
 				
 				
 				
