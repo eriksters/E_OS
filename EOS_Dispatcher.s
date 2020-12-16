@@ -11,20 +11,34 @@
 				IMPORT  SVC_Handler_f
 				IMPORT  os_Switch_f
 				IMPORT  os_getCurrentTask
+				IMPORT 	os_IsStarted
+				IMPORT  os_SetStarted
+
 
 
 PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
-				BL		os_Reg_Save
+				BL		os_IsStarted
+				CMP		r0, #0x1
+				BEQ		Pend_Started
+				
+				BL		os_SetStarted
+				BL		os_Switch_f
+				BL		os_Reg_Restore
+				B		Pend_EXIT
+				
+Pend_Started	BL		os_Reg_Save
 				BL		os_Switch_f
 				BL		os_Reg_Restore
 				
-PendSV_EXIT		POP		{pc}
+Pend_EXIT		POP		{pc}
 	
 				ENDP
 				
+	
+	
 	
 SVC_Handler		PROC
 				
@@ -35,9 +49,7 @@ SVC_Handler		PROC
 				B		Has_SP
 Used_PSP		MRS		r0, PSP
 
-
 				;	----	Do the rest of the ISR in C 	-----
-
 Has_SP			MOV		r1, #0xFFFFFFFD
 				PUSH	{r1}
 				
@@ -46,6 +58,8 @@ Has_SP			MOV		r1, #0xFFFFFFFD
 				POP		{pc}
 				
 				ENDP
+	
+	
 	
 	
 os_Reg_Save		PROC
@@ -66,12 +80,13 @@ os_Reg_Save		PROC
 				
 				MRS		r1, PSP
 				STR		r1, [r0, #0x20]
-				
-				
+			
 				POP		{pc}
 				
 				ENDP
 
+	
+	
 	
 os_Reg_Restore	PROC
 				
@@ -97,12 +112,8 @@ os_Reg_Restore	PROC
 				MSR		PSP, r0
 				
 				POP		{pc}
-				
-				
-				
+								
 				ENDP
-
-
 
 
 				END

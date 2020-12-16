@@ -8,6 +8,8 @@
 void os_Start_f( void );
 void os_Release_f( void );
 void os_TaskEnd_f( void );
+uint32_t os_IsStarted( void );
+void os_SetStarted( void );
 
 void os_TriggerPendSV( void );
 void os_TriggerPendSV( void ) {
@@ -67,7 +69,7 @@ void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers
 }
 
 void os_DeleteTask ( os_Registers_t * tcb ) {
-
+	tcb = tcb + 1;
 }
 
 void os_Start ( void ) {
@@ -78,22 +80,16 @@ void os_Start_f( void ) {
 	
 	printf("OS Start \n");
 	
-	//	TODO: 
-	//	Select which task to run first
-	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
-	
 	//	Do not start if no tasks have been created
-	if ( nextTask == 0 ) {
+	if (os_Control.taskCount < 1) {
 		return;
 	}
 	
-	os_Control.currentTask = nextTask;
-	
 	//	Set System to use PSP in thread mode
 	__set_CONTROL(0x02);
-	
+		
 	//	Start the OS
-	os_Reg_Restore();
+	os_TriggerPendSV();
 }
 
 
@@ -115,6 +111,13 @@ void os_Release_f ( void ) {
 	os_TriggerPendSV();
 }
 
+uint32_t os_IsStarted( void ) {
+	return (uint32_t) os_Control.isStarted;
+}
+
+void os_SetStarted( void ) {
+	os_Control.isStarted = 1;
+}
 
 void os_TaskEnd ( void ) {
 	__asm("SVC #0x02");

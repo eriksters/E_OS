@@ -46,6 +46,7 @@ typedef struct {
 typedef struct {
 	uint32_t taskCount;
 	os_Registers_t* currentTask;
+	uint8_t isStarted;
 } os_Control_t;
  
 typedef struct {
