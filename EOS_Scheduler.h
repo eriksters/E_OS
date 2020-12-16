@@ -8,7 +8,7 @@
 
 void os_Queue_init( void );
 
-uint32_t os_Switch_f( void );
+void os_Switch_f( void );
 
 uint32_t* os_getCurrentTask( void );
 

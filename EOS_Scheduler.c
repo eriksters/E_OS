@@ -80,13 +80,13 @@ uint32_t* queue_peek( void ) {
 
 
 
-uint32_t os_Switch_f( void ) {
+void os_Switch_f( void ) {
 	
 	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
 	
 	//	Do nothing if there are no other tasks to run
 	if (nextTask == 0) {
-		return 1;
+		return;
 	}
 	
 	//	Add previous task to the end of the queue
@@ -94,6 +94,4 @@ uint32_t os_Switch_f( void ) {
 	
 	//	Set next task as current task
 	os_Control.currentTask = nextTask;
-	
-	return 0;
 }

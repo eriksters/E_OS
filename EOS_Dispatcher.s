@@ -19,8 +19,6 @@ PendSV_Handler	PROC
 				
 				BL		os_Reg_Save
 				BL		os_Switch_f
-				CMP		r0, #0x1
-				BEQ		PendSV_EXIT
 				BL		os_Reg_Restore
 				
 PendSV_EXIT		POP		{pc}
