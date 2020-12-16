@@ -67,7 +67,6 @@ os_Reg_Save		PROC
 				PUSH	{lr}
 				
 				BL		os_getCurrentTask
-			;	LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
 				
 				STR		r4, [r0]
 				STR		r5, [r0, #0x4]
@@ -90,16 +89,9 @@ os_Reg_Save		PROC
 	
 os_Reg_Restore	PROC
 				
-		;		MOV 	r0, #0xFFFFFFFD 
-		;		PUSH 	{r0}					;	Set EXC_RETURN to return to thread mode and use PSP
-				
 				PUSH	{lr}
 				
 				BL		os_getCurrentTask
-				
-		;		LDR		r0, =os_Control
-		;		LDR		r0, [r0, #0x04]			;	Load address of Task Register struct
-				
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
 				LDR		r6, [r0, #0x8]

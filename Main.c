@@ -85,7 +85,7 @@ void t2_func( void ) {
 
 void t3_func( void ) {
 	for (;;) {
-		for (int j = 0; j < 5; j++) {		//	Execute 20 times and then release
+		for (int j = 0; j < 5; j++) {		//	Execute 5 times and then release
 			printf("t3 func. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
