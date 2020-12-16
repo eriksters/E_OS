@@ -55,7 +55,9 @@ static os_Registers_t t2_reg;
 static os_TaskStack_t t2_stack;
 void t2_func( void ) __attribute__((noreturn));
 
-
+static os_Registers_t t3_reg;
+static os_TaskStack_t t3_stack;
+void t3_func( void ) __attribute__((noreturn));
 
 void t1_func( void ) {
 	for (;;) {
@@ -81,6 +83,18 @@ void t2_func( void ) {
 	}
 }
 
+void t3_func( void ) {
+	for (;;) {
+		for (int j = 0; j < 5; j++) {		//	Execute 20 times and then release
+			printf("t3 func. Count = %d\n", j);
+			for (int i = 0; i < 10000; i++) {
+				__NOP();
+			}
+		}
+		os_Release();
+	}
+}
+
 int main() {
 	
 	//	Clock setup
@@ -93,6 +107,7 @@ int main() {
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
 	os_CreateTask(&t2_func, &t2_stack, &t2_reg);
+	os_CreateTask(&t3_func, &t3_stack, &t3_reg);
 	
 	printf("Starting OS\n");
 	os_Start();
