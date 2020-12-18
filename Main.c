@@ -109,6 +109,8 @@ int main() {
 	
 	os_Queue_init();
 	
+	os_Delay(1999);
+	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
 	os_CreateTask(&t2_func, &t2_stack, &t2_reg);

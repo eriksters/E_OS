@@ -8,6 +8,7 @@
 void os_Start_f( void );
 void os_Release_f( void );
 void os_TaskEnd_f( void );
+void os_Delay_f( uint32_t milliseconds );
 uint32_t os_IsStarted( void );
 void os_SetStarted( void );
 
@@ -37,7 +38,9 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 			os_Release_f();
 			break;
 		
-		
+		//	Delay
+		case 3:
+			os_Delay_f( stackedRegisters->R0 );
 		
 	}
 }
@@ -137,4 +140,16 @@ void os_tick( void ) {
 		os_TriggerPendSV();
 		os_Control.tick_counter = 0;
 	}
+}
+
+void os_Delay( uint32_t milliseconds ) {
+	UNUSED(milliseconds);
+	__asm("SVC #0x3");
+}
+
+void os_Delay_f( uint32_t milliseconds ) {
+	printf("Milliseconds: %d\n", milliseconds);
+	
+	
+	
 }

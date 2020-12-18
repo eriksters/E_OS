@@ -7,6 +7,8 @@
  *								Defines 				 				 *
  ******************************************/
 
+#define UNUSED(x) (void)(x)
+
 #define OS_TASK_STACK_SIZE		0x200
 #define OS_MAX_TASK_COUNT 		10
 
