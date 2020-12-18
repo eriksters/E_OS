@@ -46,6 +46,8 @@ typedef struct {
 typedef struct {
 	uint32_t taskCount;
 	os_Registers_t* currentTask;
+	uint32_t tick_counter;
+	uint32_t task_switch_tick_count;
 	uint8_t isStarted;
 } os_Control_t;
  
@@ -71,6 +73,7 @@ void os_DeleteTask ( os_Registers_t * tcb );
 void os_Start ( void );
 void os_Release ( void );
 void os_Delay ( uint32_t miliseconds );
+void os_tick( void );
 
 
 //	Called when a task reached the end. Something like os_DeleteTask

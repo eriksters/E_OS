@@ -44,6 +44,8 @@ void EXTI0_IRQHandler( void ) {
 void SysTick_Handler( void );
 void SysTick_Handler( void ) {
 	printf("In SysTick_Handler\n");
+	
+	os_tick();
 }
 
 
@@ -67,7 +69,8 @@ void t1_func( void ) {
 				__NOP();
 			}
 		}
-		os_Release();
+		// os_Release();
+		printf("t1 out\n");
 	}
 }
 
@@ -79,7 +82,8 @@ void t2_func( void ) {
 				__NOP();
 			}
 		}
-		os_Release();
+		// os_Release();
+		printf("t2 out\n");
 	}
 }
 
@@ -91,7 +95,8 @@ void t3_func( void ) {
 				__NOP();
 			}
 		}
-		os_Release();
+		// os_Release();
+		printf("t3 out\n");
 	}
 }
 
@@ -100,7 +105,7 @@ int main() {
 	//	Clock setup
 	
 	SystemCoreClockConfigure();
-	/* SysTick_Config(0x00FFFFFF); */
+	SysTick_Config(0x000FFFFF);
 	
 	os_Queue_init();
 	

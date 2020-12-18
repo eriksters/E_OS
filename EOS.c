@@ -85,6 +85,9 @@ void os_Start_f( void ) {
 		return;
 	}
 	
+	os_Control.task_switch_tick_count = 1;
+	os_Control.tick_counter = 0;
+	
 	//	Set System to use PSP in thread mode
 	__set_CONTROL(0x02);
 		
@@ -125,4 +128,13 @@ void os_TaskEnd ( void ) {
 
 void os_TaskEnd_f ( void ) {
 
+}
+
+void os_tick( void ) {
+	os_Control.tick_counter++;
+	if ( os_Control.tick_counter >= os_Control.task_switch_tick_count ) {
+		printf("Triggering Context Switch\n");
+		os_TriggerPendSV();
+		os_Control.tick_counter = 0;
+	}
 }
