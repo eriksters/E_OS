@@ -64,7 +64,6 @@ typedef struct {
  *******************************************/
 
 extern os_Control_t os_Control;
-extern os_Registers_t* os_Task_Queue[OS_MAX_TASK_COUNT];
 
  /*******************************************
  *							OS Interface        				*
