@@ -85,6 +85,7 @@ void os_Switch_f( void ) {
 	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
 	
 	//	Do nothing if there are no other tasks to run
+	//	TODO: queue can be empty while all tasks are blocked
 	if (nextTask == 0) {
 		return;
 	}

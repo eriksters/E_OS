@@ -84,6 +84,7 @@ void t2_func( void ) {
 		}
 		// os_Release();
 		printf("t2 out\n");
+		os_Delay(2000);
 	}
 }
 
@@ -112,7 +113,7 @@ int main() {
 	
 	os_Queue_init();
 	
-	os_Delay(1999);
+	// os_Delay(1999);
 	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_stack, &t1_reg);

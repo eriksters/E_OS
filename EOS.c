@@ -237,6 +237,9 @@ void os_Delay( uint32_t milliseconds ) {
 void os_Delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
 	
+	addDataStruct( (uint32_t*) os_getCurrentTask() );
 	
+	os_Control.currentTask = 0;
 	
+	os_TriggerPendSV();
 }
