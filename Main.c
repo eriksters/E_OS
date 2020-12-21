@@ -101,92 +101,7 @@ void t3_func( void ) {
 }
 
 
-typedef struct {
-	uint32_t* testArray[10];
-	uint32_t size;
-	uint32_t max_size;
-} blockedDataStructure;
-static blockedDataStructure blck;
 
-void initDataStruct( void );
-void initDataStruct( void ) {
-	blck.size = 0;
-	blck.max_size = 10;
-}
-
-uint32_t* addDataStruct( uint32_t* E );
-uint32_t* addDataStruct( uint32_t* E ) {
-	
-	uint32_t* ret = 0;
-	
-	if ( blck.size >= blck.max_size ) {
-		return ret;
-	}
-	
-	if ( E == 0 ) {
-		return ret;
-	}
-	
-	for ( uint32_t i = 0; i < blck.max_size; i++ ) {
-		if ( blck.testArray[i] == 0 ) {
-			blck.testArray[i] = E;
-			blck.size++;
-			ret = E;
-			break;
-		}
-	}
-	
-	return ret;
-}
-
-uint32_t* removeDataStruct( uint32_t* E );
-uint32_t* removeDataStruct( uint32_t* E ) {
-	
-	uint32_t* ret = 0;
-	
-	if ( blck.size == 0 ) {
-		return ret;
-	}
-	
-	if ( E == 0 ) {
-		return ret;
-	}
-	
-	for ( uint32_t i = 0; i < blck.max_size; i++) {
-		if ( blck.testArray[i] == E ) {
-			blck.testArray[i] = 0;
-			blck.size--;
-			ret = E;
-			break;
-		}
-	}
-	
-	return ret;
-}
-
-void testDataStruct( void );
-void testDataStruct( void ) {
-	initDataStruct();
-	
-	uint32_t* p_1 = (uint32_t*) 0x01;
-	uint32_t* p_2 = (uint32_t*) 0x02;
-	uint32_t* p_3 = (uint32_t*) 0x03;
-	
-	addDataStruct( p_1 );
-	addDataStruct( p_2 );
-	addDataStruct( p_3 );
-	
-	removeDataStruct( p_1 );
-	addDataStruct( p_1 );
-	
-	removeDataStruct(p_2);
-	removeDataStruct(p_3);
-	
-	addDataStruct( p_3 );
-	addDataStruct( p_2 );
-	
-	
-}
 
 int main() {
 	
@@ -196,8 +111,6 @@ int main() {
 	SysTick_Config(0x000FFFFF);
 	
 	os_Queue_init();
-	
-	testDataStruct();
 	
 	os_Delay(1999);
 	
