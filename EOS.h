@@ -45,12 +45,18 @@ typedef struct {
 
  /*--------------- General ---------------*/
  
+enum status {
+	notStarted,
+	running,
+	block
+};
+
 typedef struct {
 	uint32_t taskCount;
 	os_Registers_t* currentTask;
 	uint32_t tick_counter;
 	uint32_t task_switch_tick_count;
-	uint8_t isStarted;
+	uint8_t status;
 } os_Control_t;
  
 typedef struct {
@@ -79,6 +85,9 @@ void os_tick( void );
 
 //	Called when a task reached the end. Something like os_DeleteTask
 void os_TaskEnd ( void );
+
+//	TEMP: Init blocked task data structure
+void initDataStruct( void );
 
 #endif
 

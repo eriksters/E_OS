@@ -9,7 +9,7 @@ void os_Start_f( void );
 void os_Release_f( void );
 void os_TaskEnd_f( void );
 void os_Delay_f( uint32_t milliseconds );
-uint32_t os_IsStarted( void );
+uint32_t os_GetStatus( void );
 void os_SetStarted( void );
 
 typedef struct {
@@ -19,7 +19,7 @@ typedef struct {
 } blockedDataStructure;
 static blockedDataStructure blck;
 
-void initDataStruct( void );
+
 void initDataStruct( void ) {
 	blck.size = 0;
 	blck.max_size = 10;
@@ -204,12 +204,12 @@ void os_Release_f ( void ) {
 	os_TriggerPendSV();
 }
 
-uint32_t os_IsStarted( void ) {
-	return (uint32_t) os_Control.isStarted;
+uint32_t os_GetStatus( void ) {
+	return (uint32_t) os_Control.status;
 }
 
 void os_SetStarted( void ) {
-	os_Control.isStarted = 1;
+	os_Control.status = running;
 }
 
 void os_TaskEnd ( void ) {
@@ -239,7 +239,7 @@ void os_Delay_f( uint32_t milliseconds ) {
 	
 	addDataStruct( (uint32_t*) os_getCurrentTask() );
 	
-	os_Control.currentTask = 0;
+	os_Control.status = block;
 	
 	os_TriggerPendSV();
 }

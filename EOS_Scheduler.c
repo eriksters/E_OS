@@ -24,6 +24,7 @@ void os_Queue_init( void ) {
 	tq.head = 0;
 	tq.tail = (OS_MAX_TASK_COUNT_ - 1);
 	tq.max_size = OS_MAX_TASK_COUNT_;
+	initDataStruct();
 }
 	
 
@@ -91,7 +92,9 @@ void os_Switch_f( void ) {
 	}
 	
 	//	Add previous task to the end of the queue
-	queue_add((uint32_t*) os_Control.currentTask);
+	if ( os_Control.status != block ) {
+		queue_add((uint32_t*) os_Control.currentTask);
+	}
 	
 	//	Set next task as current task
 	os_Control.currentTask = nextTask;

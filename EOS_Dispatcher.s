@@ -11,7 +11,7 @@
 				IMPORT  SVC_Handler_f
 				IMPORT  os_Switch_f
 				IMPORT  os_getCurrentTask
-				IMPORT 	os_IsStarted
+				IMPORT 	os_GetStatus
 				IMPORT  os_SetStarted
 
 
@@ -20,11 +20,10 @@ PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
-				BL		os_IsStarted
-				CMP		r0, #0x1
-				BEQ		Pend_Started
+				BL		os_GetStatus
+				CMP		r0, #0x0
+				BNE		Pend_Started
 				
-				BL		os_SetStarted
 				BL		os_Switch_f
 				BL		os_Reg_Restore
 				B		Pend_EXIT
@@ -33,7 +32,8 @@ Pend_Started	BL		os_Reg_Save
 				BL		os_Switch_f
 				BL		os_Reg_Restore
 				
-Pend_EXIT		POP		{pc}
+Pend_EXIT		BL		os_SetStarted
+				POP		{pc}
 	
 				ENDP
 				
