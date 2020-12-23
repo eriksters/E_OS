@@ -25,7 +25,7 @@ void os_init( void );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb );
+void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_TCB_t* tcb );
 
 
 /*	Start the OS.
@@ -54,7 +54,7 @@ void os_Delay ( uint32_t miliseconds );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_DeleteTask ( os_Registers_t * tcb );
+void os_DeleteTask ( os_TCB_t * tcb );
 
 
 /*	Called when a task finishes

@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 #include "stm32f10x.h"
+#include "EOS_Config.h"
+
+/*******************************************/
+/* 								TypeDefs								 */
+/*******************************************/
 
 typedef struct {
 	uint32_t R4;
@@ -26,5 +31,12 @@ typedef struct {
 	uint32_t PC;
 	uint32_t xPSR;
 } os_StackedReg_t;
+
+
+/*******************************************/
+/* 								Functions 							 */
+/*******************************************/
+
+void os_arch_create_task( void ( *func )( void ), uint32_t* stack, os_Registers_t* regs );
 
 #endif

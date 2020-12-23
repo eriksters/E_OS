@@ -46,15 +46,15 @@ void EXTI0_IRQHandler( void ) {
 	printf("EXTI 0 \n");
 }
 
-static os_Registers_t t1_reg;
+static os_TCB_t t1_reg;
 static os_TaskStack_t t1_stack;
 void t1_func( void ) __attribute__((noreturn)); 
 
-static os_Registers_t t2_reg;
+static os_TCB_t t2_reg;
 static os_TaskStack_t t2_stack;
 void t2_func( void ) __attribute__((noreturn));
 
-static os_Registers_t t3_reg;
+static os_TCB_t t3_reg;
 static os_TaskStack_t t3_stack;
 void t3_func( void ) __attribute__((noreturn));
 

@@ -32,7 +32,7 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	}
 }
 
-void os_DeleteTask ( os_Registers_t * tcb ) {
+void os_DeleteTask ( os_TCB_t * tcb ) {
 	tcb = tcb + 1;
 }
 

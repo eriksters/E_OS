@@ -3,7 +3,7 @@
 
 
 typedef struct {
-	uint32_t* q[OS_MAX_TASK_COUNT_];
+	os_TCB_t* q[OS_MAX_TASK_COUNT];
 	uint32_t head;
 	uint32_t tail;
 	uint32_t size;
@@ -20,8 +20,8 @@ static os_tasks_ready_t os_tasks_ready;
 void os_scheduler_init( void ) {
 	os_tasks_ready.size = 0;
 	os_tasks_ready.head = 0;
-	os_tasks_ready.tail = (OS_MAX_TASK_COUNT_ - 1);
-	os_tasks_ready.max_size = OS_MAX_TASK_COUNT_;
+	os_tasks_ready.tail = (OS_MAX_TASK_COUNT - 1);
+	os_tasks_ready.max_size = OS_MAX_TASK_COUNT;
 }
 
 /*
@@ -60,7 +60,7 @@ int os_queue_isFull( void ) {
 		
 }
 
-uint32_t* queue_add( uint32_t* E ) {
+os_TCB_t* queue_add( os_TCB_t* E ) {
 	
 	if ( os_queue_isFull() ) {
 		return 0;
@@ -78,13 +78,13 @@ uint32_t* queue_add( uint32_t* E ) {
 }
 
 
-uint32_t* queue_remove( void ) {
+os_TCB_t* queue_remove( void ) {
 	
 	if ( os_tasks_ready.size == 0 ) {
 		return 0;
 	}
 	
-	uint32_t* ret = os_tasks_ready.q[os_tasks_ready.head];
+	os_TCB_t* ret = os_tasks_ready.q[os_tasks_ready.head];
 	
 	os_tasks_ready.head++;
 	if ( os_tasks_ready.head == os_tasks_ready.max_size ) {
@@ -97,7 +97,7 @@ uint32_t* queue_remove( void ) {
 }
 
 
-uint32_t* queue_peek( void ) {
+os_TCB_t* queue_peek( void ) {
 	
 	if ( os_tasks_ready.size == 0 )
 			return 0;
@@ -109,7 +109,7 @@ uint32_t* queue_peek( void ) {
 
 void os_Switch_f( void ) {
 	
-	os_Registers_t* nextTask = (os_Registers_t*) queue_remove();
+	os_TCB_t* nextTask = queue_remove();
 	
 	//	Do nothing if there are no other tasks to run
 	//	TODO: queue can be empty while all tasks are blocked
@@ -119,7 +119,7 @@ void os_Switch_f( void ) {
 	
 	//	Add previous task to the end of the queue
 	if ( os_Control.status != block ) {
-		queue_add((uint32_t*) os_Control.currentTask);
+		queue_add( os_Control.currentTask );
 	}
 	
 	//	Set next task as current task

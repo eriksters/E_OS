@@ -3,7 +3,7 @@
 
 #include "EOS_Core.h"
 
-uint32_t* os_getCurrentTask( void );
+os_TCB_t* os_getCurrentTask( void );
 uint32_t os_GetStatus( void );
 void os_SetStarted( void );
 

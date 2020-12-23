@@ -10,9 +10,6 @@
 
 #define UNUSED(x) (void)(x)
 
-#define OS_TASK_STACK_SIZE		0x200
-#define OS_MAX_TASK_COUNT 		10
-
 /********************************************/
 /*								TypeDefs									*/
 /********************************************/
@@ -24,11 +21,15 @@ enum status {
 };
 
 typedef struct {
+	os_Registers_t backed_up_registers;
+} os_TCB_t;
+
+typedef struct {
 	uint32_t taskCount;
-	os_Registers_t* currentTask;
+	os_TCB_t* currentTask;
 	uint32_t tick_counter;
 	uint32_t task_switch_tick_count;
-	uint8_t status;
+	uint32_t status;
 } os_Control_t;
  
 typedef struct {
@@ -36,14 +37,12 @@ typedef struct {
 } os_TaskStack_t;
 
 typedef struct {
-	uint32_t* testArray[10];
+	os_TCB_t* testArray[10];
 	uint32_t size;
 	uint32_t max_size;
 } os_tasks_blocked_t;
 
-typedef struct {
-	os_Registers_t backed_up_registers;
-} os_TCB_t;
+
 
 
 /********************************************/
@@ -52,8 +51,8 @@ typedef struct {
 
 void os_tick( void );
 void os_init_blocked( void );
-uint32_t* os_add_to_blocked( uint32_t* E );
-uint32_t* os_remove_from_blocked( uint32_t* E );
+os_TCB_t* os_add_to_blocked( os_TCB_t* E );
+os_TCB_t* os_remove_from_blocked( os_TCB_t* E );
 void os_core_init( void );
 void os_task_switch( void );
 

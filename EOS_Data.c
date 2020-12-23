@@ -10,6 +10,6 @@ void os_SetStarted( void ) {
 	os_Control.status = running;
 }
 
-uint32_t* os_getCurrentTask( void ) {
-	return (uint32_t*) os_Control.currentTask;
+os_TCB_t* os_getCurrentTask( void ) {
+	return os_Control.currentTask;
 }
