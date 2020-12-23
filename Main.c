@@ -1,6 +1,4 @@
-#include "stm32f10x.h"
 #include <stdio.h>
-
 #include "EOS.h"
 #include "EOS_Scheduler.h"
 
@@ -36,11 +34,6 @@ void SystemCoreClockConfigure( void ) {
 }
 //
 
-void EXTI0_IRQHandler( void );
-void EXTI0_IRQHandler( void ) {
-	printf("EXTI 0 \n");
-}
-
 void SysTick_Handler( void );
 void SysTick_Handler( void ) {
 	printf("In SysTick_Handler\n");
@@ -48,6 +41,10 @@ void SysTick_Handler( void ) {
 	os_tick();
 }
 
+void EXTI0_IRQHandler( void );
+void EXTI0_IRQHandler( void ) {
+	printf("EXTI 0 \n");
+}
 
 static os_Registers_t t1_reg;
 static os_TaskStack_t t1_stack;
@@ -112,6 +109,7 @@ int main() {
 	SysTick_Config(0x000FFFFF);
 	
 	os_Queue_init();
+	os_init_blocked();
 	
 	// os_Delay(1999);
 	

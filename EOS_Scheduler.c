@@ -1,9 +1,7 @@
 #include "EOS_Scheduler.h"
-#include "EOS.h"
+#include <stdio.h>
 
 extern os_Control_t os_Control;
-
-int os_queue_isFull( void );
 
 typedef struct {
 	uint32_t* q[OS_MAX_TASK_COUNT_];
@@ -11,26 +9,68 @@ typedef struct {
 	uint32_t tail;
 	uint32_t size;
 	uint32_t max_size;
-} queue_t;
+} os_tasks_ready_t;
 
-static queue_t tq;
 
-uint32_t* os_getCurrentTask( void ) {
-	return (uint32_t*) os_Control.currentTask;
-}
+
+static os_tasks_ready_t os_tasks_ready;
+static os_tasks_blocked_t os_tasks_blocked;
+
+
+
+
+
+
+
+
 
 void os_Queue_init( void ) {
-	tq.size = 0;
-	tq.head = 0;
-	tq.tail = (OS_MAX_TASK_COUNT_ - 1);
-	tq.max_size = OS_MAX_TASK_COUNT_;
-	initDataStruct();
+	os_tasks_ready.size = 0;
+	os_tasks_ready.head = 0;
+	os_tasks_ready.tail = (OS_MAX_TASK_COUNT_ - 1);
+	os_tasks_ready.max_size = OS_MAX_TASK_COUNT_;
+	os_init_blocked();
 }
+
+
+
+
+
+
+
+
+void testDataStruct( void );
+void testDataStruct( void ) {
+	os_init_blocked();
+	
+	uint32_t* p_1 = (uint32_t*) 0x01;
+	uint32_t* p_2 = (uint32_t*) 0x02;
+	uint32_t* p_3 = (uint32_t*) 0x03;
+	
+	os_add_to_blocked( p_1 );
+	os_add_to_blocked( p_2 );
+	os_add_to_blocked( p_3 );
+	
+	os_remove_from_blocked( p_1 );
+	os_add_to_blocked( p_1 );
+	
+	os_remove_from_blocked(p_2);
+	os_remove_from_blocked(p_3);
+	
+	os_add_to_blocked( p_3 );
+	os_add_to_blocked( p_2 );
+}
+
+
+
+
+
+
 	
 
 int os_queue_isFull( void ) {
 	
-	return (tq.max_size == tq.size);
+	return (os_tasks_ready.max_size == os_tasks_ready.size);
 		
 }
 
@@ -40,13 +80,13 @@ uint32_t* queue_add( uint32_t* E ) {
 		return 0;
 	}
 	
-	tq.tail++;
-	if ( tq.tail == tq.max_size ) {
-		tq.tail = 0;
+	os_tasks_ready.tail++;
+	if ( os_tasks_ready.tail == os_tasks_ready.max_size ) {
+		os_tasks_ready.tail = 0;
 	}
 	
-	tq.q[tq.tail] = E;
-	tq.size++;
+	os_tasks_ready.q[os_tasks_ready.tail] = E;
+	os_tasks_ready.size++;
 	
 	return E;
 }
@@ -54,18 +94,18 @@ uint32_t* queue_add( uint32_t* E ) {
 
 uint32_t* queue_remove( void ) {
 	
-	if ( tq.size == 0 ) {
+	if ( os_tasks_ready.size == 0 ) {
 		return 0;
 	}
 	
-	uint32_t* ret = tq.q[tq.head];
+	uint32_t* ret = os_tasks_ready.q[os_tasks_ready.head];
 	
-	tq.head++;
-	if ( tq.head == tq.max_size ) {
-		tq.head = 0;
+	os_tasks_ready.head++;
+	if ( os_tasks_ready.head == os_tasks_ready.max_size ) {
+		os_tasks_ready.head = 0;
 	}
 	
-	tq.size--;
+	os_tasks_ready.size--;
 	
 	return ret;
 }
@@ -73,10 +113,10 @@ uint32_t* queue_remove( void ) {
 
 uint32_t* queue_peek( void ) {
 	
-	if ( tq.size == 0 )
+	if ( os_tasks_ready.size == 0 )
 			return 0;
 	
-	return tq.q[tq.head];
+	return os_tasks_ready.q[os_tasks_ready.head];
 }
 
 

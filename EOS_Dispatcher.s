@@ -5,7 +5,6 @@
 				EXPORT  SVC_Handler
 				EXPORT	PendSV_Handler
 	
-				IMPORT	os_Control
 				IMPORT 	os_Start_f
 				IMPORT	os_Release_f
 				IMPORT  SVC_Handler_f
