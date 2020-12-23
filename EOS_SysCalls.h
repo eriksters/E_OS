@@ -10,6 +10,4 @@ void os_CreateTask( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_
 
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 
-void os_TriggerPendSV( void );
-
 #endif
