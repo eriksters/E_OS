@@ -8,6 +8,12 @@
  *							OS Interface        				*
  *******************************************/
 
+/* Handler for SVC interrupt, used for System Calls
+ * Called from EOS_Dispatcher.s
+ * Implemented in EOS.c
+*/
+void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
+
 /*	Initialize the OS.
  *	Must be called before creating tasks / starting os.
  *	Implemented in: EOS_SysCalls.c

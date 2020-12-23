@@ -6,33 +6,6 @@
 
 extern os_Control_t os_Control;
 
-
-void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
-	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
-	
-	uint16_t SCI = *(--SCI_p);
-	SCI &= 0xFF;
-	
-	switch (SCI) {
-		
-		//	Start
-		case 0:
-			os_Start_f();
-			break;
-		
-		//	Release 
-		case 1:
-			os_Release_f();
-			break;
-		
-		//	Delay
-		case 3:
-			os_Delay_f( stackedRegisters->R0 );
-			break;
-		
-	}
-}
-
 void os_init( void ) {
 	os_core_init();
 	os_scheduler_init();
