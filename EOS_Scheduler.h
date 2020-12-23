@@ -7,7 +7,7 @@
 #define OS_MAX_TASK_COUNT_ 10
 
 
-void os_Queue_init( void );
+void os_scheduler_init( void );
 
 void os_Switch_f( void );
 

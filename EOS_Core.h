@@ -54,6 +54,7 @@ void os_tick( void );
 void os_init_blocked( void );
 uint32_t* os_add_to_blocked( uint32_t* E );
 uint32_t* os_remove_from_blocked( uint32_t* E );
-
+void os_core_init( void );
+void os_task_switch( void );
 
 #endif

@@ -1,7 +1,6 @@
 #include "EOS_Scheduler.h"
 #include <stdio.h>
 
-extern os_Control_t os_Control;
 
 typedef struct {
 	uint32_t* q[OS_MAX_TASK_COUNT_];
@@ -13,32 +12,19 @@ typedef struct {
 
 
 
+extern os_Control_t os_Control;
+
+
 static os_tasks_ready_t os_tasks_ready;
-static os_tasks_blocked_t os_tasks_blocked;
 
-
-
-
-
-
-
-
-
-void os_Queue_init( void ) {
+void os_scheduler_init( void ) {
 	os_tasks_ready.size = 0;
 	os_tasks_ready.head = 0;
 	os_tasks_ready.tail = (OS_MAX_TASK_COUNT_ - 1);
 	os_tasks_ready.max_size = OS_MAX_TASK_COUNT_;
-	os_init_blocked();
 }
 
-
-
-
-
-
-
-
+/*
 void testDataStruct( void );
 void testDataStruct( void ) {
 	os_init_blocked();
@@ -60,7 +46,7 @@ void testDataStruct( void ) {
 	os_add_to_blocked( p_3 );
 	os_add_to_blocked( p_2 );
 }
-
+*/
 
 
 

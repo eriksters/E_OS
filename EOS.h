@@ -8,7 +8,7 @@
  *							OS Interface        				*
  *******************************************/
 
-void os_Init( void );
+void os_init( void );
 void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_Registers_t* tcb );
 void os_Start ( void );
 void os_Release ( void );

@@ -108,8 +108,7 @@ int main() {
 	SystemCoreClockConfigure();
 	SysTick_Config(0x000FFFFF);
 	
-	os_Queue_init();
-	os_init_blocked();
+	os_init();
 	
 	// os_Delay(1999);
 	

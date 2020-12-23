@@ -1,3 +1,4 @@
+#include "EOS.h"
 #include "EOS_SysCalls.h"
 #include "EOS_Scheduler.h"
 #include "EOS_Data.h"
@@ -30,6 +31,11 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 			break;
 		
 	}
+}
+
+void os_init( void ) {
+	os_core_init();
+	os_scheduler_init();
 }
 
 //	TODO: Implement with SCI
@@ -74,13 +80,13 @@ void os_Start_f( void ) {
 	__set_CONTROL(0x02);
 		
 	//	Start the OS
-	os_TriggerPendSV();
+	os_task_switch();
 }
 
 void os_Release_f ( void ) {
 	printf("OS Release\n");
 	
-	os_TriggerPendSV();
+	os_task_switch();
 }
 
 void os_Delay_f( uint32_t milliseconds ) {
@@ -90,7 +96,7 @@ void os_Delay_f( uint32_t milliseconds ) {
 	
 	os_Control.status = block;
 	
-	os_TriggerPendSV();
+	os_task_switch();
 }
 
 void os_TaskEnd_f ( void ) {
