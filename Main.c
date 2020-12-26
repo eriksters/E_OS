@@ -107,7 +107,7 @@ int main() {
 	
 	printf("System Core Clock: %d HZ \n", SystemCoreClock);
 	
-	SysTick_Config(0x000FFFFF);
+	SysTick_Config(0x0009C400);
 	
 	os_init();
 	
