@@ -103,6 +103,10 @@ int main() {
 	//	Clock setup
 	
 	SystemCoreClockConfigure();
+	SystemCoreClockUpdate();
+	
+	printf("System Core Clock: %d HZ \n", SystemCoreClock);
+	
 	SysTick_Config(0x000FFFFF);
 	
 	os_init();
