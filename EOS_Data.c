@@ -13,3 +13,7 @@ void os_SetStarted( void ) {
 os_TCB_t* os_getCurrentTask( void ) {
 	return os_Control.currentTask;
 }
+
+os_Registers_t* os_getCurrentTaskRegisters( void ) {
+	return &os_Control.currentTask->backed_up_registers;
+}

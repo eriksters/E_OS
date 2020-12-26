@@ -13,14 +13,47 @@ void os_task_switch( void ) {
 
 void os_tick( void ) {
 	os_Control.tick_counter++;
+	
+	//	If there are blocked tasks
+	if ( os_tasks_blocked.size > 0 ) {
+		
+		uint32_t tasks_to_check = os_tasks_blocked.size;
+		
+		//	Loop through blocked tasks array
+		for ( uint32_t i = 0; i < os_tasks_blocked.max_size; i++ ) {
+			
+			os_TCB_t* task = os_tasks_blocked.testArray[i];
+			
+			if (task != 0) {
+				task->countdown--;
+				
+				//	If countdown reaches 0, 
+				if ( task->countdown == 0 ) {
+					os_task_blocked_resume( task );
+				}
+				
+				//	If no more blocked tasks to check, break for loop
+				tasks_to_check--;
+				if (tasks_to_check == 0) {
+					break;
+				}
+			}
+		} 
+	}
+	
 	if ( os_Control.tick_counter >= os_Control.task_switch_tick_count ) {
 		printf("Triggering Context Switch\n");
 		os_task_switch();
 		os_Control.tick_counter = 0;
-	
 	}
 }
 
+extern os_TCB_t* queue_add( os_TCB_t* E );
+
+void os_task_blocked_resume( os_TCB_t* task ) {
+	os_remove_from_blocked( task );
+	queue_add( task );
+}
 
 void os_core_init( uint32_t os_tick_frq ) {
 	os_tasks_blocked.size = 0;

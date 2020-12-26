@@ -9,7 +9,7 @@
 				IMPORT	os_Release_f
 				IMPORT  SVC_Handler_f
 				IMPORT  os_Switch_f
-				IMPORT  os_getCurrentTask
+				IMPORT  os_getCurrentTaskRegisters
 				IMPORT 	os_GetStatus
 				IMPORT  os_SetStarted
 
@@ -65,7 +65,7 @@ os_Reg_Save		PROC
 				
 				PUSH	{lr}
 				
-				BL		os_getCurrentTask
+				BL		os_getCurrentTaskRegisters
 				
 				STR		r4, [r0]
 				STR		r5, [r0, #0x4]
@@ -90,7 +90,7 @@ os_Reg_Restore	PROC
 				
 				PUSH	{lr}
 				
-				BL		os_getCurrentTask
+				BL		os_getCurrentTaskRegisters
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
 				LDR		r6, [r0, #0x8]

@@ -56,7 +56,11 @@ void os_Release_f ( void ) {
 void os_Delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
 	
-	os_add_to_blocked( os_getCurrentTask() );
+	os_TCB_t* task = os_getCurrentTask();
+	
+	os_add_to_blocked( task );
+	
+	task->countdown = milliseconds / 10;
 	
 	os_Control.status = block;
 	
