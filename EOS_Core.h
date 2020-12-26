@@ -36,6 +36,7 @@ typedef struct {
 	os_TCB_t* currentTask;
 	uint32_t tick_counter;
 	uint32_t task_switch_tick_count;
+	uint32_t os_tick_frq;
 	uint32_t status;
 } os_Control_t;
  
@@ -56,7 +57,7 @@ void os_tick( void );
 void os_init_blocked( void );
 os_TCB_t* os_add_to_blocked( os_TCB_t* E );
 os_TCB_t* os_remove_from_blocked( os_TCB_t* E );
-void os_core_init( void );
+void os_core_init( uint32_t os_tick_frq );
 void os_task_switch( void );
 
 #endif

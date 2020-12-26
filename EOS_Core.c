@@ -22,9 +22,11 @@ void os_tick( void ) {
 }
 
 
-void os_core_init( void ) {
+void os_core_init( uint32_t os_tick_frq ) {
 	os_tasks_blocked.size = 0;
 	os_tasks_blocked.max_size = 10;
+	
+	os_Control.os_tick_frq = os_tick_frq;
 }
 
 os_TCB_t* os_add_to_blocked( os_TCB_t* E ) {

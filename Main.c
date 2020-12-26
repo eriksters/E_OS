@@ -109,7 +109,7 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	
-	os_init();
+	os_init( 100 );
 	
 	// os_Delay(1999);
 	

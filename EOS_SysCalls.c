@@ -6,8 +6,8 @@
 
 extern os_Control_t os_Control;
 
-void os_init( void ) {
-	os_core_init();
+void os_init( uint32_t os_tick_frq ) {
+	os_core_init( os_tick_frq );
 	os_scheduler_init();
 }
 
