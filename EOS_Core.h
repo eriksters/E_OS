@@ -20,8 +20,15 @@ enum status {
 	block
 };
 
+
+typedef struct {
+	uint32_t placeholder[(OS_TASK_STACK_SIZE / 4)];
+} os_TaskStack_t;
+
+
 typedef struct {
 	os_Registers_t backed_up_registers;
+	uint8_t stack[OS_TASK_STACK_SIZE];
 } os_TCB_t;
 
 typedef struct {
@@ -32,10 +39,6 @@ typedef struct {
 	uint32_t status;
 } os_Control_t;
  
-typedef struct {
-	uint32_t placeholder[(OS_TASK_STACK_SIZE / 4)];
-} os_TaskStack_t;
-
 typedef struct {
 	os_TCB_t* testArray[10];
 	uint32_t size;

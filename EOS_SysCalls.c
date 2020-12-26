@@ -12,11 +12,13 @@ void os_init( void ) {
 }
 
 //	TODO: Implement with SCI
-void os_CreateTask ( void ( *func )( void ), os_TaskStack_t* stack, os_TCB_t* tcb ) {
+void os_CreateTask ( void ( *func )( void ), os_TCB_t* tcb ) {
 	
 	//	Stack is descending, so Stack Pointer must be set to end of the memory block
 	//	The EXC_RETURN automatically restores several registers, which are stored on the task stack,
 	//	so the SP is adjusted to make sure this happens correctly
+	
+	uint32_t* stack = (uint32_t*) tcb->stack;
 	
 	os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers );
 	

@@ -46,16 +46,13 @@ void EXTI0_IRQHandler( void ) {
 	printf("EXTI 0 \n");
 }
 
-static os_TCB_t t1_reg;
-static os_TaskStack_t t1_stack;
+static os_TCB_t t1_tcb;
 void t1_func( void ) __attribute__((noreturn)); 
 
-static os_TCB_t t2_reg;
-static os_TaskStack_t t2_stack;
+static os_TCB_t t2_tcb;
 void t2_func( void ) __attribute__((noreturn));
 
-static os_TCB_t t3_reg;
-static os_TaskStack_t t3_stack;
+static os_TCB_t t3_tcb;
 void t3_func( void ) __attribute__((noreturn));
 
 void t1_func( void ) {
@@ -67,7 +64,7 @@ void t1_func( void ) {
 			}
 		}
 		// os_Release();
-		printf("t1 out\n");
+		// printf("t1 out\n");
 	}
 }
 
@@ -80,7 +77,7 @@ void t2_func( void ) {
 			}
 		}
 		// os_Release();
-		printf("t2 out\n");
+		// printf("t2 out\n");
 		os_Delay(2000);
 	}
 }
@@ -94,7 +91,7 @@ void t3_func( void ) {
 			}
 		}
 		// os_Release();
-		printf("t3 out\n");
+		// printf("t3 out\n");
 	}
 }
 
@@ -113,9 +110,9 @@ int main() {
 	// os_Delay(1999);
 	
 	printf("Creating Tasks\n");
-	os_CreateTask(&t1_func, &t1_stack, &t1_reg);
-	os_CreateTask(&t2_func, &t2_stack, &t2_reg);
-	os_CreateTask(&t3_func, &t3_stack, &t3_reg);
+	os_CreateTask(&t1_func, &t1_tcb);
+	os_CreateTask(&t2_func, &t2_tcb);
+	os_CreateTask(&t3_func, &t3_tcb);
 	
 	printf("Starting OS\n");
 	os_Start();
