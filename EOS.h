@@ -14,9 +14,10 @@
 */
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 
+
 /*	Initialize the OS.
  *	Must be called before creating tasks / starting os.
- *  [Param] os_tick_frq: frequency of os_tick calls. 
+ *  [Param] os_tick_frq: frequency of os_tick calls. If 0, assumed that SysTick timer is used and os_tick_frq is calculated automatically.
  *	Implemented in: EOS_SysCalls.c
 */	
 void os_init( uint32_t os_tick_frq );

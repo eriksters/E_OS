@@ -109,9 +109,7 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	
-	os_init( 100 );
-	
-	// os_Delay(1999);
+	os_init( 0 );
 	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_tcb);

@@ -50,17 +50,27 @@ void os_tick( void ) {
 
 extern os_TCB_t* queue_add( os_TCB_t* E );
 
+
 void os_task_blocked_resume( os_TCB_t* task ) {
 	os_remove_from_blocked( task );
 	queue_add( task );
 }
 
+
 void os_core_init( uint32_t os_tick_frq ) {
 	os_tasks_blocked.size = 0;
 	os_tasks_blocked.max_size = 10;
 	
+	if ( os_tick_frq == 0 ) {
+		uint32_t coreClk = SystemCoreClock;
+		uint32_t sysTickResetVal = SysTick->LOAD;
+		
+		os_tick_frq = coreClk / sysTickResetVal;
+	}
+	
 	os_Control.os_tick_frq = os_tick_frq;
 }
+
 
 os_TCB_t* os_add_to_blocked( os_TCB_t* E ) {
 	
