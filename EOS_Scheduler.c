@@ -24,33 +24,6 @@ void os_scheduler_init( void ) {
 	os_tasks_ready.max_size = OS_MAX_TASK_COUNT;
 }
 
-/*
-void testDataStruct( void );
-void testDataStruct( void ) {
-	os_init_blocked();
-	
-	uint32_t* p_1 = (uint32_t*) 0x01;
-	uint32_t* p_2 = (uint32_t*) 0x02;
-	uint32_t* p_3 = (uint32_t*) 0x03;
-	
-	os_add_to_blocked( p_1 );
-	os_add_to_blocked( p_2 );
-	os_add_to_blocked( p_3 );
-	
-	os_remove_from_blocked( p_1 );
-	os_add_to_blocked( p_1 );
-	
-	os_remove_from_blocked(p_2);
-	os_remove_from_blocked(p_3);
-	
-	os_add_to_blocked( p_3 );
-	os_add_to_blocked( p_2 );
-}
-*/
-
-
-
-
 
 	
 

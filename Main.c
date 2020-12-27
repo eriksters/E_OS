@@ -57,41 +57,35 @@ void t3_func( void ) __attribute__((noreturn));
 
 void t1_func( void ) {
 	for (;;) {
-		for (int j = 0; j < 10; j++) {		//	Execute 10 times and then release
+		for (int j = 0; j < 10; j++) {	
 			printf("t1 func. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
 			}
 		}
-		// os_Release();
-		// printf("t1 out\n");
 	}
 }
 
 void t2_func( void ) {
 	for (;;) {
-		for (int j = 0; j < 20; j++) {		//	Execute 20 times and then release
+		for (int j = 0; j < 20; j++) {		
 			printf("t2 func. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
 			}
 		}
-		// os_Release();
-		// printf("t2 out\n");
 		os_Delay(2000);
 	}
 }
 
 void t3_func( void ) {
 	for (;;) {
-		for (int j = 0; j < 5; j++) {		//	Execute 5 times and then release
+		for (int j = 0; j < 5; j++) {		
 			printf("t3 func. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
 			}
 		}
-		// os_Release();
-		// printf("t3 out\n");
 	}
 }
 
