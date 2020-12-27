@@ -47,6 +47,9 @@ typedef struct {
 	uint32_t max_size;
 } os_tasks_blocked_t;
 
+typedef struct {
+	os_TCB_t* owner;
+} os_mutex_t;
 
 
 

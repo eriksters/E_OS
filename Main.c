@@ -46,6 +46,8 @@ void EXTI0_IRQHandler( void ) {
 	printf("EXTI 0 \n");
 }
 
+static os_mutex_t mutex_1;
+
 static os_TCB_t t1_tcb;
 void t1_func( void ) __attribute__((noreturn)); 
 

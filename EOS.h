@@ -65,6 +65,11 @@ void os_DeleteTask ( os_TCB_t * tcb );
 */	
 void os_TaskEnd ( void );
 
+uint32_t os_mutex_create( os_mutex_t* );
+
+uint32_t os_mutex_lock( os_mutex_t* );
+
+uint32_t os_mutex_unlock( os_mutex_t* );
 
 
 #endif

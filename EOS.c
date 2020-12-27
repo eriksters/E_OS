@@ -7,6 +7,9 @@
 #include <stdio.h>
 
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
+	
+	uint32_t ret = 0;
+	
 	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
 	
 	uint16_t SCI = *(--SCI_p);
@@ -29,7 +32,24 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 			os_Delay_f( stackedRegisters->R0 );
 			break;
 		
+		//	Mutex Create
+		case 4:
+			ret = os_mutex_create_f( (os_mutex_t*) stackedRegisters->R0 );
+			break;
+		
+		//	Mutex Lock
+		case 5:
+			ret = os_mutex_lock_f( (os_mutex_t*) stackedRegisters->R0 );
+			break;
+		
+		//	Mutex Unlock
+		case 6:
+			ret = os_mutex_unlock_f( (os_mutex_t*) stackedRegisters->R0 );
+			break;
+		
 	}
+	
+	stackedRegisters->R0 = ret;
 }
 
 void os_DeleteTask ( os_TCB_t * tcb ) {
@@ -50,7 +70,31 @@ void os_TaskEnd ( void ) {
 
 void os_Delay( uint32_t milliseconds ) {
 	UNUSED(milliseconds);
-	__asm("SVC #0x3");
+	__asm("SVC #0x03");
+}
+
+uint32_t os_mutex_create( os_mutex_t* mutex_p ) {
+	uint32_t ret;
+	UNUSED(mutex_p);
+	__asm("SVC #0x04");
+	__asm("mov %0, r0" : "=r" (ret));
+	return ret;
+}
+
+uint32_t os_mutex_lock( os_mutex_t* mutex_p ) {
+	uint32_t ret;
+	UNUSED(mutex_p);
+	__asm("SVC #0x05");
+	__asm("mov %0, r0" : "=r" (ret));
+	return ret;
+}
+
+uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
+	uint32_t ret;
+	UNUSED(mutex_p);
+	__asm("SVC #0x06");
+	__asm("mov %0, r0" : "=r" (ret));
+	return ret;
 }
 
 
