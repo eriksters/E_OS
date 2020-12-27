@@ -54,6 +54,7 @@ typedef struct {
 /*							Functions 									*/
 /********************************************/
 
+void os_tick_reset( void );
 void os_tick( void );
 void os_init_blocked( void );
 os_TCB_t* os_add_to_blocked( os_TCB_t* E );

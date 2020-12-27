@@ -50,6 +50,8 @@ void os_Start_f( void ) {
 void os_Release_f ( void ) {
 	printf("OS Release\n");
 	
+	os_tick_reset();
+	
 	os_task_switch();
 }
 
@@ -63,6 +65,8 @@ void os_Delay_f( uint32_t milliseconds ) {
 	task->countdown = milliseconds / 10;
 	
 	os_Control.status = block;
+	
+	os_tick_reset();
 	
 	os_task_switch();
 }
