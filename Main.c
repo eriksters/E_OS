@@ -59,8 +59,24 @@ void t3_func( void ) __attribute__((noreturn));
 
 void t1_func( void ) {
 	for (;;) {
+		if ( !os_mutex_lock(&mutex_1) ) {
+			printf("T1 Mutex Locked\n");
+		} else {
+			printf("T1 Mutex NOT Lock\n");
+		}
 		for (int j = 0; j < 10; j++) {	
-			printf("t1 func. Count = %d\n", j);
+			printf("t1 [locked]. Count = %d\n", j);
+			for (int i = 0; i < 10000; i++) {
+				__NOP();
+			}
+		}
+		if ( !os_mutex_unlock(&mutex_1) ) {
+			printf("T1 mutex UNlocked\n");
+		} else {
+			printf("T1 mutex NOT UNlocked\n");
+		}
+		for (int j = 0; j < 10; j++) {	
+			printf("t1 [unlocked]. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
 			}
@@ -82,16 +98,30 @@ void t2_func( void ) {
 
 void t3_func( void ) {
 	for (;;) {
+		if ( !os_mutex_lock(&mutex_1) ) {
+			printf("T3 Mutex Locked\n");
+		} else {
+			printf("T3 Mutex NOT Lock\n");
+		}
 		for (int j = 0; j < 5; j++) {		
-			printf("t3 func. Count = %d\n", j);
+			printf("t3 [locked]. Count = %d\n", j);
+			for (int i = 0; i < 10000; i++) {
+				__NOP();
+			}
+		}
+		if ( !os_mutex_unlock(&mutex_1) ) {
+			printf("T3 mutex UNlocked\n");
+		} else {
+			printf("T3 mutex NOT UNlocked\n");
+		}
+		for (int j = 0; j < 5; j++) {		
+			printf("t3 [unlocked]. Count = %d\n", j);
 			for (int i = 0; i < 10000; i++) {
 				__NOP();
 			}
 		}
 	}
 }
-
-
 
 
 int main() {
@@ -104,6 +134,8 @@ int main() {
 	SysTick_Config(0x0009C400);
 	
 	os_init( 0 );
+	
+	os_mutex_create( &mutex_1 );
 	
 	printf("Creating Tasks\n");
 	os_CreateTask(&t1_func, &t1_tcb);

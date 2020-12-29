@@ -68,11 +68,7 @@ SVC_Used_PSP	MRS		r0, PSP
 				
 
 				;	----	Do the rest of the ISR in C 	-----
-SVC_Has_SP		; MOV		r1, #0xFFFFFFFD
-				; PUSH	{r1}
-				; PUSH 	{lr}
-				
-				BL		SVC_Handler_f
+SVC_Has_SP		BL		SVC_Handler_f
 				
 				POP		{pc}
 				

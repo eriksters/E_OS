@@ -76,13 +76,36 @@ void os_TaskEnd_f ( void ) {
 }
 
 uint32_t os_mutex_create_f( os_mutex_t* mutex_p ) {
-	return (uint32_t) mutex_p;
+	UNUSED(mutex_p);
+	return 0;
 }
 
 uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
-	return (uint32_t) mutex_p;
+
+	//	If Mutex is locked by a task, return 1
+	if ( mutex_p->owner != 0 ) {
+		return 1;
+	}
+	
+	//	Assign Mutex's owner to calling task
+	mutex_p->owner = os_getCurrentTask();
+	
+	return 0;
 }
 
 uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p ) {
-	return (uint32_t) 69;
+	
+	//	If task is locked by another thread or not locked at all, return 1
+	if ( mutex_p->owner != os_getCurrentTask() ) {
+		return 1;
+	}
+	
+	//	Unlock the thread
+	mutex_p->owner = 0;
+	
+	return 0;
 }
+
+
+
+
