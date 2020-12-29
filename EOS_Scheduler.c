@@ -91,7 +91,7 @@ void os_Switch_f( void ) {
 	}
 	
 	//	Add previous task to the end of the queue
-	if ( os_Control.status != block ) {
+	if ( os_Control.status != block && os_Control.status != starting ) {
 		queue_add( os_Control.currentTask );
 	}
 	
