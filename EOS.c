@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 
+extern os_Control_t os_Control;
+
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	
 	uint32_t ret = 0;
@@ -57,6 +59,7 @@ void os_DeleteTask ( os_TCB_t * tcb ) {
 }
 
 void os_Start ( void ) {
+	os_Control.status = starting;
 	__asm("SVC #0x00");
 }
 

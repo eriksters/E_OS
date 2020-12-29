@@ -21,18 +21,20 @@ PendSV_Handler	PROC
 				
 				BL		os_GetStatus
 				CMP		r0, #0x0
+				BEQ		Pend_EXIT
+				CMP		r0, #0x3
 				BNE		Pend_Started
 				
 				BL		os_Switch_f
 				BL		os_Reg_Restore
-				B		Pend_EXIT
+				B		Pend_Set_Start
 				
 Pend_Started	BL		os_Reg_Save
 				BL		os_Switch_f
 				BL		os_Reg_Restore
 				
-Pend_EXIT		BL		os_SetStarted
-				POP		{pc}
+Pend_Set_Start	BL		os_SetStarted
+Pend_EXIT		POP		{pc}
 	
 				ENDP
 				
@@ -41,16 +43,34 @@ Pend_EXIT		BL		os_SetStarted
 	
 SVC_Handler		PROC
 				
-				AND		r0, lr, #0x4				;	Check which stack was used for stacking
+				;	If OS is started, set EXC_RETURN to return to unpriv thread mode,
+				;	Otherwise, keep generated EXC_RETURN value
+				
+				PUSH	{lr}
+				BL		os_GetStatus
+				POP		{lr}
+				
+				CMP		r0, #3
+				BEQ		SVC_os_starting				;	OS is starting
+				PUSH	{lr}
+				B		SVC_pushed_lr				;	OS not starting
+SVC_os_starting	MOV		r1, #0xFFFFFFFD
+				PUSH	{r1}	
+				
+				
+SVC_pushed_lr	AND		r0, lr, #0x4				;	Check which stack was used for stacking
 				CMP		r0, #0x4
-				BEQ		Used_PSP
+				BEQ		SVC_Used_PSP
 				MRS		r0, MSP
-				B		Has_SP
-Used_PSP		MRS		r0, PSP
+				ADD		r0, r0, #4
+				B		SVC_Has_SP
+SVC_Used_PSP	MRS		r0, PSP
+				
 
 				;	----	Do the rest of the ISR in C 	-----
-Has_SP			MOV		r1, #0xFFFFFFFD
-				PUSH	{r1}
+SVC_Has_SP		; MOV		r1, #0xFFFFFFFD
+				; PUSH	{r1}
+				; PUSH 	{lr}
 				
 				BL		SVC_Handler_f
 				

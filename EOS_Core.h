@@ -17,7 +17,8 @@
 enum status {
 	notStarted,
 	running,
-	block
+	block,
+	starting
 };
 
 
