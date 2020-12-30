@@ -5,7 +5,7 @@ static os_tasks_blocked_t os_tasks_blocked;
 
 extern os_Control_t os_Control;
 
-void os_task_switch( void ) {
+void os_task_switch_trigger( void ) {
 	SCB->ICSR |= 0x1 << 28;
 	__DSB();
 	__ISB();
@@ -49,7 +49,7 @@ void os_tick( void ) {
 	
 	if ( os_Control.tick_counter >= os_Control.task_switch_tick_count ) {
 		printf("Triggering Context Switch\n");
-		os_task_switch();
+		os_task_switch_trigger();
 		os_Control.tick_counter = 0;
 	}
 }

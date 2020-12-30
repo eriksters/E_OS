@@ -65,7 +65,7 @@ os_TCB_t* os_blocked_add( os_TCB_t* E );
 os_TCB_t* os_blocked_remove( os_TCB_t* E );
 void os_task_blocked_resume( os_TCB_t* task);
 void os_core_init( uint32_t os_tick_frq );
-void os_task_switch( void );
+void os_task_switch_trigger( void );
 
 
 #endif

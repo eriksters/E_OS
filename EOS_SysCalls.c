@@ -44,7 +44,7 @@ void os_start_f( void ) {
 	__set_CONTROL(0x02);
 		
 	//	Start the OS
-	os_task_switch();
+	os_task_switch_trigger();
 }
 
 void os_release_f ( void ) {
@@ -52,7 +52,7 @@ void os_release_f ( void ) {
 	
 	os_tick_reset();
 	
-	os_task_switch();
+	os_task_switch_trigger();
 }
 
 void os_delay_f( uint32_t milliseconds ) {
@@ -68,7 +68,7 @@ void os_delay_f( uint32_t milliseconds ) {
 	
 	os_tick_reset();
 	
-	os_task_switch();
+	os_task_switch_trigger();
 }
 
 void os_task_end_f ( void ) {
