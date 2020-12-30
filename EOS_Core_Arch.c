@@ -9,7 +9,7 @@ void os_arch_create_task( void ( *func )( void ), uint32_t* stack_end, os_Regist
 	stackedRegisters->R2 = 0x0;
 	stackedRegisters->R3 = 0x0;
 	stackedRegisters->R12 = 0x0;
-	stackedRegisters->LR = (uint32_t) 0; // &os_TaskEnd;
+	stackedRegisters->LR = (uint32_t) 0; // &os_task_end;
 	stackedRegisters->PC = (uint32_t) func;
 	stackedRegisters->xPSR = 0x01000000;
 	

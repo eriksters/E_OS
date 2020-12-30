@@ -92,7 +92,7 @@ void t2_func( void ) {
 				__NOP();
 			}
 		}
-		os_Delay(2000);
+		os_delay(2000);
 	}
 }
 
@@ -138,12 +138,12 @@ int main() {
 	os_mutex_create( &mutex_1 );
 	
 	printf("Creating Tasks\n");
-	os_CreateTask(&t1_func, &t1_tcb);
-	os_CreateTask(&t2_func, &t2_tcb);
-	os_CreateTask(&t3_func, &t3_tcb);
+	os_task_create(&t1_func, &t1_tcb);
+	os_task_create(&t2_func, &t2_tcb);
+	os_task_create(&t3_func, &t3_tcb);
 	
 	printf("Starting OS\n");
-	os_Start();
+	os_start();
 	
 	for (;;) {
 		printf("All Threads Exited \n");

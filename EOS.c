@@ -54,24 +54,24 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	stackedRegisters->R0 = ret;
 }
 
-void os_DeleteTask ( os_TCB_t * tcb ) {
+void os_task_delete ( os_TCB_t * tcb ) {
 	tcb = tcb + 1;
 }
 
-void os_Start ( void ) {
+void os_start ( void ) {
 	os_Control.status = starting;
 	__asm("SVC #0x00");
 }
 
-void os_Release ( void ) {
+void os_release ( void ) {
 	__asm("SVC #0x01");
 }
 
-void os_TaskEnd ( void ) {
+void os_task_end ( void ) {
 	__asm("SVC #0x02");
 }
 
-void os_Delay( uint32_t milliseconds ) {
+void os_delay( uint32_t milliseconds ) {
 	UNUSED(milliseconds);
 	__asm("SVC #0x03");
 }

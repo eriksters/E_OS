@@ -27,7 +27,7 @@ void os_init( uint32_t os_tick_frq );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_CreateTask ( void ( *func )( void ), os_TCB_t* tcb );
+void os_task_create ( void ( *func )( void ), os_TCB_t* tcb );
 
 
 /*	Start the OS.
@@ -35,35 +35,35 @@ void os_CreateTask ( void ( *func )( void ), os_TCB_t* tcb );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_Start ( void );
+void os_start ( void );
 
 
 /*	End task's current time slice. Does not block the task.
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_Release ( void );
+void os_release ( void );
 
 
 /*	Block current task for X amount of milliseconds
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_Delay ( uint32_t miliseconds );
+void os_delay ( uint32_t miliseconds );
 
 
 /*	Delete task
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_DeleteTask ( os_TCB_t * tcb );
+void os_task_delete ( os_TCB_t * tcb );
 
 
 /*	Called when a task finishes
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_TaskEnd ( void );
+void os_task_end ( void );
 
 uint32_t os_mutex_create( os_mutex_t* );
 
