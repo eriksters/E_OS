@@ -1,6 +1,6 @@
 #include "EOS.h"
 #include "EOS_SysCalls.h"
-#include "EOS_Dispatcher.h"
+#include "EOS_ASM.h"
 #include "stm32f10x.h"
 #include "EOS_Scheduler.h"
 #include "EOS_Control.h"

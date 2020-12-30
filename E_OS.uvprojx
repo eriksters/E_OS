@@ -394,11 +394,6 @@
               <FilePath>.\EOS.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_Dispatcher.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\EOS_Dispatcher.s</FilePath>
-            </File>
-            <File>
               <FileName>EOS_Scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_Scheduler.c</FilePath>
@@ -423,6 +418,11 @@
               <FileType>1</FileType>
               <FilePath>.\EOS_Control.c</FilePath>
             </File>
+            <File>
+              <FileName>EOS_ASM.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\EOS_ASM.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -432,11 +432,6 @@
               <FileName>EOS.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS.h</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_Dispatcher.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_Dispatcher.h</FilePath>
             </File>
             <File>
               <FileName>EOS_Scheduler.h</FileName>
@@ -467,6 +462,11 @@
               <FileName>EOS_Control.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Control.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_ASM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_ASM.h</FilePath>
             </File>
           </Files>
         </Group>
