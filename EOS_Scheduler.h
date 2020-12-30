@@ -7,11 +7,9 @@
 
 void os_scheduler_init( void );
 
-void os_Switch_f( void );
+void os_switch_f( void );
 
 int os_queue_isFull( void );
-
-void os_tick( void );
 
 //	Add element to queue. Returns inserted element if successful, NULL if queue already full
 os_TCB_t* queue_add( os_TCB_t* E );

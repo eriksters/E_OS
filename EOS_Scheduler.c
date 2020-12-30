@@ -80,7 +80,7 @@ os_TCB_t* queue_peek( void ) {
 
 
 
-void os_Switch_f( void ) {
+void os_switch_f( void ) {
 	
 	os_TCB_t* nextTask = queue_remove();
 	

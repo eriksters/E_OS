@@ -8,7 +8,7 @@
 				IMPORT 	os_start_f
 				IMPORT	os_release_f
 				IMPORT  SVC_Handler_f
-				IMPORT  os_Switch_f
+				IMPORT  os_switch_f
 				IMPORT  os_getCurrentTaskRegisters
 				IMPORT 	os_GetStatus
 				IMPORT  os_SetStarted
@@ -25,12 +25,12 @@ PendSV_Handler	PROC
 				CMP		r0, #0x3
 				BNE		Pend_Started
 				
-				BL		os_Switch_f
+				BL		os_switch_f
 				BL		os_Reg_Restore
 				B		Pend_Set_Start
 				
 Pend_Started	BL		os_Reg_Save
-				BL		os_Switch_f
+				BL		os_switch_f
 				BL		os_Reg_Restore
 				
 Pend_Set_Start	BL		os_SetStarted
