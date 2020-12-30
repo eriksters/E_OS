@@ -3,10 +3,9 @@
 #include "EOS_Dispatcher.h"
 #include "stm32f10x.h"
 #include "EOS_Scheduler.h"
+#include "EOS_Control.h"
 
 #include <stdio.h>
-
-extern os_Control_t os_Control;
 
 void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 	

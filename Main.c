@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "EOS.h"
-#include "EOS_Scheduler.h"
 
 /* Slightly modified version of Clock Setup from example project */
 void SystemCoreClockConfigure( void );

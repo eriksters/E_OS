@@ -1,9 +1,8 @@
-#include "EOS_Core.h"
+#include "EOS_Control.h"
+
 #include <stdio.h>
 
 static os_tasks_blocked_t os_tasks_blocked;
-
-extern os_Control_t os_Control;
 
 void os_task_switch_trigger( void ) {
 	SCB->ICSR |= 0x1 << 28;

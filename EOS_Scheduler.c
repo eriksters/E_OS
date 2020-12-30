@@ -1,4 +1,5 @@
 #include "EOS_Scheduler.h"
+#include "EOS_Control.h"
 #include <stdio.h>
 
 
@@ -9,11 +10,6 @@ typedef struct {
 	uint32_t size;
 	uint32_t max_size;
 } os_tasks_ready_t;
-
-
-
-extern os_Control_t os_Control;
-
 
 static os_tasks_ready_t os_tasks_ready;
 
