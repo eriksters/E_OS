@@ -28,7 +28,7 @@ void os_CreateTask ( void ( *func )( void ), os_TCB_t* tcb ) {
 	os_Control.taskCount++;
 }
 
-void os_Start_f( void ) {
+void os_start_f( void ) {
 	
 	printf("OS Start \n");
 	
@@ -47,7 +47,7 @@ void os_Start_f( void ) {
 	os_task_switch();
 }
 
-void os_Release_f ( void ) {
+void os_release_f ( void ) {
 	printf("OS Release\n");
 	
 	os_tick_reset();
@@ -55,7 +55,7 @@ void os_Release_f ( void ) {
 	os_task_switch();
 }
 
-void os_Delay_f( uint32_t milliseconds ) {
+void os_delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
 	
 	os_TCB_t* task = os_getCurrentTask();
@@ -71,7 +71,7 @@ void os_Delay_f( uint32_t milliseconds ) {
 	os_task_switch();
 }
 
-void os_TaskEnd_f ( void ) {
+void os_task_end_f ( void ) {
 
 }
 

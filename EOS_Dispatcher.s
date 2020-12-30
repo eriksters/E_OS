@@ -5,8 +5,8 @@
 				EXPORT  SVC_Handler
 				EXPORT	PendSV_Handler
 	
-				IMPORT 	os_Start_f
-				IMPORT	os_Release_f
+				IMPORT 	os_start_f
+				IMPORT	os_release_f
 				IMPORT  SVC_Handler_f
 				IMPORT  os_Switch_f
 				IMPORT  os_getCurrentTaskRegisters

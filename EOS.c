@@ -21,17 +21,17 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 		
 		//	Start
 		case 0:
-			os_Start_f();
+			os_start_f();
 			break;
 		
 		//	Release 
 		case 1:
-			os_Release_f();
+			os_release_f();
 			break;
 		
 		//	Delay
 		case 3:
-			os_Delay_f( stackedRegisters->R0 );
+			os_delay_f( stackedRegisters->R0 );
 			break;
 		
 		//	Mutex Create
