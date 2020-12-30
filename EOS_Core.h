@@ -61,10 +61,11 @@ typedef struct {
 void os_tick_reset( void );
 void os_tick( void );
 void os_init_blocked( void );
-os_TCB_t* os_add_to_blocked( os_TCB_t* E );
-os_TCB_t* os_remove_from_blocked( os_TCB_t* E );
+os_TCB_t* os_blocked_add( os_TCB_t* E );
+os_TCB_t* os_blocked_remove( os_TCB_t* E );
+void os_task_blocked_resume( os_TCB_t* task);
 void os_core_init( uint32_t os_tick_frq );
 void os_task_switch( void );
-void os_task_blocked_resume( os_TCB_t* task);
+
 
 #endif

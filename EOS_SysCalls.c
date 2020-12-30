@@ -60,7 +60,7 @@ void os_delay_f( uint32_t milliseconds ) {
 	
 	os_TCB_t* task = os_getCurrentTask();
 	
-	os_add_to_blocked( task );
+	os_blocked_add( task );
 	
 	task->countdown = milliseconds / 10;
 	

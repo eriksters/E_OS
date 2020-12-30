@@ -58,7 +58,7 @@ extern os_TCB_t* queue_add( os_TCB_t* E );
 
 
 void os_task_blocked_resume( os_TCB_t* task ) {
-	os_remove_from_blocked( task );
+	os_blocked_remove( task );
 	queue_add( task );
 }
 
@@ -78,7 +78,7 @@ void os_core_init( uint32_t os_tick_frq ) {
 }
 
 
-os_TCB_t* os_add_to_blocked( os_TCB_t* E ) {
+os_TCB_t* os_blocked_add( os_TCB_t* E ) {
 	
 	os_TCB_t* ret = 0;
 	
@@ -103,7 +103,7 @@ os_TCB_t* os_add_to_blocked( os_TCB_t* E ) {
 }
 
 
-os_TCB_t* os_remove_from_blocked( os_TCB_t* E ) {
+os_TCB_t* os_blocked_remove( os_TCB_t* E ) {
 	
 	os_TCB_t* ret = 0;
 	
