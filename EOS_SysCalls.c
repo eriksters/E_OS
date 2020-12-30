@@ -25,7 +25,7 @@ void os_task_create ( void ( *func )( void ), os_TCB_t* tcb ) {
 	os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers );
 	
 	
-	queue_add( tcb );
+	os_ready_add( tcb );
 	//os_Task_Queue[os_Control.taskCount] = tcb;
 	os_Control.taskCount++;
 }

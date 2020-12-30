@@ -23,15 +23,15 @@ void os_scheduler_init( void ) {
 
 	
 
-int os_queue_isFull( void ) {
+int os_ready_isFull( void ) {
 	
 	return (os_tasks_ready.max_size == os_tasks_ready.size);
 		
 }
 
-os_TCB_t* queue_add( os_TCB_t* E ) {
+os_TCB_t* os_ready_add( os_TCB_t* E ) {
 	
-	if ( os_queue_isFull() ) {
+	if ( os_ready_isFull() ) {
 		return 0;
 	}
 	
@@ -47,7 +47,7 @@ os_TCB_t* queue_add( os_TCB_t* E ) {
 }
 
 
-os_TCB_t* queue_remove( void ) {
+os_TCB_t* os_ready_remove( void ) {
 	
 	if ( os_tasks_ready.size == 0 ) {
 		return 0;
@@ -66,7 +66,7 @@ os_TCB_t* queue_remove( void ) {
 }
 
 
-os_TCB_t* queue_peek( void ) {
+os_TCB_t* os_ready_peek( void ) {
 	
 	if ( os_tasks_ready.size == 0 )
 			return 0;
@@ -78,7 +78,7 @@ os_TCB_t* queue_peek( void ) {
 
 void os_switch_f( void ) {
 	
-	os_TCB_t* nextTask = queue_remove();
+	os_TCB_t* nextTask = os_ready_remove();
 	
 	//	Do nothing if there are no other tasks to run
 	//	TODO: queue can be empty while all tasks are blocked
@@ -88,7 +88,7 @@ void os_switch_f( void ) {
 	
 	//	Add previous task to the end of the queue
 	if ( os_Control.status != block && os_Control.status != starting ) {
-		queue_add( os_Control.currentTask );
+		os_ready_add( os_Control.currentTask );
 	}
 	
 	//	Set next task as current task
