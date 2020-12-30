@@ -6,7 +6,7 @@ uint32_t os_ctrl_get_status( void ) {
 	return (uint32_t) os_Control.status;
 }
 
-void os_ctrl_set_status_started( void ) {
+void os_ctrl_set_status_running( void ) {
 	os_Control.status = running;
 }
 

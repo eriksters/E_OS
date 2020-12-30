@@ -11,7 +11,7 @@
 				IMPORT  os_switch_f
 				IMPORT  os_ctrl_get_current_task_reg
 				IMPORT 	os_ctrl_get_status
-				IMPORT  os_ctrl_set_status_started
+				IMPORT  os_ctrl_set_status_running
 
 
 
@@ -33,7 +33,7 @@ Pend_Started	BL		os_reg_save
 				BL		os_switch_f
 				BL		os_reg_restore
 				
-Pend_Set_Start	BL		os_ctrl_set_status_started
+Pend_Set_Start	BL		os_ctrl_set_status_running
 Pend_EXIT		POP		{pc}
 	
 				ENDP

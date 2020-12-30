@@ -15,10 +15,14 @@
 /********************************************/
 
 enum status {
-	notStarted,
+	pre_init,
+	init,
+	post_init,
+	starting,
 	running,
 	block,
-	starting
+	exit,
+	post_exit
 };
 
 

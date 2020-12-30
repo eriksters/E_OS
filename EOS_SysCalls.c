@@ -5,8 +5,12 @@
 #include <stdio.h>
 
 void os_init( uint32_t os_tick_frq ) {
+	os_Control.status = init;
+
 	os_core_init( os_tick_frq );
 	os_scheduler_init();
+	
+	os_Control.status = post_init;
 }
 
 //	TODO: Implement with SCI
@@ -29,14 +33,12 @@ void os_task_create ( void ( *func )( void ), os_TCB_t* tcb ) {
 void os_start_f( void ) {
 	
 	printf("OS Start \n");
+	os_Control.status = starting;
 	
 	//	Do not start if no tasks have been created
 	if (os_Control.taskCount < 1) {
 		return;
 	}
-	
-	os_Control.task_switch_tick_count = 1;
-	os_Control.tick_counter = 0;
 	
 	//	Set System to use PSP in thread mode
 	__set_CONTROL(0x02);

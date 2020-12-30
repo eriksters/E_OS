@@ -63,8 +63,12 @@ void os_task_blocked_resume( os_TCB_t* task ) {
 
 
 void os_core_init( uint32_t os_tick_frq ) {
+	
 	os_tasks_blocked.size = 0;
 	os_tasks_blocked.max_size = 10;
+	
+	os_Control.task_switch_tick_count = OS_TASK_SWITCH_TICK_COUNT;
+	os_Control.tick_counter = 0;
 	
 	if ( os_tick_frq == 0 ) {
 		uint32_t coreClk = SystemCoreClock;
