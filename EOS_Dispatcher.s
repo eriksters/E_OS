@@ -1,7 +1,7 @@
 				AREA 	|.text|, CODE, READONLY
 	
-				EXPORT	os_Reg_Restore
-				EXPORT	os_Reg_Save
+				EXPORT	os_reg_Restore
+				EXPORT	os_reg_Save
 				EXPORT  SVC_Handler
 				EXPORT	PendSV_Handler
 	
@@ -26,12 +26,12 @@ PendSV_Handler	PROC
 				BNE		Pend_Started
 				
 				BL		os_switch_f
-				BL		os_Reg_Restore
+				BL		os_reg_Restore
 				B		Pend_Set_Start
 				
-Pend_Started	BL		os_Reg_Save
+Pend_Started	BL		os_reg_Save
 				BL		os_switch_f
-				BL		os_Reg_Restore
+				BL		os_reg_Restore
 				
 Pend_Set_Start	BL		os_SetStarted
 Pend_EXIT		POP		{pc}
@@ -77,7 +77,7 @@ SVC_Has_SP		BL		SVC_Handler_f
 	
 	
 	
-os_Reg_Save		PROC
+os_reg_Save		PROC
 				
 				PUSH	{lr}
 				
@@ -102,7 +102,7 @@ os_Reg_Save		PROC
 	
 	
 	
-os_Reg_Restore	PROC
+os_reg_Restore	PROC
 				
 				PUSH	{lr}
 				
