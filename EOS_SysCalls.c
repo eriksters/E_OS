@@ -1,7 +1,7 @@
 #include "EOS.h"
 #include "EOS_SysCalls.h"
 #include "EOS_Scheduler.h"
-#include "EOS_Data.h"
+#include "EOS_Control.h"
 #include <stdio.h>
 
 extern os_Control_t os_Control;
@@ -58,7 +58,7 @@ void os_release_f ( void ) {
 void os_delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
 	
-	os_TCB_t* task = os_getCurrentTask();
+	os_TCB_t* task = os_ctrl_get_current_task();
 	
 	os_blocked_add( task );
 	
@@ -88,7 +88,7 @@ uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
 	}
 	
 	//	Assign Mutex's owner to calling task
-	mutex_p->owner = os_getCurrentTask();
+	mutex_p->owner = os_ctrl_get_current_task();
 	
 	return 0;
 }
@@ -96,7 +96,7 @@ uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
 uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p ) {
 	
 	//	If task is locked by another thread or not locked at all, return 1
-	if ( mutex_p->owner != os_getCurrentTask() ) {
+	if ( mutex_p->owner != os_ctrl_get_current_task() ) {
 		return 1;
 	}
 	

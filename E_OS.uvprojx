@@ -409,11 +409,6 @@
               <FilePath>.\EOS_SysCalls.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\EOS_Data.c</FilePath>
-            </File>
-            <File>
               <FileName>EOS_Core.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_Core.c</FilePath>
@@ -422,6 +417,11 @@
               <FileName>EOS_Core_Arch.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_Core_Arch.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Control.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -432,11 +432,6 @@
               <FileName>EOS.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS.h</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_Data.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_Data.h</FilePath>
             </File>
             <File>
               <FileName>EOS_Dispatcher.h</FileName>
@@ -467,6 +462,11 @@
               <FileName>EOS_Config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Config.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Control.h</FilePath>
             </File>
           </Files>
         </Group>

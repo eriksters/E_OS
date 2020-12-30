@@ -9,9 +9,9 @@
 				IMPORT	os_release_f
 				IMPORT  SVC_Handler_f
 				IMPORT  os_switch_f
-				IMPORT  os_getCurrentTaskRegisters
-				IMPORT 	os_GetStatus
-				IMPORT  os_SetStarted
+				IMPORT  os_ctrl_get_current_task_reg
+				IMPORT 	os_ctrl_get_status
+				IMPORT  os_ctrl_set_status_started
 
 
 
@@ -19,7 +19,7 @@ PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
-				BL		os_GetStatus
+				BL		os_ctrl_get_status
 				CMP		r0, #0x0
 				BEQ		Pend_EXIT
 				CMP		r0, #0x3
@@ -33,7 +33,7 @@ Pend_Started	BL		os_reg_Save
 				BL		os_switch_f
 				BL		os_reg_Restore
 				
-Pend_Set_Start	BL		os_SetStarted
+Pend_Set_Start	BL		os_ctrl_set_status_started
 Pend_EXIT		POP		{pc}
 	
 				ENDP
@@ -47,7 +47,7 @@ SVC_Handler		PROC
 				;	Otherwise, keep generated EXC_RETURN value
 				
 				PUSH	{lr}
-				BL		os_GetStatus
+				BL		os_ctrl_get_status
 				POP		{lr}
 				
 				CMP		r0, #3
@@ -81,7 +81,7 @@ os_reg_Save		PROC
 				
 				PUSH	{lr}
 				
-				BL		os_getCurrentTaskRegisters
+				BL		os_ctrl_get_current_task_reg
 				
 				STR		r4, [r0]
 				STR		r5, [r0, #0x4]
@@ -106,7 +106,7 @@ os_reg_Restore	PROC
 				
 				PUSH	{lr}
 				
-				BL		os_getCurrentTaskRegisters
+				BL		os_ctrl_get_current_task_reg
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
 				LDR		r6, [r0, #0x8]
