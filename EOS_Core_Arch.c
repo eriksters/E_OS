@@ -1,18 +1,28 @@
 #include "EOS_Core_Arch.h"
 
 void os_arch_create_task( void ( *func )( void ), uint32_t* stack_end, os_Registers_t* reg_backup ) {
+
+	//	When the task is first dispatched, the registers that would be stacked during exception entry, are loaded from the stack, 
+	//	so they need to be set during task creation.
+	//	First, find what the stack pointer should be.
 	
-	os_StackedReg_t* stackedRegisters = (os_StackedReg_t*) ((( uint8_t* ) stack_end) + (OS_TASK_STACK_SIZE - sizeof( os_StackedReg_t )));
+	//	How many 4-byte integers do the stacked registers take up?
+	//	Stack starts at last highest address of the stack. stack_end points to lowest address.
+	uint32_t stackedRegOffset = (OS_TASK_STACK_SIZE - sizeof( os_StackedReg_t )) / 4;
 	
-	stackedRegisters->R0 = 0x11223344;			//	TODO: task parameters
-	stackedRegisters->R1 = 0x0;
-	stackedRegisters->R2 = 0x0;
-	stackedRegisters->R3 = 0x0;
-	stackedRegisters->R12 = 0x0;
-	stackedRegisters->LR = (uint32_t) 0; // &os_task_end;
-	stackedRegisters->PC = (uint32_t) func;
-	stackedRegisters->xPSR = 0x01000000;
+	//	Add offset to stack_end to get stack pointer
+	os_StackedReg_t* sp_stackedReg = (os_StackedReg_t*) (stack_end + stackedRegOffset );
 	
-	reg_backup->SP = ( uint32_t ) stackedRegisters;
+	//	Set values of each register when task starts
+	sp_stackedReg->R0 = 0x11223344;			//	TODO: task parameters
+	sp_stackedReg->R1 = 0x0;
+	sp_stackedReg->R2 = 0x0;
+	sp_stackedReg->R3 = 0x0;
+	sp_stackedReg->R12 = 0x0;
+	sp_stackedReg->LR = (uint32_t) 0; // &os_task_end;
+	sp_stackedReg->PC = (uint32_t) func;
+	sp_stackedReg->xPSR = 0x01000000;
+	
+	reg_backup->SP = ( uint32_t ) sp_stackedReg;
 	
 }
