@@ -419,9 +419,9 @@
               <FilePath>.\EOS_Control.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_ASM.s</FileName>
+              <FileName>EOS_ASM.S</FileName>
               <FileType>2</FileType>
-              <FilePath>.\EOS_ASM.s</FilePath>
+              <FilePath>.\EOS_ASM.S</FilePath>
             </File>
           </Files>
         </Group>
