@@ -37,6 +37,9 @@ typedef struct {
 /* 								Functions 							 */
 /*******************************************/
 
+/*
+ *
+*/
 void os_arch_create_task( void ( *func )( void ), uint32_t* stack, os_Registers_t* regs );
 
 #endif
