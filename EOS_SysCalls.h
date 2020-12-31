@@ -10,7 +10,8 @@ void os_start_f( void );
 
 /* Handler for os_task_create
 */
-void os_task_create_f ( void ( *func )( void ), os_TCB_t* tcb );
+void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
+
 
 /* Handler for os_release System Call.
 */

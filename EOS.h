@@ -24,11 +24,11 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 void os_init( uint32_t os_tick_frq );
 
 
-/*	Create a new task with given program and Task Control Block.
+/*	Create a new task with given program, Task Control Block and pointer to parameters (NULL can be passed if parameters not needed).
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_task_create ( void ( *func )( void ), os_TCB_t* tcb );
+void os_task_create ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
 
 
 /*	Start the OS.

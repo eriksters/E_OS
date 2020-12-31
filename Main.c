@@ -45,18 +45,38 @@ void EXTI0_IRQHandler( void ) {
 	printf("EXTI 0 \n");
 }
 
+struct t1_params_t {
+	uint32_t dummy_number;
+};
+
+struct t2_params_t {
+	uint32_t dummy_number;
+	os_mutex_t* dummy_pointer;
+};
+
+struct t3_params_t {
+	uint32_t dummy_number;
+};
+
 static os_mutex_t mutex_1;
 
 static os_TCB_t t1_tcb;
-void t1_func( void ) __attribute__((noreturn)); 
+static struct t1_params_t t1_params;
+void t1_func( void * params ) __attribute__((noreturn)); 
 
 static os_TCB_t t2_tcb;
-void t2_func( void ) __attribute__((noreturn));
+static struct t2_params_t t2_params;
+void t2_func( void * params ) __attribute__((noreturn));
 
 static os_TCB_t t3_tcb;
-void t3_func( void ) __attribute__((noreturn));
+static struct t3_params_t t3_params;
+void t3_func( void * params) __attribute__((noreturn));
 
-void t1_func( void ) {
+void t1_func( void * params ) {
+	
+	struct t1_params_t* par = (struct t1_params_t*) params;
+	printf("T1 enter. Dummy number = %d\n", par->dummy_number );
+	
 	for (;;) {
 		if ( !os_mutex_lock(&mutex_1) ) {
 			printf("T1 Mutex Locked\n");
@@ -83,8 +103,14 @@ void t1_func( void ) {
 	}
 }
 
-void t2_func( void ) {
-	os_task_create(&t3_func, &t3_tcb);
+void t2_func( void * params ) {
+	
+	struct t2_params_t* par = (struct t2_params_t*) params;
+	printf("T2 enter. Dummy number = %d; Dummy Pointer = %p\n", par->dummy_number, (void *) par->dummy_pointer );
+	
+	t3_params.dummy_number = 720;
+	os_task_create(&t3_func, &t3_tcb, &t3_params);
+	
 	for (;;) {
 		for (int j = 0; j < 20; j++) {		
 			printf("t2 func. Count = %d\n", j);
@@ -96,7 +122,11 @@ void t2_func( void ) {
 	}
 }
 
-void t3_func( void ) {
+void t3_func( void * params ) {
+	
+	struct t1_params_t* par = (struct t1_params_t*) params;
+	printf("T3 enter. Dummy number = %d\n", par->dummy_number );
+	
 	for (;;) {
 		if ( !os_mutex_lock(&mutex_1) ) {
 			printf("T3 Mutex Locked\n");
@@ -138,8 +168,13 @@ int main() {
 	os_mutex_create( &mutex_1 );
 	
 	printf("Creating Tasks\n");
-	os_task_create(&t1_func, &t1_tcb);
-	os_task_create(&t2_func, &t2_tcb);
+	
+	t1_params.dummy_number = 69;
+	os_task_create(&t1_func, &t1_tcb, &t1_params);
+	
+	t2_params.dummy_number = 420;
+	t2_params.dummy_pointer = &mutex_1;
+	os_task_create(&t2_func, &t2_tcb, &t2_params);
 	
 	printf("Starting OS\n");
 	os_start();

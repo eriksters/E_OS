@@ -30,7 +30,7 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 		
 		//	Task Create
 		case 2:
-			os_task_create_f( (void (*) (void)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1 );
+			os_task_create_f( (void (*) (void *)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1, (void *) stackedRegisters->R2 );
 			break;
 		
 		//	Delay
@@ -71,9 +71,10 @@ void os_release ( void ) {
 	__asm("SVC #0x01");
 }
 
-void os_task_create( void ( *func )( void ), os_TCB_t* tcb ) {
+void os_task_create( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
 	UNUSED(func);
 	UNUSED(tcb);
+	UNUSED(params);
 	__asm("SVC #0x02");
 } 
 

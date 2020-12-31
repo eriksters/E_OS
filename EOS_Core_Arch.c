@@ -1,6 +1,6 @@
 #include "EOS_Core_Arch.h"
 
-void os_arch_create_task( void ( *func )( void ), uint32_t* stack_end, os_Registers_t* reg_backup ) {
+void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Registers_t* reg_backup, void * params ) {
 
 	//	When the task is first dispatched, the registers that would be stacked during exception entry, are loaded from the stack, 
 	//	so they need to be set during task creation.
@@ -14,7 +14,7 @@ void os_arch_create_task( void ( *func )( void ), uint32_t* stack_end, os_Regist
 	os_StackedReg_t* sp_stackedReg = (os_StackedReg_t*) (stack_end + stackedRegOffset );
 	
 	//	Set values of each register when task starts
-	sp_stackedReg->R0 = 0x11223344;			//	TODO: task parameters
+	sp_stackedReg->R0 = (uint32_t) params;
 	sp_stackedReg->R1 = 0x0;
 	sp_stackedReg->R2 = 0x0;
 	sp_stackedReg->R3 = 0x0;
