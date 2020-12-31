@@ -13,23 +13,22 @@
 				IMPORT 	os_ctrl_get_status
 				IMPORT  os_ctrl_set_status_running
 
-
-
 PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
 				BL		os_ctrl_get_status
-				CMP		r0, #0x0
-				BEQ		Pend_EXIT
-				CMP		r0, #0x3
-				BNE		Pend_Started
+				CMP		r0, #0x0				
+				BEQ		Pend_EXIT				;	Pre-init, do nothing
 				
-				BL		os_switch_f
+				CMP		r0, #0x3				
+				BNE		Pend_Started			;	OS is started, so schedule normally
+				
+				BL		os_switch_f				;	OS is starting, so set os status and do not back up registers
 				BL		os_reg_restore
-				B		Pend_Set_Start
+				B		Pend_Set_Start			
 				
-Pend_Started	BL		os_reg_save
+Pend_Started	BL		os_reg_save				
 				BL		os_switch_f
 				BL		os_reg_restore
 				
