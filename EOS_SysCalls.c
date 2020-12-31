@@ -33,13 +33,23 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 void os_task_delete_f ( os_TCB_t* tcb ) {
 	
 	//	Check if calling task or another task
-	tcb = 0;
+	if ( tcb == 0 ) {
+		tcb = os_ctrl_get_current_task();
+	}
+	
 	
 	//	Remove from scheduling
+		//	Set task status? 
+		//	Replace task in queue with 0?
+	
 	
 	//	Remove from blocked queue
+	os_blocked_remove( tcb );
+	
 	
 	//	Release resources
+		//	Loop through all mutexes, unlock any whose owner is the deleted task
+		//	Must store all mutexes somewhere
 	
 }
 
