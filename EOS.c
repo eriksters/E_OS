@@ -53,14 +53,15 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 			ret = os_mutex_unlock_f( (os_mutex_t*) stackedRegisters->R0 );
 			break;
 		
+		//	Task Delete
+		case 7:
+			os_task_delete_f( (os_TCB_t*) stackedRegisters->R0 );
+			break;
 	}
 	
 	stackedRegisters->R0 = ret;
 }
 
-void os_task_delete ( os_TCB_t * tcb ) {
-	tcb = tcb + 1;
-}
 
 void os_start ( void ) {
 	os_Control.status = starting;
@@ -112,4 +113,8 @@ uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
+void os_task_delete ( os_TCB_t * tcb ) {
+	UNUSED(tcb);
+	__asm("SVC #0x07");
+}
 

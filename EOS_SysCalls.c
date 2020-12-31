@@ -30,6 +30,19 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 	os_Control.taskCount++;
 }
 
+void os_task_delete_f ( os_TCB_t* tcb ) {
+	
+	//	Check if calling task or another task
+	tcb = 0;
+	
+	//	Remove from scheduling
+	
+	//	Remove from blocked queue
+	
+	//	Release resources
+	
+}
+
 void os_start_f( void ) {
 	
 	printf("OS Start \n");
