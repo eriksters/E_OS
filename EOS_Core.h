@@ -23,7 +23,16 @@ enum os_status_e {
 	block,
 	exit,
 	post_exit,
-	error = 0x0FFFFFFF
+	os_error = 0x0FFFFFFF
+};
+
+
+enum os_task_status_e {
+	ready,
+	blocked,
+	zombie,
+	deleted,
+	os_task_error = 0x0FFFFFFF
 };
 
 
@@ -31,6 +40,7 @@ enum os_status_e {
  * os_TCB_t* is used as task handle.
 */
 typedef struct {
+	enum os_task_status_e status;
 	uint32_t countdown;
 	os_Registers_t backed_up_registers;
 	uint32_t stack[OS_TASK_STACK_SIZE / 4];
