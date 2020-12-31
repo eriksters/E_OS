@@ -84,6 +84,7 @@ void t1_func( void ) {
 }
 
 void t2_func( void ) {
+	os_task_create(&t3_func, &t3_tcb);
 	for (;;) {
 		for (int j = 0; j < 20; j++) {		
 			printf("t2 func. Count = %d\n", j);
@@ -139,7 +140,6 @@ int main() {
 	printf("Creating Tasks\n");
 	os_task_create(&t1_func, &t1_tcb);
 	os_task_create(&t2_func, &t2_tcb);
-	os_task_create(&t3_func, &t3_tcb);
 	
 	printf("Starting OS\n");
 	os_start();
