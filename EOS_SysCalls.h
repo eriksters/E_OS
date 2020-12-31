@@ -8,6 +8,10 @@
 void os_start_f( void );
 
 
+/* Handler for os_task_create
+*/
+void os_task_create_f ( void ( *func )( void ), os_TCB_t* tcb );
+
 /* Handler for os_release System Call.
 */
 void os_release_f( void );
