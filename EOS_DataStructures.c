@@ -12,6 +12,8 @@ static os_TCB_t test_tcb_1;
 static os_TCB_t test_tcb_2;
 static os_TCB_t test_tcb_3;
 
+
+/*
 void os_arrayList_test( void ){
 	
 	uint32_t contains = 0;
@@ -30,9 +32,11 @@ void os_arrayList_test( void ){
 	
 	__NOP();
 } 
+*/
 
 uint32_t os_arrayList_init( arrayList_h handle, void** array, uint32_t max_size ) {
 	
+	//	Error if handle is NULL or array is NULL or size is 0 
 	if ( max_size == 0 || array == 0 || handle == 0 ) {
 		return 1;
 	}
@@ -50,7 +54,8 @@ uint32_t os_arrayList_add( arrayList_h handle, void* E ) {
 	if ( handle->size == handle->max_size || E == 0 ) {
 		return 1;
 	}
-
+	
+	
 	handle->array[handle->size] = E;
 	
 	handle->size++;
@@ -97,6 +102,7 @@ uint32_t os_arrayList_remove( arrayList_h handle, void* E ) {
 	return 0;
 }
 
+
 uint32_t os_arrayList_contains( arrayList_h handle, void* E ) {
 	
 	uint32_t found = 0;
@@ -115,8 +121,4 @@ uint32_t os_arrayList_contains( arrayList_h handle, void* E ) {
 	}
 
 	return found;
-}
-
-uint32_t os_arrayList_size( arrayList_h handle ) {
-
 }
