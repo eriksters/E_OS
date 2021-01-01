@@ -171,8 +171,6 @@ int main() {
 	
 	os_init( 0 );
 	
-	os_arrayList_test();
-	
 	os_mutex_create( &mutex_1 );
 	
 	printf("Creating Tasks\n");
