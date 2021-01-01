@@ -104,6 +104,20 @@ uint32_t os_arrayList_remove( os_arrayList_h handle, void* E ) {
 }
 
 
+void* os_arrayList_get( os_arrayList_h handle, uint32_t index ) {
+	
+	//	Error if index is out of bounds
+	if ( index >= handle->max_size ) {
+		return 0;
+	}
+	
+	return handle->array[index];
+}
+
+uint32_t os_arrayList_size( os_arrayList_h handle ) {
+	return handle->size;
+}
+
 uint32_t os_arrayList_contains( os_arrayList_h handle, void* E ) {
 	
 	uint32_t found = 0;

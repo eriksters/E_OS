@@ -38,12 +38,28 @@ uint32_t os_arrayList_add( os_arrayList_h handle, void * E );
 uint32_t os_arrayList_remove( os_arrayList_h handle, void* E );
 
 
+/*	Get element by index
+ *	Param handle: handle for ArrayList
+ *	Param index: index of element to retrieve
+ *  Returns element of given index, NULL if index out of bounds
+*/
+void* os_arrayList_get( os_arrayList_h handle, uint32_t index );
+
+
+/*	Get size of ArrayList
+ *	Param handle: handle for ArrayList
+ *  Returns size of ArrayList
+*/
+uint32_t os_arrayList_size( os_arrayList_h handle );
+
+
 /*	Check if ArrayList contains a given element
  *	Param handle: handle for ArrayList
  *	Param E: element to search for
  *  Returns 1 if element is found, 0 if not
 */
 uint32_t os_arrayList_contains( os_arrayList_h handle, void* E );
+
 
 
 
