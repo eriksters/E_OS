@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "EOS.h"
 
+#include "EOS_DataStructures.h"
+
 /* Slightly modified version of Clock Setup from example project */
 void SystemCoreClockConfigure( void );
 void SystemCoreClockConfigure( void ) {
@@ -168,6 +170,8 @@ int main() {
 	SysTick_Config(0x0009C400);
 	
 	os_init( 0 );
+	
+	os_arrayList_test();
 	
 	os_mutex_create( &mutex_1 );
 	
