@@ -28,33 +28,37 @@ __attribute__((weak)) void os_tick_reset( void ) {
 
 
 void os_tick( void ) {
-	os_Control.tick_counter++;
 	
-	//	If there are blocked tasks
-	if ( os_tasks_blocked.size > 0 ) {
-		
-		uint32_t tasks_to_check = os_tasks_blocked.size;
-		
-		//	Loop through blocked tasks array
-		for ( uint32_t i = 0; i < os_tasks_blocked.max_size; i++ ) {
+	if ( os_Control.state == OS_STATE_RUNNING ) {
+	
+		os_Control.tick_counter++;
+	
+		//	If there are blocked tasks
+		if ( os_tasks_blocked.size > 0 ) {
 			
-			os_TCB_t* task = os_tasks_blocked.testArray[i];
+			uint32_t tasks_to_check = os_tasks_blocked.size;
 			
-			if (task != 0) {
-				task->countdown--;
+			//	Loop through blocked tasks array
+			for ( uint32_t i = 0; i < os_tasks_blocked.max_size; i++ ) {
 				
-				//	If countdown reaches 0, 
-				if ( task->countdown == 0 ) {
-					os_task_blocked_resume( task );
-				}
+				os_TCB_t* task = os_tasks_blocked.testArray[i];
 				
-				//	If no more blocked tasks to check, break for loop
-				tasks_to_check--;
-				if (tasks_to_check == 0) {
-					break;
+				if (task != 0) {
+					task->countdown--;
+					
+					//	If countdown reaches 0, 
+					if ( task->countdown == 0 ) {
+						os_task_blocked_resume( task );
+					}
+					
+					//	If no more blocked tasks to check, break for loop
+					tasks_to_check--;
+					if (tasks_to_check == 0) {
+						break;
+					}
 				}
-			}
-		} 
+			} 
+		}
 	}
 	
 	if ( os_Control.tick_counter >= os_Control.task_switch_tick_count ) {
