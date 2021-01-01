@@ -61,6 +61,7 @@ struct t3_params_t {
 };
 
 static os_mutex_t mutex_1;
+static os_mutex_t mutex_2;
 
 static os_TCB_t t1_tcb;
 static struct t1_params_t t1_params;
@@ -112,6 +113,8 @@ void t2_func( void * params ) {
 	
 	t3_params.dummy_number = 720;
 	os_task_create(&t3_func, &t3_tcb, &t3_params);
+	
+	os_mutex_lock( &mutex_2 );
 	
 	for (;;) {
 		for (int j = 0; j < 20; j++) {		
@@ -172,6 +175,7 @@ int main() {
 	os_init( 0 );
 	
 	os_mutex_create( &mutex_1 );
+	os_mutex_create( &mutex_2 );
 	
 	printf("Creating Tasks\n");
 	

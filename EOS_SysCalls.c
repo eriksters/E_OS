@@ -37,6 +37,8 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 
 void os_task_delete_f ( os_TCB_t* tcb ) {
 	
+	uint32_t mutexArraySize = 0;
+	os_mutex_t* mutex_p = 0;
 	uint32_t isCurrentTask = ( tcb == 0 );
 	
 	//	Check if calling task or another task
@@ -56,8 +58,13 @@ void os_task_delete_f ( os_TCB_t* tcb ) {
 	tcb->state = OS_TASK_STATE_ZOMBIE;
 	
 	//	Release resources
-		//	Loop through all mutexes, unlock any whose owner is the deleted task
-		//	Must store all mutexes somewhere
+	mutexArraySize = os_arrayList_size( os_mutex_arraylist_handle );
+	for ( uint32_t i = 0; i < mutexArraySize; i++ ) {
+		mutex_p = os_arrayList_get( os_mutex_arraylist_handle, i );
+		if ( mutex_p->owner == tcb ) {
+			mutex_p->owner = 0;
+		}
+	}
 	
 	if ( isCurrentTask ) {
 		os_task_switch_trigger();
