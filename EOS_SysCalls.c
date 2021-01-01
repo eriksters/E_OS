@@ -118,6 +118,8 @@ void os_delay_f( uint32_t milliseconds ) {
 
 void os_task_end_f ( void ) {
 	
+	os_task_delete_f( 0 );
+	
 }
 
 

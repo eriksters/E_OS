@@ -65,7 +65,7 @@ static os_mutex_t mutex_2;
 
 static os_TCB_t t1_tcb;
 static struct t1_params_t t1_params;
-void t1_func( void * params ) __attribute__((noreturn)); 
+void t1_func( void * params ); 
 
 static os_TCB_t t2_tcb;
 static struct t2_params_t t2_params;
@@ -73,14 +73,14 @@ void t2_func( void * params ) __attribute__((noreturn));
 
 static os_TCB_t t3_tcb;
 static struct t3_params_t t3_params;
-void t3_func( void * params) __attribute__((noreturn));
+void t3_func( void * params);
 
 void t1_func( void * params ) {
 	
 	struct t1_params_t* par = (struct t1_params_t*) params;
 	printf("T1 enter. Dummy number = %d\n", par->dummy_number );
 	
-	for (;;) {
+	for ( uint32_t x = 1; x < 100; x++ ) {
 		if ( !os_mutex_lock(&mutex_1) ) {
 			printf("T1 Mutex Locked\n");
 		} else {
@@ -104,6 +104,8 @@ void t1_func( void * params ) {
 			}
 		}
 	}
+	
+	printf("-------------------------T1 done----------------------\n");
 }
 
 void t2_func( void * params ) {
@@ -136,7 +138,7 @@ void t3_func( void * params ) {
 	struct t1_params_t* par = (struct t1_params_t*) params;
 	printf("T3 enter. Dummy number = %d\n", par->dummy_number );
 	
-	for (;;) {
+	for ( uint32_t x = 0; x < 10; x++ ) {
 		if ( !os_mutex_lock(&mutex_1) ) {
 			printf("T3 Mutex Locked\n");
 		} else {
@@ -160,6 +162,7 @@ void t3_func( void * params ) {
 			}
 		}
 	}
+	__NOP();
 }
 
 
