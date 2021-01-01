@@ -2,6 +2,7 @@
 #include "EOS_SysCalls.h"
 #include "EOS_Scheduler.h"
 #include "EOS_Control.h"
+#include "EOS_DataStructures.h"
 #include <stdio.h>
 
 void os_init( uint32_t os_tick_frq ) {
@@ -114,7 +115,19 @@ void os_task_end_f ( void ) {
 
 
 uint32_t os_mutex_create_f( os_mutex_t* mutex_p ) {
-	UNUSED(mutex_p);
+	
+	mutex_p->owner = 0;
+	
+	//	Error if mutex is already initialized
+	if ( os_arrayList_contains( os_mutex_arraylist_handle, mutex_p ) ) {
+		return 1;
+	}
+	
+	//	Error if mutex can not be added to mutex list
+	if (os_arrayList_add( os_mutex_arraylist_handle, mutex_p )) {
+		return 1;
+	}
+	
 	return 0;
 }
 

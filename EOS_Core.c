@@ -1,8 +1,13 @@
+#include "EOS_Core.h"
 #include "EOS_Control.h"
 
 #include <stdio.h>
 
 static os_tasks_blocked_t os_tasks_blocked;
+
+static os_mutex_t* mutex_array[OS_MAX_MUTEX_COUNT];
+static os_arrayList_t mutex_arraylist;
+os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
 
 void os_task_switch_trigger( void ) {
 	SCB->ICSR |= 0x1 << 28;
@@ -81,6 +86,8 @@ void os_core_init( uint32_t os_tick_frq ) {
 	}
 	
 	os_Control.os_tick_frq = os_tick_frq;
+	
+	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
 }
 
 

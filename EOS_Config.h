@@ -7,6 +7,10 @@
 */
 #define OS_MAX_TASK_COUNT 					10
 
+/*	Maximum amount of mutexes
+ *	Impacts size of OS data structures
+*/
+#define OS_MAX_MUTEX_COUNT					10
 
 /*	Size of each task's stack
  *	Must be divisible by 4

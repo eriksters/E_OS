@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "EOS_Core_Arch.h"
 #include "EOS_Defines.h"
+#include "EOS_DataStructures.h"
 
 /********************************************/
 /*								Defines										*/
@@ -80,6 +81,16 @@ typedef uint32_t os_Task_State_t;
 typedef struct {
 	os_TCB_t* owner;
 } os_mutex_t;
+
+
+
+/********************************************/
+/*								Data 											*/
+/********************************************/
+
+extern os_arrayList_h os_mutex_arraylist_handle;
+
+
 
 
 

@@ -5,8 +5,8 @@
 /*
 #define ARRAY_SIZE	20
 
-static arrayList_t test_arrayList;
-static arrayList_h test_arrayList_h = &test_arrayList;
+static os_arrayList_t test_arrayList;
+static os_arrayList_h test_os_arrayList_h = &test_arrayList;
 static os_TCB_t * test_array[ARRAY_SIZE];
 
 static os_TCB_t test_tcb_1;
@@ -15,27 +15,27 @@ static os_TCB_t test_tcb_3;
 
 
 
-void os_arrayList_test( void ){
+void os_os_arrayList_test( void ){
 	
 	uint32_t contains = 0;
 	
-	os_arrayList_init( test_arrayList_h, (void **) test_array, ARRAY_SIZE );
+	os_arrayList_init( test_os_arrayList_h, (void **) test_array, ARRAY_SIZE );
 	
-	os_arrayList_add( test_arrayList_h, &test_tcb_1 );
-	os_arrayList_add( test_arrayList_h, &test_tcb_2 );
-	os_arrayList_add( test_arrayList_h, &test_tcb_3 );
+	os_arrayList_add( test_os_arrayList_h, &test_tcb_1 );
+	os_arrayList_add( test_os_arrayList_h, &test_tcb_2 );
+	os_arrayList_add( test_os_arrayList_h, &test_tcb_3 );
 	
-	contains = os_arrayList_contains( test_arrayList_h, &test_tcb_2 );
+	contains = os_arrayList_contains( test_os_arrayList_h, &test_tcb_2 );
 	
-	os_arrayList_remove( test_arrayList_h, &test_tcb_2);
+	os_arrayList_remove( test_os_arrayList_h, &test_tcb_2);
 	
-	contains = os_arrayList_contains( test_arrayList_h, &test_tcb_2 );
+	contains = os_arrayList_contains( test_os_arrayList_h, &test_tcb_2 );
 	
 	__NOP();
 } 
 */
 
-uint32_t os_arrayList_init( arrayList_h handle, void** array, uint32_t max_size ) {
+uint32_t os_arrayList_init( os_arrayList_h handle, void** array, uint32_t max_size ) {
 	
 	//	Error if handle is NULL or array is NULL or size is 0 
 	if ( max_size == 0 || array == 0 || handle == 0 ) {
@@ -49,7 +49,7 @@ uint32_t os_arrayList_init( arrayList_h handle, void** array, uint32_t max_size 
 }
 
 
-uint32_t os_arrayList_add( arrayList_h handle, void* E ) {
+uint32_t os_arrayList_add( os_arrayList_h handle, void* E ) {
 	
 	//	Error if arrayList is full or element is NULL
 	if ( handle->size == handle->max_size || E == 0 ) {
@@ -65,7 +65,7 @@ uint32_t os_arrayList_add( arrayList_h handle, void* E ) {
 }
 
 
-uint32_t os_arrayList_remove( arrayList_h handle, void* E ) {
+uint32_t os_arrayList_remove( os_arrayList_h handle, void* E ) {
 	
 	uint32_t found = 0;
 	uint32_t index = 0;
@@ -104,7 +104,7 @@ uint32_t os_arrayList_remove( arrayList_h handle, void* E ) {
 }
 
 
-uint32_t os_arrayList_contains( arrayList_h handle, void* E ) {
+uint32_t os_arrayList_contains( os_arrayList_h handle, void* E ) {
 	
 	uint32_t found = 0;
 	
