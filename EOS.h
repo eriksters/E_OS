@@ -53,7 +53,8 @@ void os_release ( void );
 void os_delay ( uint32_t miliseconds );
 
 
-/*	Delete task
+/*	Remove task from scheduling, release resources held by it and make TCB ready for use by another task.
+ *	If NULL is passed, the calling task is deleted.
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	

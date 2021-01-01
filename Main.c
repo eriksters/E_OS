@@ -119,6 +119,10 @@ void t2_func( void * params ) {
 			}
 		}
 		os_delay(200);
+        
+		printf("T2, deleting\n");
+		os_task_delete( 0 );
+		
 	}
 }
 
