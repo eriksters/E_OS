@@ -14,13 +14,19 @@ static os_TCB_t test_tcb_3;
 
 void os_arrayList_test( void ){
 	
+	uint32_t contains = 0;
+	
 	os_arrayList_init( test_arrayList_h, (void **) test_array, ARRAY_SIZE );
 	
 	os_arrayList_add( test_arrayList_h, &test_tcb_1 );
 	os_arrayList_add( test_arrayList_h, &test_tcb_2 );
 	os_arrayList_add( test_arrayList_h, &test_tcb_3 );
 	
+	contains = os_arrayList_contains( test_arrayList_h, &test_tcb_2 );
+	
 	os_arrayList_remove( test_arrayList_h, &test_tcb_2);
+	
+	contains = os_arrayList_contains( test_arrayList_h, &test_tcb_2 );
 	
 	__NOP();
 } 
@@ -91,8 +97,24 @@ uint32_t os_arrayList_remove( arrayList_h handle, void* E ) {
 	return 0;
 }
 
-uint32_t os_arrayList_contains( arrayList_h handle, void* ptr ) {
+uint32_t os_arrayList_contains( arrayList_h handle, void* E ) {
+	
+	uint32_t found = 0;
+	
+	//	Error if element is NULL
+	if ( E == 0 ) {
+		return 0;
+	}
+	
+	//	Find element
+	for ( uint32_t i = 0; i < handle->size; i++ ) {
+		if ( handle->array[i] == E ) {
+			found = 1;
+			break;
+		}
+	}
 
+	return found;
 }
 
 uint32_t os_arrayList_size( arrayList_h handle ) {

@@ -20,7 +20,7 @@ uint32_t os_arrayList_add( arrayList_h handle, void * E );
 
 uint32_t os_arrayList_remove( arrayList_h handle, void* E );
 
-uint32_t os_arrayList_contains( arrayList_h handle, void* ptr );
+uint32_t os_arrayList_contains( arrayList_h handle, void* E );
 
 uint32_t os_arrayList_size( arrayList_h handle );
 
