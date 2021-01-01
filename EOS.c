@@ -58,8 +58,14 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 			os_task_delete_f( (os_TCB_t*) stackedRegisters->R0 );
 			break;
 		
+		//	Task End
 		case 8:
 			os_task_end_f();
+			break;
+		
+		//	Shut Down OS
+		case 9:
+			os_exit_f();
 			break;
 	}
 	
@@ -121,4 +127,8 @@ void os_task_delete ( os_TCB_t * tcb ) {
 
 void os_task_end ( void ) {
 	__asm("SVC #0x08");
+}
+
+void os_exit( void ) {
+	__asm("SVC #0x09");
 }

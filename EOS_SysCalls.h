@@ -47,4 +47,9 @@ uint32_t os_mutex_lock_f( os_mutex_t* mutex_p );
 */
 uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p );
 
+
+/* Handler for os_exit System Call'.
+*/
+void os_exit_f( void );
+
 #endif

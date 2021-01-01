@@ -13,6 +13,9 @@ typedef struct {
 
 static os_tasks_ready_t os_tasks_ready;
 
+
+
+
 void os_scheduler_init( void ) {
 	os_tasks_ready.size = 0;
 	os_tasks_ready.head = 0;
@@ -104,18 +107,7 @@ void os_switch_f( void ) {
 		}
 	}
 	
-	
-	/*
-	//	Do nothing if there are no other tasks to run
-	//	TODO: queue can be empty while all tasks are blocked
-	if (nextTask == 0) {
-		return;
-	}
-	*/
-	
-	
-	
-	
+		
 	do {
 		nextTask = os_ready_remove();
 		
@@ -124,9 +116,7 @@ void os_switch_f( void ) {
 			if ( os_blocked_size() == 0 ) {
 				os_Control.state = OS_STATE_EXIT;
 				
-				//	TODO: Exit task
-				
-				return;
+				nextTask = &os_exit_task_handle;
 				
 			} else {
 				//	TODO: Dummy task to execute while other tasks are blocked

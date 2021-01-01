@@ -92,5 +92,12 @@ uint32_t os_mutex_lock( os_mutex_t* );
 uint32_t os_mutex_unlock( os_mutex_t* );
 
 
+/*	Shut down the OS.
+ *	Implemented in: EOS.c
+ *	Handled in: EOS_SysCalls.cs
+*/
+void os_exit( void );
+
+
 #endif
 

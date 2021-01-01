@@ -9,6 +9,10 @@ static os_mutex_t* mutex_array[OS_MAX_MUTEX_COUNT];
 static os_arrayList_t mutex_arraylist;
 os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
 
+os_TCB_t os_exit_task_handle;
+
+void os_exit_task( void * param);
+
 void os_task_switch_trigger( void ) {
 	SCB->ICSR |= 0x1 << 28;
 	__DSB();
@@ -88,6 +92,11 @@ void os_core_init( uint32_t os_tick_frq ) {
 	os_Control.os_tick_frq = os_tick_frq;
 	
 	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
+	
+	
+	//	Initialize OS Shutdown task
+	uint32_t* stack = (uint32_t*) os_exit_task_handle.stack;
+	os_arch_create_task( &os_exit_task, (uint32_t*) stack, &os_exit_task_handle.backed_up_registers, 0 );
 }
 
 
@@ -143,4 +152,11 @@ os_TCB_t* os_blocked_remove( os_TCB_t* E ) {
 
 uint32_t os_blocked_size( void ) {
 	return os_tasks_blocked.size;
+}
+
+extern void os_exit( void );
+
+void os_exit_task( void * param ) {
+	UNUSED( param );
+	os_exit();
 }
