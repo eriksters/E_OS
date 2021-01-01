@@ -2,8 +2,19 @@
 #include "EOS_Core.h"
 #include <stdio.h>
 
-
 /*
+#define ARRAY_SIZE	20
+
+static arrayList_t test_arrayList;
+static arrayList_h test_arrayList_h = &test_arrayList;
+static os_TCB_t * test_array[ARRAY_SIZE];
+
+static os_TCB_t test_tcb_1;
+static os_TCB_t test_tcb_2;
+static os_TCB_t test_tcb_3;
+
+
+
 void os_arrayList_test( void ){
 	
 	uint32_t contains = 0;
