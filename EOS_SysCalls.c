@@ -36,24 +36,31 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 
 void os_task_delete_f ( os_TCB_t* tcb ) {
 	
+	uint32_t isCurrentTask = ( tcb == 0 );
+	
 	//	Check if calling task or another task
-	if ( tcb == 0 ) {
+	if ( isCurrentTask ) {
 		tcb = os_ctrl_get_current_task();
 	}
 	
+	//	Remove from blocked
+	if ( tcb->state == OS_TASK_STATE_BLOCKED ) {
+		os_blocked_remove( tcb );
+	}
 	
-	//	Remove from scheduling
-		//	Set task status? 
-		//	Replace task in queue with 0?
-	
-	
-	//	Remove from blocked queue
-	os_blocked_remove( tcb );
-	
+	//	Set task state as Zombie and schedule for removal
+	if ( tcb->state != OS_TASK_STATE_READY && tcb->state != OS_TASK_STATE_RUNNING ) {
+		os_ready_add( tcb );
+	}
+	tcb->state = OS_TASK_STATE_ZOMBIE;
 	
 	//	Release resources
 		//	Loop through all mutexes, unlock any whose owner is the deleted task
 		//	Must store all mutexes somewhere
+	
+	if ( isCurrentTask ) {
+		os_task_switch_trigger();
+	}
 	
 }
 
