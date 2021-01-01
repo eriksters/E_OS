@@ -63,7 +63,7 @@ void os_task_delete ( os_TCB_t * tcb ) {
 }
 
 void os_start ( void ) {
-	os_Control.status = starting;
+	os_Control.state = OS_STATE_STARTING;
 	__asm("SVC #0x00");
 }
 

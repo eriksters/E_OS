@@ -75,22 +75,87 @@ os_TCB_t* os_ready_peek( void ) {
 }
 
 
-
+/*	Result is impacted by os state:
+ *	STARTING: Only picks the next task
+ *  RUNNING: Picks the next task and adds previous task back in queue
+ *
+ *	If previous task has been blocked or is in zombie state, do not add it back in queue.
+ *	If next task is blocked or in zombie state, do not set it as current task.
+ *  If next task is in zombie state, remove it from scheduling and set as deleted.
+*/
 void os_switch_f( void ) {
 	
-	os_TCB_t* nextTask = os_ready_remove();
+	os_TCB_t* previousTask = 0;
+	os_TCB_t* nextTask = 0;
 	
+	
+	if ( os_Control.state != OS_STATE_STARTING ) {
+		
+		previousTask = os_ctrl_get_current_task();
+		
+		//	Add previous task to the end of the queue, if it has not been deleted or blocked
+		if ( previousTask->state == OS_TASK_STATE_RUNNING ) {
+			os_ready_add( previousTask );
+			previousTask->state = OS_TASK_STATE_READY;
+		
+		//	If previous Task is in zombie state, change it to deleted
+		} else if ( previousTask->state == OS_TASK_STATE_ZOMBIE ) {
+			previousTask->state = OS_TASK_STATE_DELETED;
+		}
+	}
+	
+	
+	/*
 	//	Do nothing if there are no other tasks to run
 	//	TODO: queue can be empty while all tasks are blocked
 	if (nextTask == 0) {
 		return;
 	}
+	*/
 	
-	//	Add previous task to the end of the queue
-	if ( os_Control.status != block && os_Control.status != starting ) {
-		os_ready_add( os_Control.currentTask );
+	
+	
+	
+	do {
+		nextTask = os_ready_remove();
+		
+		if ( nextTask == 0 ) {
+			
+			if ( os_blocked_size() == 0 ) {
+				os_Control.state = OS_STATE_EXIT;
+				
+				//	TODO: Exit task
+				
+				return;
+				
+			} else {
+				//	TODO: Dummy task to execute while other tasks are blocked
+			}
+			
+			
+		}
+		
+	} while ( nextTask->state == OS_TASK_STATE_ZOMBIE || nextTask->state == OS_TASK_STATE_BLOCKED );
+	
+	
+	
+	/*
+	while ( nextTask->state == OS_TASK_STATE_ZOMBIE || nextTask->state == OS_TASK_STATE_BLOCKED ) {
+		
+		if ( nextTask->state == OS_TASK_STATE_ZOMBIE ) {
+			nextTask->state = OS_TASK_STATE_DELETED;
+		}
+		
+		nextTask = os_ready_remove();
+		
+		if ( nextTask == 0 ) {
+			return;
+		} 
 	}
+	*/
 	
 	//	Set next task as current task
 	os_Control.currentTask = nextTask;
 }
+
+

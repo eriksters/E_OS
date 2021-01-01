@@ -2,12 +2,17 @@
 
 os_Control_t os_Control;
 
-enum os_status_e os_ctrl_get_status( void ) {
-	return os_Control.status;
+os_State_t os_ctrl_get_state( void ) {
+	return os_Control.state;
 }
 
-void os_ctrl_set_status_running( void ) {
-	os_Control.status = running;
+void os_ctrl_set_task_state_running( void ) {
+	os_Control.currentTask->state = OS_TASK_STATE_RUNNING;
+}
+
+//	TODO: set to any state
+void os_ctrl_set_state_running( void ) {
+	os_Control.state = OS_STATE_RUNNING;
 }
 
 os_TCB_t* os_ctrl_get_current_task( void ) {

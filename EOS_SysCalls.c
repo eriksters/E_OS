@@ -5,15 +5,15 @@
 #include <stdio.h>
 
 void os_init( uint32_t os_tick_frq ) {
-	os_Control.status = init;
+	os_Control.state = OS_STATE_INIT;
 
 	os_core_init( os_tick_frq );
 	os_scheduler_init();
 	
-	os_Control.status = post_init;
+	os_Control.state = OS_STATE_POST_INIT;
 }
 
-//	TODO: Implement with SCI
+
 void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
 	
 	//	Stack is descending, so Stack Pointer must be set to end of the memory block
@@ -24,16 +24,21 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 	
 	os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers, params );
 	
+	if ( os_ready_add( tcb ) == tcb ) {
+		tcb->state = OS_TASK_STATE_READY;
+	} else {
+		//	TODO: Test how this works
+		tcb->state = OS_TASK_STATE_ZOMBIE;
+	}
 	
-	os_ready_add( tcb );
-	//os_Task_Queue[os_Control.taskCount] = tcb;
 	os_Control.taskCount++;
 }
+
 
 void os_start_f( void ) {
 	
 	printf("OS Start \n");
-	os_Control.status = starting;
+	os_Control.state = OS_STATE_STARTING;
 	
 	//	Do not start if no tasks have been created
 	if (os_Control.taskCount < 1) {
@@ -47,6 +52,7 @@ void os_start_f( void ) {
 	os_task_switch_trigger();
 }
 
+
 void os_release_f ( void ) {
 	printf("OS Release\n");
 	
@@ -54,6 +60,7 @@ void os_release_f ( void ) {
 	
 	os_task_switch_trigger();
 }
+
 
 void os_delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
@@ -64,21 +71,24 @@ void os_delay_f( uint32_t milliseconds ) {
 	
 	task->countdown = milliseconds / 10;
 	
-	os_Control.status = block;
+	task->state = OS_TASK_STATE_BLOCKED;
 	
 	os_tick_reset();
 	
 	os_task_switch_trigger();
 }
 
-void os_task_end_f ( void ) {
 
+void os_task_end_f ( void ) {
+	
 }
+
 
 uint32_t os_mutex_create_f( os_mutex_t* mutex_p ) {
 	UNUSED(mutex_p);
 	return 0;
 }
+
 
 uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
 
@@ -92,6 +102,7 @@ uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
 	
 	return 0;
 }
+
 
 uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p ) {
 	

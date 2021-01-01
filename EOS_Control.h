@@ -25,12 +25,17 @@ os_Registers_t* os_ctrl_get_current_task_reg( void );
 /* Returns status of the OS (from os_Control).
  * Used in assembly code.
 */
-enum os_status_e os_ctrl_get_status( void );
+os_State_t os_ctrl_get_state( void );
 
 
 /* Set OS status as running
  * Used in assembly code.
 */
-void os_ctrl_set_status_running( void );
+void os_ctrl_set_state_running( void );
+
+/* Set Current Task's state as running
+ * Used in assembly code
+*/
+void os_ctrl_set_task_state_running( void );
 
 #endif

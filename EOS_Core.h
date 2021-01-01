@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "EOS_Core_Arch.h"
+#include "EOS_Defines.h"
 
 /********************************************/
 /*								Defines										*/
@@ -14,6 +15,7 @@
 /*								TypeDefs									*/
 /********************************************/
 
+/*
 enum os_status_e {
 	pre_init,
 	init,
@@ -34,13 +36,13 @@ enum os_task_status_e {
 	deleted,
 	os_task_error = 0x0FFFFFFF
 };
-
+*/
 
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
 */
 typedef struct {
-	enum os_task_status_e status;
+	uint32_t state;
 	uint32_t countdown;
 	os_Registers_t backed_up_registers;
 	uint32_t stack[OS_TASK_STACK_SIZE / 4];
@@ -55,7 +57,7 @@ typedef struct {
 	uint32_t tick_counter;
 	uint32_t task_switch_tick_count;
 	uint32_t os_tick_frq;
-	enum os_status_e status;
+	uint32_t state;
 } os_Control_t;
 
 
@@ -67,6 +69,10 @@ typedef struct {
 	uint32_t max_size;
 } os_tasks_blocked_t;
 
+
+typedef uint32_t os_State_t;
+
+typedef uint32_t os_Task_State_t;
 
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
@@ -104,6 +110,11 @@ os_TCB_t* os_blocked_add( os_TCB_t* E );
  * Returns E if successful, NULL if task was not found or NULL passed as E.
 */
 os_TCB_t* os_blocked_remove( os_TCB_t* E );
+
+
+/* Get amount of blocked tasks.
+*/
+uint32_t os_blocked_size( void );
 
 
 /* Resume a blocked task.

@@ -118,7 +118,7 @@ void t2_func( void * params ) {
 				__NOP();
 			}
 		}
-		os_delay(2000);
+		os_delay(200);
 	}
 }
 

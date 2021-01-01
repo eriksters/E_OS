@@ -60,6 +60,7 @@ extern os_TCB_t* os_ready_add( os_TCB_t* E );
 
 void os_task_blocked_resume( os_TCB_t* task ) {
 	os_blocked_remove( task );
+	task->state = OS_TASK_STATE_READY;
 	os_ready_add( task );
 }
 
@@ -130,4 +131,9 @@ os_TCB_t* os_blocked_remove( os_TCB_t* E ) {
 	}
 	
 	return ret;
+}
+
+
+uint32_t os_blocked_size( void ) {
+	return os_tasks_blocked.size;
 }

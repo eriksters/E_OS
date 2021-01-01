@@ -1,3 +1,5 @@
+#include "EOS_Defines.h"
+
 				AREA 	|.text|, CODE, READONLY
 	
 				EXPORT	os_reg_restore
@@ -10,18 +12,19 @@
 				IMPORT  SVC_Handler_f
 				IMPORT  os_switch_f
 				IMPORT  os_ctrl_get_current_task_reg
-				IMPORT 	os_ctrl_get_status
-				IMPORT  os_ctrl_set_status_running
+				IMPORT 	os_ctrl_get_state
+				IMPORT  os_ctrl_set_state_running
+				IMPORT  os_ctrl_set_task_state_running
 
 PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
-				BL		os_ctrl_get_status
-				CMP		r0, #0x0				
+				BL		os_ctrl_get_state
+				CMP		r0, #OS_STATE_PRE_INIT				
 				BEQ		Pend_EXIT				;	Pre-init, do nothing
 				
-				CMP		r0, #0x3				
+				CMP		r0, #OS_STATE_STARTING				
 				BNE		Pend_Started			;	OS is started, so schedule normally
 				
 				BL		os_switch_f				;	OS is starting, so set os status and do not back up registers
@@ -32,8 +35,9 @@ Pend_Started	BL		os_reg_save
 				BL		os_switch_f
 				BL		os_reg_restore
 				
-Pend_Set_Start	BL		os_ctrl_set_status_running
-Pend_EXIT		POP		{pc}
+Pend_Set_Start	BL		os_ctrl_set_state_running
+Pend_EXIT		BL		os_ctrl_set_task_state_running
+				POP		{pc}
 	
 				ENDP
 				
@@ -46,7 +50,7 @@ SVC_Handler		PROC
 				;	Otherwise, keep generated EXC_RETURN value
 				
 				PUSH	{lr}
-				BL		os_ctrl_get_status
+				BL		os_ctrl_get_state
 				POP		{lr}
 				
 				CMP		r0, #3
