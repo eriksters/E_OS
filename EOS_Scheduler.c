@@ -97,7 +97,7 @@ void os_switch_f( void ) {
 		previousTask = os_ctrl_get_current_task();
 		
 		//	Add previous task to the end of the queue, if it has not been deleted or blocked
-		if ( previousTask->state == OS_TASK_STATE_RUNNING ) {
+		if ( previousTask->state == OS_TASK_STATE_RUNNING && previousTask != &os_wait_task_handle ) {
 			os_ready_add( previousTask );
 			previousTask->state = OS_TASK_STATE_READY;
 		
@@ -119,7 +119,9 @@ void os_switch_f( void ) {
 				nextTask = &os_exit_task_handle;
 				
 			} else {
-				//	TODO: Dummy task to execute while other tasks are blocked
+				
+				nextTask = &os_wait_task_handle;
+				
 			}
 			
 			
@@ -127,22 +129,7 @@ void os_switch_f( void ) {
 		
 	} while ( nextTask->state == OS_TASK_STATE_ZOMBIE || nextTask->state == OS_TASK_STATE_BLOCKED );
 	
-	
-	
-	/*
-	while ( nextTask->state == OS_TASK_STATE_ZOMBIE || nextTask->state == OS_TASK_STATE_BLOCKED ) {
-		
-		if ( nextTask->state == OS_TASK_STATE_ZOMBIE ) {
-			nextTask->state = OS_TASK_STATE_DELETED;
-		}
-		
-		nextTask = os_ready_remove();
-		
-		if ( nextTask == 0 ) {
-			return;
-		} 
-	}
-	*/
+
 	
 	//	Set next task as current task
 	os_Control.currentTask = nextTask;

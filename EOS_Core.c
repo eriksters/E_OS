@@ -10,8 +10,13 @@ static os_arrayList_t mutex_arraylist;
 os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
 
 os_TCB_t os_exit_task_handle;
+void os_exit_task( void * );
 
-void os_exit_task( void * param);
+os_TCB_t os_wait_task_handle;
+void os_wait_task( void * ) __attribute__((noreturn));
+
+
+
 
 void os_task_switch_trigger( void ) {
 	SCB->ICSR |= 0x1 << 28;
@@ -80,6 +85,8 @@ void os_task_blocked_resume( os_TCB_t* task ) {
 
 void os_core_init( uint32_t os_tick_frq ) {
 	
+	uint32_t* stack = 0;
+	
 	os_tasks_blocked.size = 0;
 	os_tasks_blocked.max_size = 10;
 	
@@ -99,8 +106,12 @@ void os_core_init( uint32_t os_tick_frq ) {
 	
 	
 	//	Initialize OS Shutdown task
-	uint32_t* stack = (uint32_t*) os_exit_task_handle.stack;
+	stack = (uint32_t*) os_exit_task_handle.stack;
 	os_arch_create_task( &os_exit_task, (uint32_t*) stack, &os_exit_task_handle.backed_up_registers, 0 );
+	
+	//	Initialize OS Wait task
+	stack = (uint32_t*) os_wait_task_handle.stack;
+	os_arch_create_task( &os_wait_task, (uint32_t*) stack, &os_wait_task_handle.backed_up_registers, 0 );
 }
 
 
@@ -163,4 +174,12 @@ extern void os_exit( void );
 void os_exit_task( void * param ) {
 	UNUSED( param );
 	os_exit();
+}
+
+void os_wait_task( void * param ) {
+	UNUSED( param );
+	//__asm("B	.");
+	for (;;) {
+		printf("OS Wait\n");
+	}
 }
