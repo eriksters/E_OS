@@ -146,6 +146,12 @@ static uint32_t* test_array[TEST_ARRAY_SIZE];
 
 void os_queue_test( void ) {
 	os_queue_init( test_queue_h, (void**) test_array, TEST_ARRAY_SIZE );
+	
+	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
+	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
+	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
+	os_queue_add( test_queue_h, (uint32_t*) 0x40 );
+	
 }
 
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
@@ -165,7 +171,23 @@ uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
 }
 
 uint32_t os_queue_add( os_queue_h handle, void * E ) {
-
+	
+	//	Error if E is NULL or queue is full
+	if ( handle->size == handle->max_size || E == 0 ) {
+		return 1;
+	}
+	
+	handle->tail++;
+	
+	//	Check for wrap-around
+	if ( handle->tail == handle->max_size ) {
+		handle->tail = 0;
+	}
+	
+	handle->array[handle->tail] = E;
+	handle->size++;
+	
+	return 0;
 }
 
 uint32_t os_queue_remove( os_queue_h handle, void* E ) {
