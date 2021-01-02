@@ -43,6 +43,7 @@ Pend_Exit		POP		{r0}
 
 				MOV		r0, #0x00
 				MSR		CONTROL, r0
+				ISB
 
 				MOV		r0, #0xFFFFFFF9
 				PUSH	{r0}
