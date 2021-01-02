@@ -70,7 +70,7 @@ uint32_t os_arrayList_size( os_arrayList_h handle );
 uint32_t os_arrayList_contains( os_arrayList_h handle, void* E );
 
 
-void os_queue_test( void );
+// void os_queue_test( void );
 
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size );
 

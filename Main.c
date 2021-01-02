@@ -178,7 +178,7 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	
-	os_queue_test();
+	// os_queue_test();
 	
 	os_init( 0 );
 	
