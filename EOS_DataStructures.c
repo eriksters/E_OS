@@ -152,6 +152,12 @@ void os_queue_test( void ) {
 	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
 	os_queue_add( test_queue_h, (uint32_t*) 0x40 );
 	
+	os_queue_remove( test_queue_h );
+	os_queue_remove( test_queue_h );
+	os_queue_remove( test_queue_h );
+	os_queue_remove( test_queue_h );
+	os_queue_remove( test_queue_h );
+	
 }
 
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
@@ -190,8 +196,29 @@ uint32_t os_queue_add( os_queue_h handle, void * E ) {
 	return 0;
 }
 
-uint32_t os_queue_remove( os_queue_h handle, void* E ) {
-
+void* os_queue_remove( os_queue_h handle ) {
+	
+	void* ret = 0;
+	
+	//	Return NULL if no elements in queue
+	if ( handle->size == 0 ) {
+		return 0;
+	}
+	
+	//	Get head element
+	ret = handle->array[handle->head];
+	
+	
+	handle->head++;
+	
+	//	Wrap-around
+	if ( handle->head == handle->max_size ) {
+		handle->head = 0;
+	}
+	
+	handle->size--;
+	
+	return ret;
 }
 
 uint32_t os_queue_size( os_queue_h handle ) {

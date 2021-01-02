@@ -76,7 +76,7 @@ uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size );
 
 uint32_t os_queue_add( os_queue_h handle, void * E );
 
-uint32_t os_queue_remove( os_queue_h handle, void* E );
+void* os_queue_remove( os_queue_h handle );
 
 uint32_t os_queue_size( os_queue_h handle );
 
