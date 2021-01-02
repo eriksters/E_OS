@@ -9,6 +9,10 @@ static os_mutex_t* mutex_array[OS_MAX_MUTEX_COUNT];
 static os_arrayList_t mutex_arraylist;
 os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
 
+static os_TCB_t* blocked_array[OS_MAX_TASK_COUNT];
+static os_arrayList_t blocked_arrayList;
+os_arrayList_h os_blocked_arrayList_handle = &blocked_arrayList;
+
 os_TCB_t os_exit_task_handle;
 void os_exit_task( void * );
 
@@ -34,34 +38,29 @@ __attribute__((weak)) void os_tick_reset( void ) {
 
 void os_tick( void ) {
 	
+	uint32_t size = 0;
+	
 	if ( os_Control.state == OS_STATE_RUNNING ) {
 	
 		os_Control.tick_counter++;
-	
+		
+		size = os_blocked_size();
+		
 		//	If there are blocked tasks
-		if ( os_tasks_blocked.size > 0 ) {
-			
-			uint32_t tasks_to_check = os_tasks_blocked.size;
+		if ( size > 0 ) {
 			
 			//	Loop through blocked tasks array
-			for ( uint32_t i = 0; i < os_tasks_blocked.max_size; i++ ) {
+			for ( uint32_t i = 0; i < size; i++ ) {
 				
-				os_TCB_t* task = os_tasks_blocked.testArray[i];
+				os_TCB_t* task = os_blocked_get( i );
+
+				task->countdown--;
 				
-				if (task != 0) {
-					task->countdown--;
-					
-					//	If countdown reaches 0, 
-					if ( task->countdown == 0 ) {
-						os_task_blocked_resume( task );
-					}
-					
-					//	If no more blocked tasks to check, break for loop
-					tasks_to_check--;
-					if (tasks_to_check == 0) {
-						break;
-					}
+				//	If countdown reaches 0, 
+				if ( task->countdown == 0 ) {
+					os_task_blocked_resume( task );
 				}
+				
 			} 
 		}
 	}
@@ -102,8 +101,11 @@ void os_core_init( uint32_t os_tick_frq ) {
 	
 	os_Control.os_tick_frq = os_tick_frq;
 	
-	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
+	//	Initialize Blocked Task ArrayList
+	os_arrayList_init( os_blocked_arrayList_handle, (void**) blocked_array, OS_MAX_TASK_COUNT );
 	
+	//	Initialize Mutex ArrayList
+	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
 	
 	//	Initialize OS Shutdown task
 	stack = (uint32_t*) os_exit_task_handle.stack;
@@ -117,6 +119,14 @@ void os_core_init( uint32_t os_tick_frq ) {
 
 os_TCB_t* os_blocked_add( os_TCB_t* E ) {
 	
+	if ( os_arrayList_add( os_blocked_arrayList_handle, E ) ) {
+		return 0;
+	}
+	
+	return E;
+	
+	
+	/*
 	os_TCB_t* ret = 0;
 	
 	if ( os_tasks_blocked.size >= os_tasks_blocked.max_size ) {
@@ -137,11 +147,19 @@ os_TCB_t* os_blocked_add( os_TCB_t* E ) {
 	}
 	
 	return ret;
+	*/
 }
 
 
 os_TCB_t* os_blocked_remove( os_TCB_t* E ) {
 	
+	if (os_arrayList_remove( os_blocked_arrayList_handle, E )) {
+		return 0;
+	}
+	
+	return E;
+	
+	/*
 	os_TCB_t* ret = 0;
 	
 	if ( os_tasks_blocked.size == 0 ) {
@@ -162,12 +180,23 @@ os_TCB_t* os_blocked_remove( os_TCB_t* E ) {
 	}
 	
 	return ret;
+	*/
 }
 
 
 uint32_t os_blocked_size( void ) {
-	return os_tasks_blocked.size;
+	
+	return os_arrayList_size( os_blocked_arrayList_handle );
+	
+	//	return os_tasks_blocked.size;
 }
+
+os_TCB_t* os_blocked_get( uint32_t index ) {
+	
+	return os_arrayList_get( os_blocked_arrayList_handle, index );
+
+}
+
 
 extern void os_exit( void );
 

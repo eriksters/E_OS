@@ -16,28 +16,6 @@
 /*								TypeDefs									*/
 /********************************************/
 
-/*
-enum os_status_e {
-	pre_init,
-	init,
-	post_init,
-	starting,
-	running,
-	block,
-	exit,
-	post_exit,
-	os_error = 0x0FFFFFFF
-};
-
-
-enum os_task_status_e {
-	ready,
-	blocked,
-	zombie,
-	deleted,
-	os_task_error = 0x0FFFFFFF
-};
-*/
 
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
@@ -62,18 +40,11 @@ typedef struct {
 } os_Control_t;
 
 
-/* Data structure for blocked tasks.
-*/
-typedef struct {
-	os_TCB_t* testArray[10];
-	uint32_t size;
-	uint32_t max_size;
-} os_tasks_blocked_t;
-
-
 typedef uint32_t os_State_t;
 
 typedef uint32_t os_Task_State_t;
+
+
 
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
@@ -89,6 +60,7 @@ typedef struct {
 /********************************************/
 
 extern os_arrayList_h os_mutex_arraylist_handle;
+extern os_arrayList_h os_blocked_arrayList_handle;
 extern os_TCB_t os_exit_task_handle;
 extern os_TCB_t os_wait_task_handle;
 
@@ -126,6 +98,11 @@ os_TCB_t* os_blocked_remove( os_TCB_t* E );
 /* Get amount of blocked tasks.
 */
 uint32_t os_blocked_size( void );
+
+
+/* Get blocked task by index.
+*/
+os_TCB_t* os_blocked_get( uint32_t index );
 
 
 /* Resume a blocked task.
