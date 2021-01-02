@@ -178,6 +178,8 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	
+	os_queue_test();
+	
 	os_init( 0 );
 	
 	os_mutex_create( &mutex_1 );

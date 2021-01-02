@@ -139,8 +139,29 @@ uint32_t os_arrayList_contains( os_arrayList_h handle, void* E ) {
 }
 //
 
-uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
+#define TEST_ARRAY_SIZE		10
+static os_queue_t test_queue;
+static os_queue_h test_queue_h = &test_queue;
+static uint32_t* test_array[TEST_ARRAY_SIZE];
 
+void os_queue_test( void ) {
+	os_queue_init( test_queue_h, (void**) test_array, TEST_ARRAY_SIZE );
+}
+
+uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
+	
+	//	Error if handle is NULL or array is NULL or size is less than 1
+	if ( handle == 0 || array == 0 || max_size < 1 ) {
+		return 1;
+	}
+	
+	handle->array = array;
+	handle->max_size = max_size;
+	handle->size = 0;
+	handle->head = 0;
+	handle->tail = max_size - 1;
+	
+	return 0;
 }
 
 uint32_t os_queue_add( os_queue_h handle, void * E ) {
