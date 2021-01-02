@@ -120,10 +120,7 @@ void os_task_blocked_resume( os_TCB_t* task);
 void os_core_init( uint32_t os_tick_frq );
 
 
-/* Triggers task switch on interrupt exit. 
- * In Cortex-M3: sets PendSV as pending.
-*/
-void os_task_switch_trigger( void );
+
 
 
 

@@ -20,11 +20,7 @@ void os_wait_task( void * ) __attribute__((noreturn));
 
 
 
-void os_task_switch_trigger( void ) {
-	SCB->ICSR |= 0x1 << 28;
-	__DSB();
-	__ISB();
-} 
+
 
 
 __attribute__((weak)) void os_tick_reset( void ) {

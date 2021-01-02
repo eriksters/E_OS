@@ -42,4 +42,10 @@ typedef struct {
 */
 void os_arch_create_task( void ( *func )( void * ), uint32_t* stack, os_Registers_t* regs, void * params );
 
+
+/* Triggers task switch on interrupt exit. 
+ * In Cortex-M3: sets PendSV as pending.
+*/
+void os_task_switch_trigger( void );
+
 #endif

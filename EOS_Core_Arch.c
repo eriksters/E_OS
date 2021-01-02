@@ -28,3 +28,10 @@ void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Regi
 	reg_backup->SP = ( uint32_t ) sp_stackedReg;
 	
 }
+
+
+void os_task_switch_trigger( void ) {
+	SCB->ICSR |= 0x1 << 28;
+	__DSB();
+	__ISB();
+} 
