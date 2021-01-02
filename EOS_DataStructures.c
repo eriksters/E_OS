@@ -235,3 +235,6 @@ void* os_queue_peek( os_queue_h handle ) {
 	return handle->array[handle->head];
 }
 
+uint32_t os_queue_is_full( os_queue_h handle ) {
+	return ( handle->size == handle->max_size );
+}

@@ -81,5 +81,7 @@ void* os_queue_remove( os_queue_h handle );
 uint32_t os_queue_size( os_queue_h handle );
 
 void* os_queue_peek( os_queue_h handle );
+
+uint32_t os_queue_is_full( os_queue_h handle );
 	
 #endif
