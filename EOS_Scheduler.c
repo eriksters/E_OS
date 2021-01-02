@@ -2,34 +2,15 @@
 #include "EOS_Control.h"
 #include <stdio.h>
 
-
-typedef struct {
-	os_TCB_t* q[OS_MAX_TASK_COUNT];
-	uint32_t head;
-	uint32_t tail;
-	uint32_t size;
-	uint32_t max_size;
-} os_tasks_ready_t;
-
-static os_tasks_ready_t os_tasks_ready;
-
-
 static os_queue_t os_tasks_ready_queue;
 static os_queue_h os_tasks_ready_queue_h = &os_tasks_ready_queue;
 static os_TCB_t* os_ready_array[OS_MAX_TASK_COUNT];
 
-void os_scheduler_init( void ) {
-	os_tasks_ready.size = 0;
-	os_tasks_ready.head = 0;
-	os_tasks_ready.tail = (OS_MAX_TASK_COUNT - 1);
-	os_tasks_ready.max_size = OS_MAX_TASK_COUNT;
-	
+void os_scheduler_init( void ) {	
 	
 	os_queue_init( os_tasks_ready_queue_h, (void**) os_ready_array, OS_MAX_TASK_COUNT );
-}
-
-
 	
+}
 
 uint32_t os_ready_isFull( void ) {
 	
