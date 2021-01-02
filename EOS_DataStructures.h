@@ -80,6 +80,6 @@ void* os_queue_remove( os_queue_h handle );
 
 uint32_t os_queue_size( os_queue_h handle );
 
-uint32_t os_queue_peek( os_queue_h handle, void* E );
+void* os_queue_peek( os_queue_h handle );
 	
 #endif
