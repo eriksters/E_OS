@@ -31,9 +31,9 @@ void os_scheduler_init( void ) {
 
 	
 
-int os_ready_isFull( void ) {
+uint32_t os_ready_isFull( void ) {
 	
-	return (os_tasks_ready.max_size == os_tasks_ready.size);
+	return os_queue_is_full( os_tasks_ready_queue_h );
 		
 }
 

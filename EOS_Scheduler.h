@@ -21,7 +21,7 @@ void os_switch_f( void );
  * Returns 1 if full, 0 if not.
  * Implemented in EOS_Scheduler.c
 */ 
-int os_ready_isFull( void );
+uint32_t os_ready_isFull( void );
 
 
 /* Add task to ready ready task data structure. 
