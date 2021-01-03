@@ -54,9 +54,9 @@ void os_task_delete_f ( os_task_h task ) {
 
 	
 	//	Release resources
-	mutexArraySize = os_arrayList_size( os_mutex_arraylist_handle );
+	mutexArraySize = os_arraylist_size( os_mutex_arraylist_handle );
 	for ( uint32_t i = 0; i < mutexArraySize; i++ ) {
-		mutex_p = os_arrayList_get( os_mutex_arraylist_handle, i );
+		mutex_p = os_arraylist_get( os_mutex_arraylist_handle, i );
 		if ( mutex_p->owner == task ) {
 			mutex_p->owner = 0;
 		}
@@ -120,12 +120,12 @@ void os_task_end_f ( void ) {
 os_mutex_h os_mutex_create_f( os_mutex_t* mutex_p ) {
 	
 	//	Error if mutex is already initialized
-	if ( os_arrayList_contains( os_mutex_arraylist_handle, mutex_p ) ) {
+	if ( os_arraylist_contains( os_mutex_arraylist_handle, mutex_p ) ) {
 		return 0;
 	}
 	
 	//	Error if mutex can not be added to mutex list
-	if (os_arrayList_add( os_mutex_arraylist_handle, mutex_p )) {
+	if (os_arraylist_add( os_mutex_arraylist_handle, mutex_p )) {
 		return 0;
 	}
 	

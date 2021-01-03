@@ -5,8 +5,8 @@
 /*
 #define ARRAY_SIZE	20
 
-static os_arrayList_t test_arrayList;
-static os_arrayList_h test_os_arrayList_h = &test_arrayList;
+static os_arraylist_t test_arraylist;
+static os_arraylist_h test_os_arraylist_h = &test_arraylist;
 static os_TCB_t * test_array[ARRAY_SIZE];
 
 static os_TCB_t test_tcb_1;
@@ -15,43 +15,43 @@ static os_TCB_t test_tcb_3;
 
 
 
-void os_os_arrayList_test( void ){
+void os_os_arraylist_test( void ){
 	
 	uint32_t contains = 0;
 	
-	os_arrayList_init( test_os_arrayList_h, (void **) test_array, ARRAY_SIZE );
+	os_arraylist_init( test_os_arraylist_h, (void **) test_array, ARRAY_SIZE );
 	
-	os_arrayList_add( test_os_arrayList_h, &test_tcb_1 );
-	os_arrayList_add( test_os_arrayList_h, &test_tcb_2 );
-	os_arrayList_add( test_os_arrayList_h, &test_tcb_3 );
+	os_arraylist_add( test_os_arraylist_h, &test_tcb_1 );
+	os_arraylist_add( test_os_arraylist_h, &test_tcb_2 );
+	os_arraylist_add( test_os_arraylist_h, &test_tcb_3 );
 	
-	contains = os_arrayList_contains( test_os_arrayList_h, &test_tcb_2 );
+	contains = os_arraylist_contains( test_os_arraylist_h, &test_tcb_2 );
 	
-	os_arrayList_remove( test_os_arrayList_h, &test_tcb_2);
+	os_arraylist_remove( test_os_arraylist_h, &test_tcb_2);
 	
-	contains = os_arrayList_contains( test_os_arrayList_h, &test_tcb_2 );
+	contains = os_arraylist_contains( test_os_arraylist_h, &test_tcb_2 );
 	
 	__NOP();
 } 
 */
 
-uint32_t os_arrayList_init( os_arrayList_h handle, void** array, uint32_t max_size ) {
+os_arraylist_h os_arraylist_init( os_arraylist_t* arraylist_p, void** array, uint32_t max_size ) {
 	
-	//	Error if handle is NULL or array is NULL or size is 0 
-	if ( max_size == 0 || array == 0 || handle == 0 ) {
-		return 1;
+	//	Error if arraylist_p is NULL or array is NULL or size is 0 
+	if ( max_size == 0 || array == 0 || arraylist_p == 0 ) {
+		return 0;
 	}
 	
-	handle->max_size = max_size;
-	handle->array = array;
+	arraylist_p->max_size = max_size;
+	arraylist_p->array = array;
 	
-	return 0;
+	return (os_arraylist_h) arraylist_p;
 }
 
 
-uint32_t os_arrayList_add( os_arrayList_h handle, void* E ) {
+uint32_t os_arraylist_add( os_arraylist_h handle, void* E ) {
 	
-	//	Error if arrayList is full or element is NULL
+	//	Error if arraylist is full or element is NULL
 	if ( handle->size == handle->max_size || E == 0 ) {
 		return 1;
 	}
@@ -65,7 +65,7 @@ uint32_t os_arrayList_add( os_arrayList_h handle, void* E ) {
 }
 
 
-uint32_t os_arrayList_remove( os_arrayList_h handle, void* E ) {
+uint32_t os_arraylist_remove( os_arraylist_h handle, void* E ) {
 	
 	uint32_t found = 0;
 	uint32_t index = 0;
@@ -104,7 +104,7 @@ uint32_t os_arrayList_remove( os_arrayList_h handle, void* E ) {
 }
 
 
-void* os_arrayList_get( os_arrayList_h handle, uint32_t index ) {
+void* os_arraylist_get( os_arraylist_h handle, uint32_t index ) {
 	
 	//	Error if index is out of bounds
 	if ( index >= handle->max_size ) {
@@ -114,11 +114,11 @@ void* os_arrayList_get( os_arrayList_h handle, uint32_t index ) {
 	return handle->array[index];
 }
 
-uint32_t os_arrayList_size( os_arrayList_h handle ) {
+uint32_t os_arraylist_size( os_arraylist_h handle ) {
 	return handle->size;
 }
 
-uint32_t os_arrayList_contains( os_arrayList_h handle, void* E ) {
+uint32_t os_arraylist_contains( os_arraylist_h handle, void* E ) {
 	
 	uint32_t found = 0;
 	
@@ -175,20 +175,20 @@ void os_queue_test( void ) {
 */
 
 
-uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
+os_queue_h os_queue_init( os_queue_t* queue_p, void** array, uint32_t max_size ) {
 	
-	//	Error if handle is NULL or array is NULL or size is less than 1
-	if ( handle == 0 || array == 0 || max_size < 1 ) {
-		return 1;
+	//	Error if queue_p is NULL or array is NULL or size is less than 1
+	if ( queue_p == 0 || array == 0 || max_size < 1 ) {
+		return 0;
 	}
 	
-	handle->array = array;
-	handle->max_size = max_size;
-	handle->size = 0;
-	handle->head = 0;
-	handle->tail = max_size - 1;
+	queue_p->array = array;
+	queue_p->max_size = max_size;
+	queue_p->size = 0;
+	queue_p->head = 0;
+	queue_p->tail = max_size - 1;
 	
-	return 0;
+	return (os_queue_h) queue_p;
 }
 
 uint32_t os_queue_add( os_queue_h handle, void * E ) {

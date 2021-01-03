@@ -3,18 +3,18 @@
 #include "EOS_Workers.h"
 #include <stdio.h>
 
-static os_task_h os_ready_array[OS_MAX_TASK_COUNT];
-static os_queue_t os_tasks_ready_queue;
-static os_queue_h os_ready_tasks_queue_H = &os_tasks_ready_queue;
+static os_task_h os_ready_tasks_array[OS_MAX_TASK_COUNT];
+static os_queue_t os_ready_tasks_queue;
+static os_queue_h os_ready_tasks_queue_H;
 
 
-static os_task_h os_blocked_array[OS_MAX_TASK_COUNT];
-static os_arrayList_t blocked_arrayList;
-static os_arrayList_h os_blocked_tasks_arrayList_H = &blocked_arrayList;
+static os_task_h os_blocked_tasks_array[OS_MAX_TASK_COUNT];
+static os_arraylist_t os_blocked_tasks_arraylist;
+static os_arraylist_h os_blocked_tasks_arraylist_H;
 
 void os_scheduler_init( void ) {	
-	os_queue_init( os_ready_tasks_queue_H, (void**) os_ready_array, OS_MAX_TASK_COUNT );	
-	os_arrayList_init( os_blocked_tasks_arrayList_H, (void**) os_blocked_array, OS_MAX_TASK_COUNT );
+	os_ready_tasks_queue_H = os_queue_init( &os_ready_tasks_queue, (void**) os_ready_tasks_array, OS_MAX_TASK_COUNT );	
+	os_blocked_tasks_arraylist_H = os_arraylist_init( &os_blocked_tasks_arraylist, (void**) os_blocked_tasks_array, OS_MAX_TASK_COUNT );
 }
 
 /*	Result is impacted by os state:
@@ -83,7 +83,7 @@ void os_schedule_task( os_task_h task ) {
 
 void os_deschedule_task( os_task_h task ) {
 	
-	os_arrayList_remove( os_blocked_tasks_arrayList_H, task );
+	os_arraylist_remove( os_blocked_tasks_arraylist_H, task );
 	
 	if ( task->state == OS_TASK_STATE_RUNNING ) {
 		task->state = OS_TASK_STATE_DELETED;
@@ -103,7 +103,7 @@ void os_block_task( os_task_h task ) {
 		return;
 	}
 	
-	os_arrayList_add( os_blocked_tasks_arrayList_H, task );
+	os_arraylist_add( os_blocked_tasks_arraylist_H, task );
 	
 	task->state = OS_TASK_STATE_BLOCKED;
 }
@@ -116,7 +116,7 @@ void os_unblock_task( os_task_h task ) {
 		return;
 	}
 	
-	os_arrayList_remove( os_blocked_tasks_arrayList_H, task );
+	os_arraylist_remove( os_blocked_tasks_arraylist_H, task );
 	task->state = OS_TASK_STATE_READY;
 	
 	//	Add task back to scheduling queue
@@ -125,11 +125,11 @@ void os_unblock_task( os_task_h task ) {
 
 
 uint32_t os_get_blocked_task_amount( void ) {
-	return os_arrayList_size( os_blocked_tasks_arrayList_H );
+	return os_arraylist_size( os_blocked_tasks_arraylist_H );
 }
 
 os_TCB_t* os_get_blocked_task_by_index( uint32_t index ) {
-	return os_arrayList_get( os_blocked_tasks_arrayList_H, index );
+	return os_arraylist_get( os_blocked_tasks_arraylist_H, index );
 }
 
 

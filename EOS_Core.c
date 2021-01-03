@@ -6,8 +6,8 @@
 #include "EOS_Workers.h"
 
 static os_mutex_t* mutex_array[OS_MAX_MUTEX_COUNT];
-static os_arrayList_t mutex_arraylist;
-os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
+static os_arraylist_t mutex_arraylist;
+os_arraylist_h os_mutex_arraylist_handle = &mutex_arraylist;
 
 
 
@@ -62,8 +62,8 @@ void os_core_init( uint32_t os_tick_frq ) {
 	
 	os_Control.os_tick_frq = os_tick_frq;
 	
-	//	Initialize Mutex ArrayList
-	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
+	//	Initialize Mutex Arraylist
+	os_arraylist_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
 	
 	//	Initialize OS Shutdown task
 	stack = (uint32_t*) os_exit_worker_H.stack;

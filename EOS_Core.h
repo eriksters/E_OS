@@ -57,8 +57,7 @@ typedef os_mutex_t* os_mutex_h;
 /*								Data 											*/
 /********************************************/
 
-extern os_arrayList_h os_mutex_arraylist_handle;
-extern os_arrayList_h os_blocked_arrayList_handle;
+extern os_arraylist_h os_mutex_arraylist_handle;
 
 
 
