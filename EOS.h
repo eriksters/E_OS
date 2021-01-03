@@ -30,7 +30,7 @@ void os_init( uint32_t os_tick_frq );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_task_create ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
+os_task_h os_task_create ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
 
 
 /*	Start the OS.

@@ -10,7 +10,7 @@ void os_start_f( void );
 
 /* Handler for os_task_create System Call.
 */
-void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
+os_task_h os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
 
 
 /* Handler for os_task_delete System Call.

@@ -188,7 +188,12 @@ int main() {
 	printf("Creating Tasks\n");
 	
 	t1_params.dummy_number = 69;
-	os_task_create(&t1_func, &t1_tcb, &t1_params);
+	
+	os_task_h handle;
+	
+	for ( uint32_t i = 0; i < 20; i++ ) {
+		handle = os_task_create(&t1_func, &t1_tcb, &t1_params);
+	}
 	
 	t2_params.dummy_number = 420;
 	t2_params.dummy_pointer = &mutex_1;

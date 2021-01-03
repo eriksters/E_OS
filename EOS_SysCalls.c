@@ -15,11 +15,13 @@ void os_init( uint32_t os_tick_frq ) {
 }
 
 
-void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
+os_task_h os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
 	
 	//	Stack is descending, so Stack Pointer must be set to end of the memory block
 	//	The EXC_RETURN automatically restores several registers, which are stored on the task stack,
 	//	so the SP is adjusted to make sure this happens correctly
+	
+	os_task_h ret = 0;
 	
 	if ( os_Control.taskCount < OS_MAX_TASK_COUNT ) {
 		uint32_t* stack = (uint32_t*) tcb->stack;
@@ -28,17 +30,12 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 		
 		os_schedule_task( tcb );
 		
-		/*
-		if ( os_ready_add( tcb ) == tcb ) {
-			tcb->state = OS_TASK_STATE_READY;
-		} else {
-			//	TODO: Test how this works
-			tcb->state = OS_TASK_STATE_ZOMBIE;
-		}
-		*/
-		
 		os_Control.taskCount++;
+		
+		ret = (os_task_h) tcb;
 	}
+	
+	return ret;
 }
 
 void os_task_delete_f ( os_task_h task ) {

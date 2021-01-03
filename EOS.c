@@ -30,7 +30,7 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 		
 		//	Task Create
 		case 2:
-			os_task_create_f( (void (*) (void *)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1, (void *) stackedRegisters->R2 );
+			ret = (uint32_t) os_task_create_f( (void (*) (void *)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1, (void *) stackedRegisters->R2 );
 			break;
 		
 		//	Delay
@@ -82,11 +82,14 @@ void os_release ( void ) {
 	__asm("SVC #0x01");
 }
 
-void os_task_create( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
+os_task_h os_task_create( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
+	os_task_h ret;
 	UNUSED(func);
 	UNUSED(tcb);
 	UNUSED(params);
 	__asm("SVC #0x02");
+	__asm("mov %0, r0" : "=r" (ret));
+	return ret;
 } 
 
 
@@ -119,8 +122,8 @@ uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
-void os_task_delete ( os_task_h tcb ) {
-	UNUSED(tcb);
+void os_task_delete ( os_task_h task ) {
+	UNUSED(task);
 	__asm("SVC #0x07");
 }
 
