@@ -1,5 +1,6 @@
 #include "EOS_Scheduler.h"
 #include "EOS_Control.h"
+#include "EOS_Workers.h"
 #include <stdio.h>
 
 static os_TCB_t* os_ready_array[OS_MAX_TASK_COUNT];
@@ -35,7 +36,7 @@ void os_switch_current_task( void ) {
 		previousTask = os_ctrl_get_current_task();
 		
 		//	Add previous task to the end of the queue, if it has not been deleted or blocked
-		if ( previousTask->state == OS_TASK_STATE_RUNNING && previousTask != &os_wait_task_handle ) {
+		if ( previousTask->state == OS_TASK_STATE_RUNNING && previousTask != &os_wait_worker_H ) {
 			os_queue_add( os_ready_tasks_queue_H, previousTask );		//os_ready_add( previousTask );
 			previousTask->state = OS_TASK_STATE_READY;
 		
@@ -55,12 +56,12 @@ void os_switch_current_task( void ) {
 			//	And also no blocked tasks, then shut down OS
 			if ( os_get_blocked_task_amount() == 0 ) {
 				os_Control.state = OS_STATE_EXIT;
-				nextTask = &os_exit_task_handle;
+				nextTask = &os_exit_worker_H;
 			
 			//	But there are blocked tasks, then run empty code
 			//	Here low-power setting could be used
 			} else {
-				nextTask = &os_wait_task_handle;
+				nextTask = &os_wait_worker_H;
 			}
 		}
 	} while ( nextTask->state == OS_TASK_STATE_ZOMBIE || nextTask->state == OS_TASK_STATE_BLOCKED );

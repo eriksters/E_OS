@@ -61,8 +61,8 @@ typedef struct {
 
 extern os_arrayList_h os_mutex_arraylist_handle;
 extern os_arrayList_h os_blocked_arrayList_handle;
-extern os_TCB_t os_exit_task_handle;
-extern os_TCB_t os_wait_task_handle;
+extern os_TCB_t os_exit_worker_H;
+extern os_TCB_t os_wait_worker_H;
 
 
 

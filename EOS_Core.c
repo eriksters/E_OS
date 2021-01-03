@@ -3,17 +3,12 @@
 
 #include <stdio.h>
 #include "EOS_Scheduler.h"
+#include "EOS_Workers.h"
 
 static os_mutex_t* mutex_array[OS_MAX_MUTEX_COUNT];
 static os_arrayList_t mutex_arraylist;
 os_arrayList_h os_mutex_arraylist_handle = &mutex_arraylist;
 
-
-os_TCB_t os_exit_task_handle;
-void os_exit_task( void * );
-
-os_TCB_t os_wait_task_handle;
-void os_wait_task( void * ) __attribute__((noreturn));
 
 
 void os_tick( void ) {
@@ -72,26 +67,13 @@ void os_core_init( uint32_t os_tick_frq ) {
 	os_arrayList_init( os_mutex_arraylist_handle, (void**) mutex_array, OS_MAX_MUTEX_COUNT );
 	
 	//	Initialize OS Shutdown task
-	stack = (uint32_t*) os_exit_task_handle.stack;
-	os_arch_create_task( &os_exit_task, (uint32_t*) stack, &os_exit_task_handle.backed_up_registers, 0 );
+	stack = (uint32_t*) os_exit_worker_H.stack;
+	os_arch_create_task( &os_exit_task, (uint32_t*) stack, &os_exit_worker_H.backed_up_registers, 0 );
 	
 	//	Initialize OS Wait task
-	stack = (uint32_t*) os_wait_task_handle.stack;
-	os_arch_create_task( &os_wait_task, (uint32_t*) stack, &os_wait_task_handle.backed_up_registers, 0 );
+	stack = (uint32_t*) os_wait_worker_H.stack;
+	os_arch_create_task( &os_wait_task, (uint32_t*) stack, &os_wait_worker_H.backed_up_registers, 0 );
 }
 
 
-extern void os_exit( void );
 
-void os_exit_task( void * param ) {
-	UNUSED( param );
-	os_exit();
-}
-
-void os_wait_task( void * param ) {
-	UNUSED( param );
-	//__asm("B	.");
-	for (;;) {
-		printf("OS Wait\n");
-	}
-}

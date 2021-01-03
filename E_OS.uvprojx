@@ -428,6 +428,11 @@
               <FileType>1</FileType>
               <FilePath>.\EOS_DataStructures.c</FilePath>
             </File>
+            <File>
+              <FileName>EOS_Workers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Workers.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -482,6 +487,11 @@
               <FileName>EOS_DataStructures.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_DataStructures.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Workers.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Workers.h</FilePath>
             </File>
           </Files>
         </Group>
