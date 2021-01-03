@@ -37,13 +37,12 @@ typedef struct {
 /* 								Functions 							 */
 /*******************************************/
 
-/*
- *
+/* Initialize architecture specific hardware.
 */
 void os_arch_start( void );
 
-/*
- *
+
+/* Initialize a task's backed up registers to hardware requirements.
 */
 void os_arch_create_task( void ( *func )( void * ), uint32_t* stack, os_Registers_t* regs, void * params );
 

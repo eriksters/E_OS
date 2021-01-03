@@ -77,34 +77,6 @@ extern os_TCB_t os_wait_task_handle;
 void os_tick( void );
 
 
-/* Add task to blocked task data structure.
- * Returns E if successful, NULL if data structure is full or NULL is passed as E.
-*/
-os_TCB_t* os_blocked_add( os_TCB_t* E );
-
-
-/* Remove task from blocked task data structure.
- * Returns E if successful, NULL if task was not found or NULL passed as E.
-*/
-os_TCB_t* os_blocked_remove( os_TCB_t* E );
-
-
-/* Get amount of blocked tasks.
-*/
-uint32_t os_blocked_size( void );
-
-
-/* Get blocked task by index.
-*/
-os_TCB_t* os_blocked_get( uint32_t index );
-
-
-/* Resume a blocked task.
- * Removes task from blocked data structure and sets it up for execution.
-*/
-void os_task_blocked_resume( os_TCB_t* task);
-
-
 /* Initialize Core data structures.
  * Must be called before tasks are created and OS started.
  * Called automatically from os_init.
@@ -112,6 +84,39 @@ void os_task_blocked_resume( os_TCB_t* task);
  * If Sys_Tick is used and configured, system clock is configured and SystemCoreClock is updated, 0 can be passed to calculate os_tick_frq automatically.
 */
 void os_core_init( uint32_t os_tick_frq );
+
+
+
+
+/* Add task to blocked task data structure.
+ * Returns E if successful, NULL if data structure is full or NULL is passed as E.
+*/
+// os_TCB_t* os_blocked_add( os_TCB_t* E );
+
+
+/* Remove task from blocked task data structure.
+ * Returns E if successful, NULL if task was not found or NULL passed as E.
+*/
+// os_TCB_t* os_blocked_remove( os_TCB_t* E );
+
+
+/* Get amount of blocked tasks.
+*/
+// uint32_t os_blocked_size( void );
+
+
+/* Get blocked task by index.
+*/
+// os_TCB_t* os_blocked_get( uint32_t index );
+
+
+/* Resume a blocked task.
+ * Removes task from blocked data structure and sets it up for execution.
+*/
+// void os_task_blocked_resume( os_TCB_t* task);
+
+
+
 
 
 

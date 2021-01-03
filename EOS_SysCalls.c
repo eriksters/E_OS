@@ -21,18 +21,24 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 	//	The EXC_RETURN automatically restores several registers, which are stored on the task stack,
 	//	so the SP is adjusted to make sure this happens correctly
 	
-	uint32_t* stack = (uint32_t*) tcb->stack;
-	
-	os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers, params );
-	
-	if ( os_ready_add( tcb ) == tcb ) {
-		tcb->state = OS_TASK_STATE_READY;
-	} else {
-		//	TODO: Test how this works
-		tcb->state = OS_TASK_STATE_ZOMBIE;
+	if ( os_Control.taskCount < OS_MAX_TASK_COUNT ) {
+		uint32_t* stack = (uint32_t*) tcb->stack;
+		
+		os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers, params );
+		
+		os_schedule_task( tcb );
+		
+		/*
+		if ( os_ready_add( tcb ) == tcb ) {
+			tcb->state = OS_TASK_STATE_READY;
+		} else {
+			//	TODO: Test how this works
+			tcb->state = OS_TASK_STATE_ZOMBIE;
+		}
+		*/
+		
+		os_Control.taskCount++;
 	}
-	
-	os_Control.taskCount++;
 }
 
 void os_task_delete_f ( os_TCB_t* tcb ) {
@@ -46,16 +52,22 @@ void os_task_delete_f ( os_TCB_t* tcb ) {
 		tcb = os_ctrl_get_current_task();
 	}
 	
-	//	Remove from blocked
+	//	Schedule for removal
+	os_deschedule_task( tcb );
+	
+	/*
 	if ( tcb->state == OS_TASK_STATE_BLOCKED ) {
 		os_blocked_remove( tcb );
 	}
+	*/
 	
 	//	Set task state as Zombie and schedule for removal
+	/*
 	if ( tcb->state != OS_TASK_STATE_READY && tcb->state != OS_TASK_STATE_RUNNING ) {
 		os_ready_add( tcb );
 	}
 	tcb->state = OS_TASK_STATE_ZOMBIE;
+	*/
 	
 	//	Release resources
 	mutexArraySize = os_arrayList_size( os_mutex_arraylist_handle );
@@ -104,11 +116,9 @@ void os_delay_f( uint32_t milliseconds ) {
 	
 	os_TCB_t* task = os_ctrl_get_current_task();
 	
-	os_blocked_add( task );
+	os_block_task( task );
 	
 	task->countdown = milliseconds / 10;
-	
-	task->state = OS_TASK_STATE_BLOCKED;
 	
 	os_tick_reset();
 	
