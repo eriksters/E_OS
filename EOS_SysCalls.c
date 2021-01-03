@@ -82,9 +82,8 @@ void os_start_f( void ) {
 		return;
 	}
 	
-	//	Set System to use PSP in thread mode
-	__set_CONTROL(0x02);
-	__ISB();
+	//	Set up hardware (stack pointer selection and interrupt priorities)
+	os_arch_start();
 		
 	//	Start the OS
 	os_task_switch_trigger();

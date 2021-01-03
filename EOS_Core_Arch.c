@@ -1,6 +1,15 @@
 #include "EOS_Core_Arch.h"
+#include "stm32f10x.h"
 
 extern void os_task_end( void );
+
+void os_arch_start( void ) {
+	NVIC_SetPriority( PendSV_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL );
+	NVIC_SetPriority( SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 2UL );
+	
+	__set_CONTROL(0x02);
+	__ISB();
+}
 
 void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Registers_t* reg_backup, void * params ) {
 
