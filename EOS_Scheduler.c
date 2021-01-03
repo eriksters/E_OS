@@ -131,26 +131,4 @@ os_TCB_t* os_get_blocked_task_by_index( uint32_t index ) {
 	return os_arrayList_get( os_blocked_tasks_arrayList_H, index );
 }
 
-/*
-os_TCB_t* os_ready_add( os_TCB_t* E ) {
-	if ( os_queue_add( os_ready_tasks_queue_H, E ) ) {
-		return 0;
-	}
-	
-	return E;
-}
-
-
-os_TCB_t* os_ready_remove( void ) {
-	return (os_TCB_t*) os_queue_remove( os_ready_tasks_queue_H );
-}
-
-
-os_TCB_t* os_ready_peek( void ) {
-	return (os_TCB_t*) os_queue_peek( os_ready_tasks_queue_H );
-}
-*/
-
-
-
 
