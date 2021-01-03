@@ -41,39 +41,26 @@ void os_task_create_f ( void ( *func )( void * ), os_TCB_t* tcb, void * params )
 	}
 }
 
-void os_task_delete_f ( os_TCB_t* tcb ) {
+void os_task_delete_f ( os_task_h task ) {
 	
 	uint32_t mutexArraySize = 0;
 	os_mutex_t* mutex_p = 0;
-	uint32_t isCurrentTask = ( tcb == 0 );
+	uint32_t isCurrentTask = ( task == 0 );
 	
 	//	Check if calling task or another task
 	if ( isCurrentTask ) {
-		tcb = os_ctrl_get_current_task();
+		task = os_ctrl_get_current_task();
 	}
 	
 	//	Schedule for removal
-	os_deschedule_task( tcb );
-	
-	/*
-	if ( tcb->state == OS_TASK_STATE_BLOCKED ) {
-		os_blocked_remove( tcb );
-	}
-	*/
-	
-	//	Set task state as Zombie and schedule for removal
-	/*
-	if ( tcb->state != OS_TASK_STATE_READY && tcb->state != OS_TASK_STATE_RUNNING ) {
-		os_ready_add( tcb );
-	}
-	tcb->state = OS_TASK_STATE_ZOMBIE;
-	*/
+	os_deschedule_task( task );
+
 	
 	//	Release resources
 	mutexArraySize = os_arrayList_size( os_mutex_arraylist_handle );
 	for ( uint32_t i = 0; i < mutexArraySize; i++ ) {
 		mutex_p = os_arrayList_get( os_mutex_arraylist_handle, i );
-		if ( mutex_p->owner == tcb ) {
+		if ( mutex_p->owner == task ) {
 			mutex_p->owner = 0;
 		}
 	}
@@ -114,7 +101,7 @@ void os_release_f ( void ) {
 void os_delay_f( uint32_t milliseconds ) {
 	printf("Milliseconds: %d\n", milliseconds);
 	
-	os_TCB_t* task = os_ctrl_get_current_task();
+	os_task_h task = os_ctrl_get_current_task();
 	
 	os_block_task( task );
 	

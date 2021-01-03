@@ -2,7 +2,7 @@
 
 os_Control_t os_Control;
 
-os_State_t os_ctrl_get_state( void ) {
+os_state_t os_ctrl_get_state( void ) {
 	return os_Control.state;
 }
 

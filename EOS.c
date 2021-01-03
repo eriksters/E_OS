@@ -55,7 +55,7 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
 		
 		//	Task Delete
 		case 7:
-			os_task_delete_f( (os_TCB_t*) stackedRegisters->R0 );
+			os_task_delete_f( (os_task_h) stackedRegisters->R0 );
 			break;
 		
 		//	Task End
@@ -119,7 +119,7 @@ uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
-void os_task_delete ( os_TCB_t * tcb ) {
+void os_task_delete ( os_task_h tcb ) {
 	UNUSED(tcb);
 	__asm("SVC #0x07");
 }

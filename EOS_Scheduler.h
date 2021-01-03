@@ -21,26 +21,26 @@ void os_switch_current_task( void );
  * Called when a task is first created and when a task is unblocked.
  * Implemented in EOS_Sheduler.c
 */
-void os_schedule_task( os_TCB_t* task );
+void os_schedule_task( os_task_h task );
 
 
 /* Deschedule a task.
  * Called when a task finishes or when a task is deleted.
  * Implemented in EOS_Sheduler.c
 */
-void os_deschedule_task( os_TCB_t* task );
+void os_deschedule_task( os_task_h task );
 
 
 /* Block a task.
  * Implemented in EOS_Sheduler.c
 */
-void os_block_task( os_TCB_t* task );
+void os_block_task( os_task_h task );
 
 
 /* Unblock a task.
  * Implemented in EOS_Sheduler.c
 */
-void os_unblock_task( os_TCB_t* task );
+void os_unblock_task( os_task_h task );
 
 
 /* Get amount of blocked tasks.
@@ -52,7 +52,7 @@ uint32_t os_get_blocked_task_amount( void );
 /* Get a blocked task by its index.
  * Implemented in EOS_Sheduler.c
 */
-os_TCB_t* os_get_blocked_task_by_index( uint32_t index );
+os_task_h os_get_blocked_task_by_index( uint32_t index );
 
 
 #endif

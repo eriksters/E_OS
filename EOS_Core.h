@@ -16,33 +16,34 @@
 /*								TypeDefs									*/
 /********************************************/
 
+typedef uint32_t os_state_t;
+typedef uint32_t os_task_state_t;
 
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
 */
 typedef struct {
-	uint32_t state;
+	os_task_state_t state;
 	uint32_t countdown;
 	os_Registers_t backed_up_registers;
 	uint32_t stack[OS_TASK_STACK_SIZE / 4];
 } os_TCB_t;
 
+typedef os_TCB_t* os_task_h;
 
 /* Contains state and configuration of the OS.
 */
 typedef struct {
+	os_state_t state;
 	uint32_t taskCount;
-	os_TCB_t* currentTask;
+	os_task_h currentTask;
 	uint32_t tick_counter;
 	uint32_t task_switch_tick_count;
 	uint32_t os_tick_frq;
-	uint32_t state;
 } os_Control_t;
 
 
-typedef uint32_t os_State_t;
 
-typedef uint32_t os_Task_State_t;
 
 
 
@@ -50,7 +51,7 @@ typedef uint32_t os_Task_State_t;
  * os_TCB_t* is used as task handle.
 */
 typedef struct {
-	os_TCB_t* owner;
+	os_task_h owner;
 } os_mutex_t;
 
 
@@ -61,8 +62,6 @@ typedef struct {
 
 extern os_arrayList_h os_mutex_arraylist_handle;
 extern os_arrayList_h os_blocked_arrayList_handle;
-extern os_TCB_t os_exit_worker_H;
-extern os_TCB_t os_wait_worker_H;
 
 
 

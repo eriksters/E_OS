@@ -24,6 +24,8 @@ void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
 void os_init( uint32_t os_tick_frq );
 
 
+//	TODO: Return task handle if successful
+
 /*	Create a new task with given program, Task Control Block and pointer to parameters (NULL can be passed if parameters not needed).
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
@@ -58,7 +60,7 @@ void os_delay ( uint32_t miliseconds );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_task_delete ( os_TCB_t * tcb );
+void os_task_delete ( os_task_h task );
 
 
 /*	Called when a task finishes
