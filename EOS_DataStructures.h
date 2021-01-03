@@ -22,6 +22,10 @@ typedef os_arrayList_t* os_arrayList_h;
 typedef os_queue_t* os_queue_h;
 
 
+/*******************************************************
+*												ArrayList											 *
+*******************************************************/
+
 /*	Initialize an ArrayList
  *	Param handle: handle for ArrayList
  *	Param array: Pointer to array where elements will be stored
@@ -70,20 +74,62 @@ uint32_t os_arrayList_size( os_arrayList_h handle );
 uint32_t os_arrayList_contains( os_arrayList_h handle, void* E );
 
 
-// void os_queue_test( void );
 
+
+/*******************************************************
+*												Queue													 *
+*******************************************************/
+
+/*	Initialize a Queue
+ *	Param handle: handle for Queue
+ *	Param array: Pointer to array where elements will be stored
+ *	Param max_size: allocated size of array
+ *	Returns 0 if successful, 1 if handle is NULL or array is NULL or size is 0 
+*/
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size );
 
+
+/*	Add an element to Queue
+ *	Param handle: handle for Queue
+ *	Param E: element to add
+ *  Returns 0 if successful, 1 if Queue is full or element is NULL
+*/
 uint32_t os_queue_add( os_queue_h handle, void* E );
 
+
+/*	Remove and retrieve head element from Queue
+ *	Param handle: handle for Queue
+ *  Returns head element pointer if successful, NULL if queue is empty
+*/
 void* os_queue_remove( os_queue_h handle );
 
+
+/*	Get amount of elements stored in Queue
+ *	Param handle: handle for Queue
+ *  Returns size of elements
+*/
 uint32_t os_queue_size( os_queue_h handle );
 
+
+/*	Retrieve but not remove head element from Queue
+ *	Param handle: handle for Queue
+ *  Returns head element pointer
+*/
 void* os_queue_peek( os_queue_h handle );
 
+
+/*	Check if Queue is full
+ *	Param handle: handle for Queue
+ *  Returns 1 if Queue is full, 0 if not
+*/
 uint32_t os_queue_is_full( os_queue_h handle );
 
+
+/*	Check if Queue contains an element
+ *	Param handle: handle for Queue
+ *	Param E: element to search for
+ *  Returns 1 if Queue contains given element, 0 if not
+*/
 uint32_t os_queue_contains( os_queue_h handle, void* E);
 	
 #endif
