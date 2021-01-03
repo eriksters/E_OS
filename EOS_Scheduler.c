@@ -12,7 +12,15 @@ void os_scheduler_init( void ) {
 	
 }
 
-uint32_t os_ready_isFull( void ) {
+/*	Result is impacted by os state:
+ *	STARTING: Only picks the next task
+ *  RUNNING: Picks the next task and adds previous task back in queue
+ *
+ *	If previous task has been blocked or is in zombie state, do not add it back in queue.
+ *	If next task is blocked or in zombie state, do not set it as current task.
+ *  If next task is in zombie state, remove it from scheduling and set as deleted.
+*/
+void os_switch_current_task( void ) {
 	
 	return os_queue_is_full( os_tasks_ready_queue_h );
 		

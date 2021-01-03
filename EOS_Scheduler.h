@@ -14,7 +14,7 @@ void os_scheduler_init( void );
 /* Call scheduler to select and set next task in os_Control.
  * Implemented in EOS_Scheduler.c
 */ 
-void os_switch_f( void );
+void os_switch_current_task( void );
 
 
 /* Check if ready task data structure is full. 

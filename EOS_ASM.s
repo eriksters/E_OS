@@ -10,7 +10,7 @@
 				IMPORT 	os_start_f
 				IMPORT	os_release_f
 				IMPORT  SVC_Handler_f
-				IMPORT  os_switch_f
+				IMPORT  os_switch_current_task
 				IMPORT  os_ctrl_get_current_task_reg
 				IMPORT 	os_ctrl_get_state
 				IMPORT  os_ctrl_set_state_running
@@ -35,7 +35,7 @@ PendSV_Handler	PROC
 				
 				
 Pend_Normal		BL		os_reg_save				
-				BL		os_switch_f
+				BL		os_switch_current_task
 				BL		os_reg_restore
 				B		Pend_Run
 
@@ -51,7 +51,7 @@ Pend_Exit		POP		{r0}
 				B		Pend_Pop
 				
 				
-Pend_Starting	BL		os_switch_f				;	OS is starting, so set os status and do not back up registers
+Pend_Starting	BL		os_switch_current_task				;	OS is starting, so set os status and do not back up registers
 				BL		os_reg_restore
 				BL		os_ctrl_set_state_running
 
