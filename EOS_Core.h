@@ -43,10 +43,6 @@ typedef struct {
 } os_Control_t;
 
 
-
-
-
-
 /* Task Control Block.
  * os_TCB_t* is used as task handle.
 */
@@ -54,6 +50,7 @@ typedef struct {
 	os_task_h owner;
 } os_mutex_t;
 
+typedef os_mutex_t* os_mutex_h;
 
 
 /********************************************/

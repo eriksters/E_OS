@@ -47,6 +47,15 @@ void EXTI0_IRQHandler( void ) {
 	printf("EXTI 0 \n");
 }
 
+/* ------------------		Handles		---------------- */
+static os_mutex_h mutex_1_H;
+static os_mutex_h mutex_2_H;
+
+static os_task_h task_1_H;
+static os_task_h task_2_H;
+static os_task_h task_3_H;
+
+
 struct t1_params_t {
 	uint32_t dummy_number;
 };
@@ -117,7 +126,7 @@ void t2_func( void * params ) {
 	printf("T2 enter. Dummy number = %d; Dummy Pointer = %p\n", par->dummy_number, (void *) par->dummy_pointer );
 	
 	t3_params.dummy_number = 720;
-	os_task_create(&t3_func, &t3_tcb, &t3_params);
+	task_3_H = os_task_create(&t3_func, &t3_tcb, &t3_params);
 	
 	os_mutex_lock( &mutex_2 );
 	
@@ -130,7 +139,7 @@ void t2_func( void * params ) {
 		}
 		os_delay(200);
         
-		printf("T2, deleting\n");
+		printf("----------------- T2, deleting -------------------\n");
 		os_task_delete( 0 );
 		
 	}
@@ -165,7 +174,9 @@ void t3_func( void * params ) {
 			}
 		}
 	}
-	__NOP();
+	printf("----------------------T3 3s Delay -------------\n");
+	os_delay( 3000 );
+	printf("--------------------- T3 Done -----------------\n");
 }
 
 
@@ -182,22 +193,20 @@ int main() {
 	
 	os_init( 0 );
 	
-	os_mutex_create( &mutex_1 );
-	os_mutex_create( &mutex_2 );
+	mutex_1_H = os_mutex_create( &mutex_1 );
+	mutex_2_H = os_mutex_create( &mutex_2 );
 	
 	printf("Creating Tasks\n");
 	
 	t1_params.dummy_number = 69;
 	
-	os_task_h handle;
 	
-	for ( uint32_t i = 0; i < 20; i++ ) {
-		handle = os_task_create(&t1_func, &t1_tcb, &t1_params);
-	}
+	task_1_H = os_task_create(&t1_func, &t1_tcb, &t1_params);
+	
 	
 	t2_params.dummy_number = 420;
 	t2_params.dummy_pointer = &mutex_1;
-	os_task_create(&t2_func, &t2_tcb, &t2_params);
+	task_2_H = os_task_create(&t2_func, &t2_tcb, &t2_params);
 	
 	printf("Starting OS\n");
 	os_start();

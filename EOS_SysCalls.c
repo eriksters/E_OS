@@ -118,47 +118,47 @@ void os_task_end_f ( void ) {
 }
 
 
-uint32_t os_mutex_create_f( os_mutex_t* mutex_p ) {
-	
-	mutex_p->owner = 0;
+os_mutex_h os_mutex_create_f( os_mutex_t* mutex_p ) {
 	
 	//	Error if mutex is already initialized
 	if ( os_arrayList_contains( os_mutex_arraylist_handle, mutex_p ) ) {
-		return 1;
+		return 0;
 	}
 	
 	//	Error if mutex can not be added to mutex list
 	if (os_arrayList_add( os_mutex_arraylist_handle, mutex_p )) {
-		return 1;
+		return 0;
 	}
 	
-	return 0;
+	mutex_p->owner = 0;
+	
+	return (os_mutex_h) mutex_p;
 }
 
 
-uint32_t os_mutex_lock_f( os_mutex_t* mutex_p ) {
+uint32_t os_mutex_lock_f( os_mutex_h mutex ) {
 
 	//	If Mutex is locked by a task, return 1
-	if ( mutex_p->owner != 0 ) {
+	if ( mutex->owner != 0 ) {
 		return 1;
 	}
 	
 	//	Assign Mutex's owner to calling task
-	mutex_p->owner = os_ctrl_get_current_task();
+	mutex->owner = os_ctrl_get_current_task();
 	
 	return 0;
 }
 
 
-uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p ) {
+uint32_t os_mutex_unlock_f( os_mutex_h mutex ) {
 	
 	//	If task is locked by another thread or not locked at all, return 1
-	if ( mutex_p->owner != os_ctrl_get_current_task() ) {
+	if ( mutex->owner != os_ctrl_get_current_task() ) {
 		return 1;
 	}
 	
 	//	Unlock the thread
-	mutex_p->owner = 0;
+	mutex->owner = 0;
 	
 	return 0;
 }

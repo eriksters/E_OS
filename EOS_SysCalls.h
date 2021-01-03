@@ -35,17 +35,17 @@ void os_task_end_f( void );
 
 /* Handler for os_mutex_create System Call.  
 */
-uint32_t os_mutex_create_f( os_mutex_t* mutex_p );
+os_mutex_h os_mutex_create_f( os_mutex_t* mutex_p );
 
 
 /* Handler for os_mutex_lock System Call.  
 */
-uint32_t os_mutex_lock_f( os_mutex_t* mutex_p );
+uint32_t os_mutex_lock_f( os_mutex_h mutex );
 
 
 /* Handler for os_mutex_unlock System Call.  
 */
-uint32_t os_mutex_unlock_f( os_mutex_t* mutex_p );
+uint32_t os_mutex_unlock_f( os_mutex_h mutex );
 
 
 /* Handler for os_exit System Call'.

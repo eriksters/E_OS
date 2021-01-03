@@ -75,7 +75,7 @@ void os_task_end ( void );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */
-uint32_t os_mutex_create( os_mutex_t* );
+os_mutex_h os_mutex_create( os_mutex_t* );
 
 
 /*	Lock a mutex to currently executing task.
