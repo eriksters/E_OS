@@ -140,7 +140,7 @@ uint32_t os_arrayList_contains( os_arrayList_h handle, void* E ) {
 //
 
 /*
-#define TEST_ARRAY_SIZE		10
+#define TEST_ARRAY_SIZE		3
 static os_queue_t test_queue;
 static os_queue_h test_queue_h = &test_queue;
 static uint32_t* test_array[TEST_ARRAY_SIZE];
@@ -148,10 +148,13 @@ static uint32_t* test_array[TEST_ARRAY_SIZE];
 void os_queue_test( void ) {
 	
 	uint32_t* b = 0;
+	uint32_t contains = 0;
 	
 	os_queue_init( test_queue_h, (void**) test_array, TEST_ARRAY_SIZE );
 	
+	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
+	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
 	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
 	os_queue_add( test_queue_h, (uint32_t*) 0x40 );
@@ -163,8 +166,14 @@ void os_queue_test( void ) {
 	b = os_queue_peek( test_queue_h );
 	b = os_queue_remove( test_queue_h );
 	
+	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
+	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
+	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
+	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
+	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 }
 */
+
 
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size ) {
 	
@@ -237,4 +246,26 @@ void* os_queue_peek( os_queue_h handle ) {
 
 uint32_t os_queue_is_full( os_queue_h handle ) {
 	return ( handle->size == handle->max_size );
+}
+
+uint32_t os_queue_contains( os_queue_h handle, void* E) {
+	
+	uint32_t found = 0;
+	uint32_t index = handle->head;
+	
+	for ( uint32_t i = 0; i < handle->size; i++ ) {
+		
+		if ( index == handle->max_size ) {
+			index = 0;
+		}
+		
+		if ( handle->array[index] == E ) {
+			found = 1;
+			break;
+		}
+		
+		index++;
+	}
+	
+	return found;
 }

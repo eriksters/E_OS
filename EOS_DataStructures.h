@@ -36,7 +36,7 @@ uint32_t os_arrayList_init( os_arrayList_h handle, void** array, uint32_t max_si
  *	Param E: element to add
  *  Returns 0 if successful, 1 if arrayList is full or element is NULL
 */
-uint32_t os_arrayList_add( os_arrayList_h handle, void * E );
+uint32_t os_arrayList_add( os_arrayList_h handle, void* E );
 
 
 /*	Remove an element from an ArrayList
@@ -74,7 +74,7 @@ uint32_t os_arrayList_contains( os_arrayList_h handle, void* E );
 
 uint32_t os_queue_init( os_queue_h handle, void** array, uint32_t max_size );
 
-uint32_t os_queue_add( os_queue_h handle, void * E );
+uint32_t os_queue_add( os_queue_h handle, void* E );
 
 void* os_queue_remove( os_queue_h handle );
 
@@ -83,5 +83,7 @@ uint32_t os_queue_size( os_queue_h handle );
 void* os_queue_peek( os_queue_h handle );
 
 uint32_t os_queue_is_full( os_queue_h handle );
+
+uint32_t os_queue_contains( os_queue_h handle, void* E);
 	
 #endif
