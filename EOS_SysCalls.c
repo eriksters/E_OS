@@ -87,8 +87,7 @@ void os_start_f( void ) {
 
 
 void os_release_f ( void ) {
-	printf("OS Release\n");
-	
+
 	os_tick_reset();
 	
 	os_task_switch_trigger();
@@ -96,7 +95,6 @@ void os_release_f ( void ) {
 
 
 void os_delay_f( uint32_t milliseconds ) {
-	printf("Milliseconds: %d\n", milliseconds);
 	
 	os_task_h task = os_ctrl_get_current_task();
 	
@@ -107,6 +105,7 @@ void os_delay_f( uint32_t milliseconds ) {
 	os_tick_reset();
 	
 	os_task_switch_trigger();
+	
 }
 
 

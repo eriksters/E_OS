@@ -41,7 +41,6 @@ void os_tick( void ) {
 	}
 	
 	if ( os_Control.tick_counter >= os_Control.task_switch_tick_count ) {
-		printf("Triggering Context Switch\n");
 		os_task_switch_trigger();
 		os_Control.tick_counter = 0;
 	}

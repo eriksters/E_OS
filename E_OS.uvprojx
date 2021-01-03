@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>5</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -384,11 +384,6 @@
           <GroupName>Src</GroupName>
           <Files>
             <File>
-              <FileName>Main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Main.c</FilePath>
-            </File>
-            <File>
               <FileName>EOS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS.c</FilePath>
@@ -432,6 +427,11 @@
               <FileName>EOS_Workers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_Workers.c</FilePath>
+            </File>
+            <File>
+              <FileName>Main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main.c</FilePath>
             </File>
           </Files>
         </Group>
