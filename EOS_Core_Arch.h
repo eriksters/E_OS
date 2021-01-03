@@ -43,6 +43,13 @@ typedef struct {
 void os_arch_create_task( void ( *func )( void * ), uint32_t* stack, os_Registers_t* regs, void * params );
 
 
+/* Resets the os_tick time source to initial countdown value.
+ * By default, resets Sys_Tick->VAL to 0, then clears SysTick pending interrupt. 
+ * Has as a 'weak' attribute, so it can be overwritten by user if another time source is used.
+*/
+void os_tick_reset( void );
+
+
 /* Triggers task switch on interrupt exit. 
  * In Cortex-M3: sets PendSV as pending.
 */

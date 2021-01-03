@@ -70,12 +70,6 @@ extern os_TCB_t os_wait_task_handle;
 /*							Functions 									*/
 /********************************************/
 
-/* Resets the os_tick time source to initial countdown value.
- * By default, resets Sys_Tick->VAL to 0, then clears SysTick pending interrupt. 
- * Has as a 'weak' attribute, so it can be overwritten by user if another time source is used.
-*/
-void os_tick_reset( void );
-
 
 /* Called by a user selected time source for scheduling and time keeping
  * How often scheduler gets called can be configured by changing OS_TASK_SWITCH_TICK_COUNT in EOS_Config.h

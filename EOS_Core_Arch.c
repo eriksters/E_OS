@@ -35,3 +35,9 @@ void os_task_switch_trigger( void ) {
 	__DSB();
 	__ISB();
 } 
+
+__attribute__((weak)) void os_tick_reset( void ) {
+	SysTick->VAL = 0;
+	
+	NVIC_ClearPendingIRQ(SysTick_IRQn);
+}

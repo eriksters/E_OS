@@ -23,11 +23,7 @@ void os_wait_task( void * ) __attribute__((noreturn));
 
 
 
-__attribute__((weak)) void os_tick_reset( void ) {
-	SysTick->VAL = 0;
-	
-	NVIC_ClearPendingIRQ(SysTick_IRQn);
-}
+
 
 
 void os_tick( void ) {
