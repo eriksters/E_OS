@@ -3,34 +3,27 @@
 
 #include <stdint.h>
 #include "EOS_Core.h"
+#include "EOS_Mutex.h"
+#include "EOS_Timing.h"
 
  /*******************************************
  *							OS Interface        				*
  *******************************************/
 
-/* Handler for SVC interrupt, used for System Calls
- * Should not be called from application.
- * Called from EOS_Dispatcher.s
- * Implemented in EOS.c
-*/
-void SVC_Handler_f( os_StackedReg_t* stackedRegisters );
-
 
 /*	Initialize the OS.
  *	Must be called before creating tasks / starting os.
- *  [Param] os_tick_frq: frequency of os_tick calls. If 0, assumed that SysTick timer is used and os_tick_frq is calculated automatically.
+ *  Param os_tick_frq: frequency of os_tick calls. If 0, assumed that SysTick timer is used and os_tick_frq is calculated automatically.
  *	Implemented in: EOS_SysCalls.c
 */	
 void os_init( uint32_t os_tick_frq );
 
 
-//	TODO: Return task handle if successful
-
 /*	Create a new task with given program, Task Control Block and pointer to parameters (NULL can be passed if parameters not needed).
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-os_task_h os_task_create ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
+os_task_h os_create_task ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
 
 
 /*	Start the OS.
@@ -60,14 +53,14 @@ void os_delay ( uint32_t miliseconds );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_task_delete ( os_task_h task );
+void os_delete_task ( os_task_h task );
 
 
 /*	Called when a task finishes
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-void os_task_end ( void );
+void os_task_finished ( void );
 
 
 /*	Create/Initialize a mutex.
@@ -75,7 +68,7 @@ void os_task_end ( void );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */
-os_mutex_h os_mutex_create( os_mutex_t* );
+os_mutex_h os_create_mutex( os_mutex_t* );
 
 
 /*	Lock a mutex to currently executing task.
@@ -83,7 +76,7 @@ os_mutex_h os_mutex_create( os_mutex_t* );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.cs
 */
-uint32_t os_mutex_lock( os_mutex_t* );
+uint32_t os_lock_mutex( os_mutex_t* );
 
 
 /*	Unlock mutex.
@@ -91,7 +84,7 @@ uint32_t os_mutex_lock( os_mutex_t* );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.cs
 */
-uint32_t os_mutex_unlock( os_mutex_t* );
+uint32_t os_unlock_mutex( os_mutex_t* );
 
 
 /*	Shut down the OS.
@@ -99,6 +92,16 @@ uint32_t os_mutex_unlock( os_mutex_t* );
  *	Handled in: EOS_SysCalls.cs
 */
 void os_exit( void );
+
+
+/*	Block current task until os_unblock_task is called
+*/
+void os_block( void );
+
+
+/*	Unblock a task
+*/
+void os_unblock( os_task_h task );
 
 
 #endif

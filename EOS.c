@@ -1,77 +1,96 @@
 #include "EOS.h"
-#include "EOS_SysCalls.h"
-#include "EOS_ASM.h"
-#include "stm32f10x.h"
-#include "EOS_Scheduler.h"
-#include "EOS_Control.h"
+#include "EOS_Mutex.h"
+#include "EOS_Setup.h"
+#include "EOS_Tasks.h"
+#include "EOS_Scheduling.h"
+#include "EOS_Blocking.h"
 
 #include <stdio.h>
 
-void SVC_Handler_f( os_StackedReg_t* stackedRegisters ) {
+/* Handler for SVC interrupt, used for System Calls
+ * Called from EOS_ASM.s
+*/
+void SVC_Handler_c( os_StackedReg_t* stackedRegisters );
+
+
+void SVC_Handler_c( os_StackedReg_t* stackedRegisters ) {
 	
 	uint32_t ret = 0;
 	
-	uint16_t* SCI_p = (uint16_t*) stackedRegisters->PC;
+	uint8_t* SCN_p = (uint8_t*) stackedRegisters->PC;
+	SCN_p -= 2;
 	
-	uint16_t SCI = *(--SCI_p);
-	SCI &= 0xFF;
+	uint8_t SCN = *SCN_p;
 	
-	switch (SCI) {
+	switch (SCN) {
 		
 		//	Start
 		case 0:
-			os_start_f();
+			os_start_call_handler();
 			break;
 		
 		//	Release 
 		case 1:
-			os_release_f();
+			os_release_call_handler();
 			break;
 		
 		//	Task Create
 		case 2:
-			ret = (uint32_t) os_task_create_f( (void (*) (void *)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1, (void *) stackedRegisters->R2 );
+			ret = (uint32_t) os_create_task_call_handler( (void (*) (void *)) stackedRegisters->R0, (os_TCB_t*) stackedRegisters->R1, (void *) stackedRegisters->R2 );
 			break;
 		
 		//	Delay
 		case 3:
-			os_delay_f( stackedRegisters->R0 );
+			os_delay_call_handler( stackedRegisters->R0 );
 			break;
 		
 		//	Mutex Create
 		case 4:
-			ret = (uint32_t) os_mutex_create_f( (os_mutex_t*) stackedRegisters->R0 );
+			ret = (uint32_t) os_create_mutex_call_handler( (os_mutex_t*) stackedRegisters->R0 );
 			break;
 		
 		//	Mutex Lock
 		case 5:
-			ret = os_mutex_lock_f( (os_mutex_h) stackedRegisters->R0 );
+			ret = os_lock_mutex_call_handler( (os_mutex_h) stackedRegisters->R0 );
 			break;
 		
 		//	Mutex Unlock
 		case 6:
-			ret = os_mutex_unlock_f( (os_mutex_h) stackedRegisters->R0 );
+			ret = os_unlock_mutex_call_handler( (os_mutex_h) stackedRegisters->R0 );
 			break;
 		
 		//	Task Delete
 		case 7:
-			os_task_delete_f( (os_task_h) stackedRegisters->R0 );
+			os_delete_task_call_handler( (os_task_h) stackedRegisters->R0 );
 			break;
 		
-		//	Task End
+		//	Task Finished (Automatically called when a task finishes)
 		case 8:
-			os_task_end_f();
+			os_task_finished_call_handler();
 			break;
 		
 		//	Shut Down OS
 		case 9:
-			os_exit_f();
+			os_exit_call_handler();
+			break;
+		
+		//	Block a task for undetermined amount of time
+		case 10:
+			os_block_call_handler();
+			break;
+		
+		//	Unblock a blocked task
+		case 11:
+			os_unblock_call_handler( (os_task_h) stackedRegisters->R0 );
 			break;
 	}
 	
 	stackedRegisters->R0 = ret;
 }
 
+void os_init( uint32_t tick_frq ) {
+	os_init_call_handler( tick_frq );
+} 
 
 void os_start ( void ) {
 	os_Control.state = OS_STATE_STARTING;
@@ -82,7 +101,7 @@ void os_release ( void ) {
 	__asm("SVC #0x01");
 }
 
-os_task_h os_task_create( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
+os_task_h os_create_task( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
 	os_task_h ret;
 	UNUSED(func);
 	UNUSED(tcb);
@@ -98,7 +117,7 @@ void os_delay( uint32_t milliseconds ) {
 	__asm("SVC #0x03");
 }
 
-os_mutex_h os_mutex_create( os_mutex_t* mutex_p ) {
+os_mutex_h os_create_mutex( os_mutex_t* mutex_p ) {
 	os_mutex_h ret;
 	UNUSED(mutex_p);
 	__asm("SVC #0x04");
@@ -106,7 +125,7 @@ os_mutex_h os_mutex_create( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
-uint32_t os_mutex_lock( os_mutex_t* mutex_p ) {
+uint32_t os_lock_mutex( os_mutex_t* mutex_p ) {
 	uint32_t ret;
 	UNUSED(mutex_p);
 	__asm("SVC #0x05");
@@ -114,7 +133,7 @@ uint32_t os_mutex_lock( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
-uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
+uint32_t os_unlock_mutex( os_mutex_t* mutex_p ) {
 	uint32_t ret;
 	UNUSED(mutex_p);
 	__asm("SVC #0x06");
@@ -122,16 +141,26 @@ uint32_t os_mutex_unlock( os_mutex_t* mutex_p ) {
 	return ret;
 }
 
-void os_task_delete ( os_task_h task ) {
+void os_delete_task ( os_task_h task ) {
 	UNUSED(task);
 	__asm("SVC #0x07");
 }
 
 
-void os_task_end ( void ) {
+void os_task_finished ( void ) {
 	__asm("SVC #0x08");
 }
 
 void os_exit( void ) {
 	__asm("SVC #0x09");
+}
+
+void os_block( void ) {
+	__asm("SVC #0x10");
+}
+
+
+void os_unblock( os_task_h task ) {
+	UNUSED(task);
+	__asm("SVC #0x11");
 }

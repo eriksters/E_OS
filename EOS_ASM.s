@@ -7,20 +7,20 @@
 				EXPORT  SVC_Handler
 				EXPORT	PendSV_Handler
 	
-				IMPORT 	os_start_f
-				IMPORT	os_release_f
-				IMPORT  SVC_Handler_f
+				IMPORT 	os_start_call_handler
+				IMPORT	os_release_call_handler
+				IMPORT  SVC_Handler_c
 				IMPORT  os_switch_current_task
-				IMPORT  os_ctrl_get_current_task_reg
-				IMPORT 	os_ctrl_get_state
-				IMPORT  os_ctrl_set_state_running
-				IMPORT  os_ctrl_set_task_state_running
+				IMPORT  os_get_current_task_reg
+				IMPORT 	os_get_state
+				IMPORT  os_set_state
+				IMPORT  os_set_current_task_state
 
 PendSV_Handler	PROC
 	
 				PUSH	{lr}
 				
-				BL		os_ctrl_get_state
+				BL		os_get_state
 				
 				CMP		r0, #OS_STATE_RUNNING	;	OS is running, so schedule normally
 				BEQ		Pend_Normal
@@ -53,10 +53,12 @@ Pend_Exit		POP		{r0}
 				
 Pend_Starting	BL		os_switch_current_task				;	OS is starting, so set os status and do not back up registers
 				BL		os_reg_restore
-				BL		os_ctrl_set_state_running
+				MOV		r0, #OS_STATE_RUNNING
+				BL		os_set_state
 
 
-Pend_Run		BL		os_ctrl_set_task_state_running
+Pend_Run		MOV		r0, #OS_TASK_STATE_RUNNING
+				BL		os_set_current_task_state
 Pend_Pop		POP		{pc}
 	
 				ENDP
@@ -70,7 +72,7 @@ SVC_Handler		PROC
 				;	Otherwise, keep generated EXC_RETURN value
 				
 				PUSH	{lr}
-				BL		os_ctrl_get_state
+				BL		os_get_state
 				POP		{lr}
 				
 				CMP		r0, #OS_STATE_STARTING
@@ -91,7 +93,7 @@ SVC_Used_PSP	MRS		r0, PSP
 				
 
 				;	----	Do the rest of the ISR in C 	-----
-SVC_Has_SP		BL		SVC_Handler_f
+SVC_Has_SP		BL		SVC_Handler_c
 				
 				POP		{pc}
 				
@@ -104,7 +106,7 @@ os_reg_save		PROC
 				
 				PUSH	{lr}
 				
-				BL		os_ctrl_get_current_task_reg
+				BL		os_get_current_task_reg
 				
 				STR		r4, [r0]
 				STR		r5, [r0, #0x4]
@@ -129,7 +131,7 @@ os_reg_restore	PROC
 				
 				PUSH	{lr}
 				
-				BL		os_ctrl_get_current_task_reg
+				BL		os_get_current_task_reg
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
 				LDR		r6, [r0, #0x8]

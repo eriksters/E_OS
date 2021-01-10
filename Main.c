@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include "EOS.h"
+#include "stm32f10x.h"
 
-#include "EOS_DataStructures.h"
+void SystemCoreClockConfigure( void );
+void SysTick_Handler( void );
+
+ /*******************************************
+ *							Configuration        				*
+ *******************************************/
+
 
 /* Slightly modified version of Clock Setup from example project */
-void SystemCoreClockConfigure( void );
 void SystemCoreClockConfigure( void ) {
 	
   RCC->CR |= ((uint32_t)RCC_CR_HSION);                     // Enable HSI
@@ -33,21 +39,17 @@ void SystemCoreClockConfigure( void ) {
   RCC->CFGR |=  RCC_CFGR_SW_PLL;
   while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);  // Wait till PLL is system clock src
 }
-//
 
-void SysTick_Handler( void );
-void SysTick_Handler( void ) {
-	printf("In SysTick_Handler\n");
-	
+
+void SysTick_Handler( void ) {	
 	os_tick();
 }
 
-void EXTI0_IRQHandler( void );
-void EXTI0_IRQHandler( void ) {
-	printf("EXTI 0 \n");
-}
+ /*******************************************
+ *							Program Stuff    						*					//	TODO Name
+ *******************************************/
 
-/* ------------------		Handles		---------------- */
+/* --------------		Handles		------------ */
 static os_mutex_h mutex_1_H;
 static os_mutex_h mutex_2_H;
 
@@ -56,6 +58,7 @@ static os_task_h task_2_H;
 static os_task_h task_3_H;
 
 
+/* -----		Task Parameter Structs		---- */
 struct t1_params_t {
 	uint32_t dummy_number;
 };
@@ -69,28 +72,34 @@ struct t3_params_t {
 	uint32_t dummy_number;
 };
 
+/* ------------		Data Section		-------- */
+//	Mutexes
 static os_mutex_t mutex_1;
 static os_mutex_t mutex_2;
 
+//	Task Control Blocks
 static os_TCB_t t1_tcb;
-static struct t1_params_t t1_params;
-void t1_func( void * params ); 
-
 static os_TCB_t t2_tcb;
-static struct t2_params_t t2_params;
-void t2_func( void * params ) __attribute__((noreturn));
-
 static os_TCB_t t3_tcb;
+
+//	Task parameters
+static struct t1_params_t t1_params;
+static struct t2_params_t t2_params;
 static struct t3_params_t t3_params;
+
+//	Task function declarations
+void t1_func( void * params ); 
+void t2_func( void * params ) __attribute__((noreturn));
 void t3_func( void * params);
 
+//	Task function definitions
 void t1_func( void * params ) {
 	
 	struct t1_params_t* par = (struct t1_params_t*) params;
 	printf("T1 enter. Dummy number = %d\n", par->dummy_number );
 	
 	for ( uint32_t x = 1; x < 20; x++ ) {
-		if ( !os_mutex_lock(&mutex_1) ) {
+		if ( !os_lock_mutex(&mutex_1) ) {
 			printf("T1 Mutex Locked\n");
 		} else {
 			printf("T1 Mutex NOT Lock\n");
@@ -101,7 +110,7 @@ void t1_func( void * params ) {
 				__NOP();
 			}
 		}
-		if ( !os_mutex_unlock(&mutex_1) ) {
+		if ( !os_unlock_mutex(&mutex_1) ) {
 			printf("T1 mutex UNlocked\n");
 		} else {
 			printf("T1 mutex NOT UNlocked\n");
@@ -126,9 +135,9 @@ void t2_func( void * params ) {
 	printf("T2 enter. Dummy number = %d; Dummy Pointer = %p\n", par->dummy_number, (void *) par->dummy_pointer );
 	
 	t3_params.dummy_number = 720;
-	task_3_H = os_task_create(&t3_func, &t3_tcb, &t3_params);
+	task_3_H = os_create_task(&t3_func, &t3_tcb, &t3_params);
 	
-	os_mutex_lock( &mutex_2 );
+	os_lock_mutex( &mutex_2 );
 	
 	for (;;) {
 		for (int j = 0; j < 20; j++) {		
@@ -140,7 +149,7 @@ void t2_func( void * params ) {
 		os_delay(200);
         
 		printf("----------------- T2, deleting -------------------\n");
-		os_task_delete( 0 );
+		os_delete_task( 0 );
 		
 	}
 }
@@ -151,7 +160,7 @@ void t3_func( void * params ) {
 	printf("T3 enter. Dummy number = %d\n", par->dummy_number );
 	
 	for ( uint32_t x = 0; x < 10; x++ ) {
-		if ( !os_mutex_lock(&mutex_1) ) {
+		if ( !os_lock_mutex(&mutex_1) ) {
 			printf("T3 Mutex Locked\n");
 		} else {
 			printf("T3 Mutex NOT Lock\n");
@@ -162,7 +171,7 @@ void t3_func( void * params ) {
 				__NOP();
 			}
 		}
-		if ( !os_mutex_unlock(&mutex_1) ) {
+		if ( !os_unlock_mutex(&mutex_1) ) {
 			printf("T3 mutex UNlocked\n");
 		} else {
 			printf("T3 mutex NOT UNlocked\n");
@@ -179,6 +188,8 @@ void t3_func( void * params ) {
 	printf("--------------------- T3 Done -----------------\n");
 }
 
+//	Example ASM
+int32_t add_and_store( int32_t num1, int32_t* num2_p, int32_t* result_p );
 
 int main() {
 	
@@ -189,24 +200,30 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	
-	// os_queue_test();
+	//	Example ASM
+	int32_t num_1 = 20;
+	int32_t num_2 = -30;
+	int32_t result;
+	int32_t result_ret = add_and_store( num_1, &num_2, &result );
+	
+	printf("Returned = %d, stored = %d\n", result_ret, result);
 	
 	os_init( 0 );
 	
-	mutex_1_H = os_mutex_create( &mutex_1 );
-	mutex_2_H = os_mutex_create( &mutex_2 );
+	mutex_1_H = os_create_mutex( &mutex_1 );
+	mutex_2_H = os_create_mutex( &mutex_2 );
 	
 	printf("Creating Tasks\n");
 	
 	t1_params.dummy_number = 69;
 	
 	
-	task_1_H = os_task_create(&t1_func, &t1_tcb, &t1_params);
+	task_1_H = os_create_task(&t1_func, &t1_tcb, &t1_params);
 	
 	
 	t2_params.dummy_number = 420;
 	t2_params.dummy_pointer = &mutex_1;
-	task_2_H = os_task_create(&t2_func, &t2_tcb, &t2_params);
+	task_2_H = os_create_task(&t2_func, &t2_tcb, &t2_params);
 	
 	printf("Starting OS\n");
 	os_start();

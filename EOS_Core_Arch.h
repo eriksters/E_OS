@@ -2,7 +2,6 @@
 #define EOS_CORE_ARCH_H
 
 #include <stdint.h>
-#include "stm32f10x.h"
 #include "EOS_Config.h"
 
 /*******************************************/
@@ -38,6 +37,7 @@ typedef struct {
 /*******************************************/
 
 /* Initialize architecture specific hardware.
+ * Called during OS startup
 */
 void os_arch_start( void );
 
@@ -57,6 +57,12 @@ void os_tick_reset( void );
 /* Triggers task switch on interrupt exit. 
  * In Cortex-M3: sets PendSV as pending.
 */
-void os_task_switch_trigger( void );
+void os_trigger_task_switch( void );
+
+
+/* Get frequency of SysTick interrupts in HZ
+ * In Cortex-M3: sets PendSV as pending.
+*/
+uint32_t os_get_systick_frq( void );
 
 #endif

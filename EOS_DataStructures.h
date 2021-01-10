@@ -80,6 +80,7 @@ uint32_t os_arraylist_contains( os_arraylist_h handle, void* E );
 *												Queue													 *
 *******************************************************/
 
+
 /*	Initialize a Queue
  *	Param handle: handle for Queue
  *	Param array: Pointer to array where elements will be stored
@@ -102,6 +103,13 @@ uint32_t os_queue_add( os_queue_h handle, void* E );
  *  Returns head element pointer if successful, NULL if queue is empty
 */
 void* os_queue_remove( os_queue_h handle );
+
+
+/*	Remove a specific element from Queue
+ *	Param handle: handle for Queue
+ *  Returns 0 if element was found, 1 if not
+*/
+uint32_t os_queue_remove_element( os_queue_h handle, void* E );
 
 
 /*	Get amount of elements stored in Queue
@@ -130,6 +138,6 @@ uint32_t os_queue_is_full( os_queue_h handle );
  *	Param E: element to search for
  *  Returns 1 if Queue contains given element, 0 if not
 */
-uint32_t os_queue_contains( os_queue_h handle, void* E);
+uint32_t os_queue_contains( os_queue_h handle, void* E );
 	
 #endif

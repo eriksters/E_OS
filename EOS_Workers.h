@@ -1,7 +1,9 @@
 #ifndef EOS_WORKERS_H
 #define EOS_WORKERS_H
 
-#include "EOS_Core.h"
+#include "EOS.h"
+
+//	void os_workers_init( void );
 
 extern os_TCB_t os_exit_worker_H;
 void os_exit_task( void * );

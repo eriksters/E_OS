@@ -152,25 +152,16 @@ void os_queue_test( void ) {
 	
 	os_queue_init( test_queue_h, (void**) test_array, TEST_ARRAY_SIZE );
 	
-	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
-	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
 	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
+	
+	os_queue_remove( test_queue_h );
+	
 	os_queue_add( test_queue_h, (uint32_t*) 0x40 );
 	
-	b = os_queue_remove( test_queue_h );
-	os_queue_remove( test_queue_h );
-	os_queue_remove( test_queue_h );
-	b = os_queue_remove( test_queue_h );
-	b = os_queue_peek( test_queue_h );
-	b = os_queue_remove( test_queue_h );
+	os_queue_remove_element( test_queue_h, (uint32_t*) 0x40 );
 	
-	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
-	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
-	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
-	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
-	contains = os_queue_contains(test_queue_h, (uint32_t*) 0x10);
 }
 */
 
@@ -268,4 +259,59 @@ uint32_t os_queue_contains( os_queue_h handle, void* E) {
 	}
 	
 	return found;
+}
+
+uint32_t os_queue_remove_element( os_queue_h handle, void* E ) {
+	
+	uint32_t ret = 1;
+	uint32_t index = handle->head;
+	
+	//	Find the element, set ret
+	
+	for ( uint32_t i = 0; i < handle->size; i++ ) {
+		if ( handle->array[index] == E ) {
+			ret = 0;
+			break;
+		}
+		
+		index++;
+		if ( index == handle->max_size ) { index = 0; }		//	Wrap-around
+	}
+	
+	//	Advance head
+	if ( !ret ) {
+		
+		//	No wrap around: advance head
+		if ( index >= handle->head ) {
+			
+			for ( uint32_t i = index; i > handle->head; i-- ) {
+				handle->array[i] = handle->array[i - 1];
+			}
+			
+			if ( handle->head == handle->max_size ) {
+				handle->head = 0;
+			} else {
+				handle->head++;
+			}
+		
+		//	Wrap around: decrease tail
+		} else {
+			
+			for ( uint32_t i = index; i < handle->tail; i++ ) {
+				handle->array[i] = handle->array[i + 1];
+			}
+			
+			if ( handle->tail == 0 ) {
+				handle->tail = handle->max_size - 1;
+			} else {
+				handle->tail--;
+			}
+		}
+		
+		handle->size--;
+	}
+	
+	
+	return ret;
+	
 }

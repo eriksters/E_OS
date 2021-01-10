@@ -1,7 +1,7 @@
 #include "EOS_Core_Arch.h"
 #include "stm32f10x.h"
 
-extern void os_task_end( void );
+extern void os_task_finished( void );
 
 void os_arch_start( void ) {
 	NVIC_SetPriority( PendSV_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL );
@@ -30,7 +30,7 @@ void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Regi
 	sp_stackedReg->R2 = 0x0;
 	sp_stackedReg->R3 = 0x0;
 	sp_stackedReg->R12 = 0x0;
-	sp_stackedReg->LR = (uint32_t) &os_task_end; 
+	sp_stackedReg->LR = (uint32_t) &os_task_finished; 
 	sp_stackedReg->PC = (uint32_t) func;
 	sp_stackedReg->xPSR = 0x01000000;
 	
@@ -39,7 +39,7 @@ void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Regi
 }
 
 
-void os_task_switch_trigger( void ) {
+void os_trigger_task_switch( void ) {
 	SCB->ICSR |= 0x1 << 28;
 	__DSB();
 	__ISB();
@@ -50,3 +50,11 @@ __attribute__((weak)) void os_tick_reset( void ) {
 	
 	NVIC_ClearPendingIRQ(SysTick_IRQn);
 }
+
+uint32_t os_get_systick_frq( void ) {
+	uint32_t coreClk = SystemCoreClock;
+	uint32_t sysTickResetVal = SysTick->LOAD;
+		
+	return coreClk / sysTickResetVal;
+}
+

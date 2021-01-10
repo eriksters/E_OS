@@ -384,19 +384,54 @@
           <GroupName>Src</GroupName>
           <Files>
             <File>
+              <FileName>Add.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\Add.s</FilePath>
+            </File>
+            <File>
+              <FileName>Main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main.c</FilePath>
+            </File>
+            <File>
               <FileName>EOS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_Scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\EOS_Scheduler.c</FilePath>
+              <FileName>EOS_ASM.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\EOS_ASM.S</FilePath>
             </File>
             <File>
-              <FileName>EOS_SysCalls.c</FileName>
+              <FileName>EOS_Setup.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\EOS_SysCalls.c</FilePath>
+              <FilePath>.\EOS_Setup.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_DataStructures.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_DataStructures.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Timing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Timing.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Mutex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Mutex.c</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Workers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Workers.c</FilePath>
             </File>
             <File>
               <FileName>EOS_Core.c</FileName>
@@ -409,29 +444,14 @@
               <FilePath>.\EOS_Core_Arch.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_Control.c</FileName>
+              <FileName>EOS_Blocking.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\EOS_Control.c</FilePath>
+              <FilePath>.\EOS_Blocking.c</FilePath>
             </File>
             <File>
-              <FileName>EOS_ASM.S</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\EOS_ASM.S</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_DataStructures.c</FileName>
+              <FileName>EOS_Scheduling.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\EOS_DataStructures.c</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_Workers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\EOS_Workers.c</FilePath>
-            </File>
-            <File>
-              <FileName>Main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Main.c</FilePath>
+              <FilePath>.\EOS_Scheduling.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -444,39 +464,39 @@
               <FilePath>.\EOS.h</FilePath>
             </File>
             <File>
-              <FileName>EOS_Scheduler.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_Scheduler.h</FilePath>
-            </File>
-            <File>
               <FileName>EOS_Core.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Core.h</FilePath>
             </File>
             <File>
-              <FileName>EOS_Core_Arch.h</FileName>
+              <FileName>EOS_Setup.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\EOS_Core_Arch.h</FilePath>
+              <FilePath>.\EOS_Setup.h</FilePath>
             </File>
             <File>
-              <FileName>EOS_SysCalls.h</FileName>
+              <FileName>EOS_Scheduling.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\EOS_SysCalls.h</FilePath>
+              <FilePath>.\EOS_Scheduling.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Timing.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Timing.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Mutex.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Mutex.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Tasks.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Tasks.h</FilePath>
             </File>
             <File>
               <FileName>EOS_Config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Config.h</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_Control.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_Control.h</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_ASM.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_ASM.h</FilePath>
             </File>
             <File>
               <FileName>EOS_Defines.h</FileName>
@@ -492,6 +512,16 @@
               <FileName>EOS_Workers.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Workers.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Core_Arch.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Core_Arch.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Blocking.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Blocking.h</FilePath>
             </File>
           </Files>
         </Group>
