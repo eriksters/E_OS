@@ -2,38 +2,7 @@
 #include "EOS_Core.h"
 #include <stdio.h>
 
-/*
-#define ARRAY_SIZE	20
 
-static os_arraylist_t test_arraylist;
-static os_arraylist_h test_os_arraylist_h = &test_arraylist;
-static os_TCB_t * test_array[ARRAY_SIZE];
-
-static os_TCB_t test_tcb_1;
-static os_TCB_t test_tcb_2;
-static os_TCB_t test_tcb_3;
-
-
-
-void os_os_arraylist_test( void ){
-	
-	uint32_t contains = 0;
-	
-	os_arraylist_init( test_os_arraylist_h, (void **) test_array, ARRAY_SIZE );
-	
-	os_arraylist_add( test_os_arraylist_h, &test_tcb_1 );
-	os_arraylist_add( test_os_arraylist_h, &test_tcb_2 );
-	os_arraylist_add( test_os_arraylist_h, &test_tcb_3 );
-	
-	contains = os_arraylist_contains( test_os_arraylist_h, &test_tcb_2 );
-	
-	os_arraylist_remove( test_os_arraylist_h, &test_tcb_2);
-	
-	contains = os_arraylist_contains( test_os_arraylist_h, &test_tcb_2 );
-	
-	__NOP();
-} 
-*/
 
 os_arraylist_h os_arraylist_init( os_arraylist_t* arraylist_p, void** array, uint32_t max_size ) {
 	
@@ -44,6 +13,7 @@ os_arraylist_h os_arraylist_init( os_arraylist_t* arraylist_p, void** array, uin
 	
 	arraylist_p->max_size = max_size;
 	arraylist_p->array = array;
+	arraylist_p->size = 0;
 	
 	return (os_arraylist_h) arraylist_p;
 }
@@ -139,31 +109,6 @@ uint32_t os_arraylist_contains( os_arraylist_h handle, void* E ) {
 }
 //
 
-/*
-#define TEST_ARRAY_SIZE		3
-static os_queue_t test_queue;
-static os_queue_h test_queue_h = &test_queue;
-static uint32_t* test_array[TEST_ARRAY_SIZE];
-
-void os_queue_test( void ) {
-	
-	uint32_t* b = 0;
-	uint32_t contains = 0;
-	
-	os_queue_init( test_queue_h, (void**) test_array, TEST_ARRAY_SIZE );
-	
-	os_queue_add( test_queue_h, (uint32_t*) 0x10 );
-	os_queue_add( test_queue_h, (uint32_t*) 0x20 );
-	os_queue_add( test_queue_h, (uint32_t*) 0x30 );
-	
-	os_queue_remove( test_queue_h );
-	
-	os_queue_add( test_queue_h, (uint32_t*) 0x40 );
-	
-	os_queue_remove_element( test_queue_h, (uint32_t*) 0x40 );
-	
-}
-*/
 
 
 os_queue_h os_queue_init( os_queue_t* queue_p, void** array, uint32_t max_size ) {

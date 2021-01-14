@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "EOS.h"
 #include "stm32f10x.h"
+#include "EOS_Tests.h"
 
 void SystemCoreClockConfigure( void );
 void SysTick_Handler( void );
@@ -200,6 +201,15 @@ int main() {
 	
 	SysTick_Config(0x0009C400);
 	NVIC_SetPriority( SysTick_IRQn, 0);
+	
+	
+	//	Tests
+	uint32_t failed_data_structures_tests = os_data_structures_test();
+	printf( "Data structures failed tests: %d\n", failed_data_structures_tests );
+	
+	uint32_t failed_modules = os_all_tests();
+	printf( "Failed modules: %d\n", failed_modules );
+	
 	
 	//	Example ASM
 	int32_t num_1 = 20;

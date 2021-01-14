@@ -26,6 +26,7 @@ typedef os_queue_t* os_queue_h;
 *												Arraylist											 *
 *******************************************************/
 
+
 /*	Initialize an Arraylist
  *	Param handle: Pointer to Arraylist data structure
  *	Param array: Pointer to array where elements will be stored
@@ -79,6 +80,7 @@ uint32_t os_arraylist_contains( os_arraylist_h handle, void* E );
 /*******************************************************
 *												Queue													 *
 *******************************************************/
+
 
 
 /*	Initialize a Queue

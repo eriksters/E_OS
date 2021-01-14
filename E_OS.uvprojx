@@ -448,6 +448,11 @@
               <FileType>1</FileType>
               <FilePath>.\EOS_Scheduling.c</FilePath>
             </File>
+            <File>
+              <FileName>EOS_Tests.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EOS_Tests.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -512,6 +517,11 @@
               <FileName>EOS_Blocking.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Blocking.h</FilePath>
+            </File>
+            <File>
+              <FileName>EOS_Tests.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\EOS_Tests.h</FilePath>
             </File>
           </Files>
         </Group>
