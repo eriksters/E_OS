@@ -36,11 +36,17 @@ typedef struct {
 /* 								Functions 							 */
 /*******************************************/
 
-/* Initialize architecture specific hardware.
- * Called during OS startup
+/* Initialize hardware.
+ * Called during OS startup.
 */
 void os_arch_start( void );
 
+
+/* Deinitialize hardware.
+ * Called during OS shut down.
+*/
+void os_arch_exit( void );
+	
 
 /* Initialize a task's backed up registers to hardware requirements.
 */

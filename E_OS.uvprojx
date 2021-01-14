@@ -404,11 +404,6 @@
               <FilePath>.\EOS_ASM.S</FilePath>
             </File>
             <File>
-              <FileName>EOS_Setup.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\EOS_Setup.c</FilePath>
-            </File>
-            <File>
               <FileName>EOS_DataStructures.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\EOS_DataStructures.c</FilePath>
@@ -467,11 +462,6 @@
               <FileName>EOS_Core.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\EOS_Core.h</FilePath>
-            </File>
-            <File>
-              <FileName>EOS_Setup.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\EOS_Setup.h</FilePath>
             </File>
             <File>
               <FileName>EOS_Scheduling.h</FileName>

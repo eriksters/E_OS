@@ -199,6 +199,7 @@ int main() {
 	SystemCoreClockUpdate();
 	
 	SysTick_Config(0x0009C400);
+	NVIC_SetPriority( SysTick_IRQn, 0);
 	
 	//	Example ASM
 	int32_t num_1 = 20;

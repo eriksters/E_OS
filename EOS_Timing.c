@@ -24,7 +24,7 @@ void os_timing_init( uint32_t os_tick_frq_ ) {
 
 void os_tick( void ) {
 	
-	if ( os_Control.state == OS_STATE_RUNNING ) {
+	if ( os_get_state() == OS_STATE_RUNNING ) {
 		uint32_t size = 0;
 		
 		size = os_arraylist_size( delayed_tasks_arraylist_H );

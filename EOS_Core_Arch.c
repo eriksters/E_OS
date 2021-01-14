@@ -5,9 +5,13 @@ extern void os_task_finished( void );
 
 void os_arch_start( void ) {
 	NVIC_SetPriority( PendSV_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL );
-	NVIC_SetPriority( SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 2UL );
 	
 	__set_CONTROL(0x02);
+	__ISB();
+}
+
+void os_arch_exit( void ) {
+	__set_CONTROL(0x00);
 	__ISB();
 }
 

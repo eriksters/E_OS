@@ -3,7 +3,13 @@
 #include "EOS_Mutex.h"
 #include <stdio.h>
 
+static os_task_h current_task;
+static uint32_t task_count;
 
+void os_tasks_init( void ) {
+	current_task = 0;
+	task_count = 0;
+}
 
 os_task_h os_create_task_call_handler ( void ( *func )( void * ), os_TCB_t* tcb, void * params ) {
 	
@@ -13,14 +19,14 @@ os_task_h os_create_task_call_handler ( void ( *func )( void * ), os_TCB_t* tcb,
 	
 	os_task_h ret = 0;
 	
-	if ( os_Control.taskCount < OS_MAX_TASK_COUNT ) {
+	if ( task_count < OS_MAX_TASK_COUNT ) {
 		uint32_t* stack = (uint32_t*) tcb->stack;
 		
 		os_arch_create_task( func, (uint32_t*) stack, &tcb->backed_up_registers, params );
 		
 		os_schedule_task( tcb );
 		
-		os_Control.taskCount++;
+		task_count++;
 		
 		ret = (os_task_h) tcb;
 	}
@@ -44,18 +50,31 @@ void os_delete_task_call_handler ( os_task_h task ) {
 }
 
 
+void os_task_deleted( void ) {
+	task_count--;
+}
+
+
 void os_task_finished_call_handler ( void ) {
 	os_delete_task_call_handler( 0 );
 }
 
-os_TCB_t* os_get_current_task( void ) {
-	return os_Control.currentTask;
+os_task_h os_get_current_task( void ) {
+	return current_task;
+}
+
+void os_set_current_task( os_task_h task ) {
+	current_task = task;
 }
 
 void os_set_current_task_state( os_task_state_t state ) {
-	os_Control.currentTask->state = state;
+	current_task->state = state;
 }
 
 os_Registers_t* os_get_current_task_reg( void ) {
-	return &os_Control.currentTask->backed_up_registers;
+	return &current_task->backed_up_registers;
+}
+
+uint32_t os_get_task_count( void ) {
+	return task_count;
 }

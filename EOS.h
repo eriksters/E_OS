@@ -23,7 +23,7 @@ void os_init( uint32_t os_tick_frq );
  *	Implemented in: EOS.c
  *	Handled in: EOS_SysCalls.c
 */	
-os_task_h os_create_task ( void ( *func )( void * ), os_TCB_t* tcb, void * params );
+os_task_h os_create_task ( void ( *func )( void * ), os_TCB_t* tcb, void* params );
 
 
 /*	Start the OS.
@@ -94,7 +94,7 @@ uint32_t os_unlock_mutex( os_mutex_t* );
 void os_exit( void );
 
 
-/*	Block current task until os_unblock_task is called
+/*	Block current task until os_unblock is called
 */
 void os_block( void );
 

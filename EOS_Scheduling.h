@@ -10,7 +10,7 @@
 
 /* Initialize scheduler data structures associated with specific scheduling algorithm implementation.
 */
-void os_scheduling_algo_init( void );
+void os_scheduling_init( void );
 
 
 /* Called every os_tick from the os_tick function

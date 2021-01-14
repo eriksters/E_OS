@@ -1,12 +1,12 @@
 #include "EOS_Defines.h"
-
+	
 				AREA 	|.text|, CODE, READONLY
 	
 				EXPORT	os_reg_restore
 				EXPORT	os_reg_save
 				EXPORT  SVC_Handler
 				EXPORT	PendSV_Handler
-	
+					
 				IMPORT 	os_start_call_handler
 				IMPORT	os_release_call_handler
 				IMPORT  SVC_Handler_c
@@ -15,8 +15,12 @@
 				IMPORT 	os_get_state
 				IMPORT  os_set_state
 				IMPORT  os_set_current_task_state
-
+				IMPORT  os_arch_exit
+					
 PendSV_Handler	PROC
+				
+				MOV		r0, #0x1
+				MSR		PRIMASK, r0
 	
 				PUSH	{lr}
 				
@@ -39,17 +43,17 @@ Pend_Normal		BL		os_reg_save
 				BL		os_reg_restore
 				B		Pend_Run
 
-Pend_Exit		POP		{r0}
+Pend_Exit		POP		{r0}					;	OS is in exit state
 
-				MOV		r0, #0x00
-				MSR		CONTROL, r0
-				ISB
+				BL		os_arch_exit			
 
-				MOV		r0, #0xFFFFFFF9
+				MOV		r0, #0xFFFFFFF9			;	EXC_RETURN: Thread mode, privileged access 
 				PUSH	{r0}
 				
-				B		Pend_Pop
+				MOV		r0, #OS_STATE_DONE
+				BL		os_set_state
 				
+				B		Pend_Pop		
 				
 Pend_Starting	BL		os_switch_current_task				;	OS is starting, so set os status and do not back up registers
 				BL		os_reg_restore
@@ -59,6 +63,10 @@ Pend_Starting	BL		os_switch_current_task				;	OS is starting, so set os status a
 
 Pend_Run		MOV		r0, #OS_TASK_STATE_RUNNING
 				BL		os_set_current_task_state
+				
+				MOV		r0, #0x0
+				MSR		PRIMASK, r0
+				
 Pend_Pop		POP		{pc}
 	
 				ENDP
@@ -99,9 +107,9 @@ SVC_Has_SP		BL		SVC_Handler_c
 				
 				ENDP
 	
-	
-	
-	
+
+
+
 os_reg_save		PROC
 				
 				PUSH	{lr}
@@ -132,6 +140,7 @@ os_reg_restore	PROC
 				PUSH	{lr}
 				
 				BL		os_get_current_task_reg
+				
 				LDR		r4, [r0]
 				LDR		r5, [r0, #0x4]
 				LDR		r6, [r0, #0x8]
@@ -140,6 +149,7 @@ os_reg_restore	PROC
 				LDR		r9, [r0, #0x14]
 				LDR		r10, [r0, #0x18]
 				LDR		r11, [r0, #0x1C]
+				
 				LDR		r0, [r0, #0x20]
 				MSR		PSP, r0
 				

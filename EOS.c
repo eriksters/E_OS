@@ -93,7 +93,7 @@ void os_init( uint32_t tick_frq ) {
 } 
 
 void os_start ( void ) {
-	os_Control.state = OS_STATE_STARTING;
+	os_set_state( OS_STATE_STARTING );
 	__asm("SVC #0x00");
 }
 

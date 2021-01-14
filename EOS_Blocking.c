@@ -10,9 +10,12 @@ static os_arraylist_h os_blocked_tasks_arraylist_H;
 
 void os_blocking_init( void ) {
 	os_blocked_tasks_arraylist_H = os_arraylist_init( &os_blocked_tasks_arraylist, (void**) os_blocked_tasks_array, OS_MAX_TASK_COUNT );
-	os_scheduling_algo_init();
 }
 
+
+void os_block_call_handler( void ) {	
+	os_block_task( os_get_current_task() );
+}
 
 void os_block_task( os_task_h task ) {
 	
@@ -25,8 +28,15 @@ void os_block_task( os_task_h task ) {
 	
 	task->state = OS_TASK_STATE_BLOCKED;
 	
-	if ( task == os_get_current_task() ) {
-		os_trigger_task_switch();
+	//	Task no longer is ready
+	os_deschedule_task( task );
+}
+
+
+
+void os_unblock_call_handler( os_task_h task ) {
+	if ( task != 0 ) {
+		os_unblock_task( task );
 	}
 }
 
@@ -43,15 +53,7 @@ void os_unblock_task( os_task_h task ) {
 	os_schedule_task( task );
 }
 
-void os_block_call_handler( void ) {	
-	os_block_task( os_get_current_task() );	
-}
 
-void os_unblock_call_handler( os_task_h task ) {
-	if ( task != 0 ) {
-		os_unblock_task( task );
-	}
-}
 
 
 uint32_t os_get_blocked_task_amount( void ) {
