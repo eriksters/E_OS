@@ -13,8 +13,8 @@ static uint32_t os_tick_frq;
 
 void os_timing_init( uint32_t os_tick_frq_ ) {
 	
-	if ( os_tick_frq == 0 ) {
-		os_tick_frq = os_get_systick_frq();
+	if ( os_tick_frq_ == 0 ) {
+		os_tick_frq_ = os_get_systick_frq();
 	}
 	
 	os_tick_frq = os_tick_frq_;
@@ -36,7 +36,6 @@ void os_tick( void ) {
 			for ( uint32_t i = 0; i < size; i++ ) {
 				
 				os_TCB_t* task = os_arraylist_get( delayed_tasks_arraylist_H, i );
-
 				task->countdown--;
 				
 				//	If countdown reaches 0, 
@@ -47,9 +46,7 @@ void os_tick( void ) {
 				
 			} 
 		}
-		
 		os_scheduling_tick();
-		
 	}
 }
 
@@ -57,12 +54,12 @@ void os_delay_call_handler( uint32_t milliseconds ) {
 	
 	os_task_h task = os_get_current_task();
 	
-	task->countdown = milliseconds / 10;
+	task->countdown = milliseconds * os_tick_frq / 1000;
 	
 	os_arraylist_add( delayed_tasks_arraylist_H, task );
 	
 	os_block_task( task );
 	
-	os_trigger_task_switch();
+	os_release_call_handler();
 	
 }

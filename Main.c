@@ -3,8 +3,20 @@
 #include "stm32f10x.h"
 #include "EOS_Tests.h"
 
+//	Example ASM
+int32_t add_and_store( int32_t num1, int32_t* num2_p, int32_t* result_p );
+
+//	Clock configuration
 void SystemCoreClockConfigure( void );
+
+//	SysTick
 void SysTick_Handler( void );
+
+//	Loop for count times
+void Loop( uint32_t count );
+
+//	Release until a mutex is acquired
+void acquire_mutex( os_mutex_h );
 
  /*******************************************
  *							Configuration        				*
@@ -46,13 +58,24 @@ void SysTick_Handler( void ) {
 	os_tick();
 }
 
+void Loop( uint32_t count ) {
+	for ( uint32_t i = 0; i < count; i++ ) {
+		__NOP();
+	}
+}
+
+void acquire_mutex( os_mutex_h mutex ) {
+	while ( os_lock_mutex( mutex )) os_release();
+}
+
  /*******************************************
- *							Program Stuff    						*					//	TODO Name
+ *							Program Data    						*
  *******************************************/
 
 /* --------------		Handles		------------ */
-static os_mutex_h mutex_1_H;
-static os_mutex_h mutex_2_H;
+static os_mutex_h LED_1_mutex_H;
+static os_mutex_h LED_2_mutex_H;
+static os_mutex_h console_mutex_H;
 
 static os_task_h task_1_H;
 static os_task_h task_2_H;
@@ -77,6 +100,7 @@ struct t3_params_t {
 //	Mutexes
 static os_mutex_t mutex_1;
 static os_mutex_t mutex_2;
+static os_mutex_t mutex_3;
 
 //	Task Control Blocks
 static os_TCB_t t1_tcb;
@@ -97,100 +121,65 @@ void t3_func( void * params);
 void t1_func( void * params ) {
 	
 	struct t1_params_t* par = (struct t1_params_t*) params;
-	printf("T1 enter. Dummy number = %d\n", par->dummy_number );
 	
-	for ( uint32_t x = 1; x < 20; x++ ) {
-		if ( !os_lock_mutex(&mutex_1) ) {
-			printf("T1 Mutex Locked\n");
-		} else {
-			printf("T1 Mutex NOT Lock\n");
-		}
-		for (int j = 0; j < 10; j++) {	
-			printf("t1 [locked]. Count = %d\n", j);
-			for (int i = 0; i < 10000; i++) {
-				__NOP();
-			}
-		}
-		if ( !os_unlock_mutex(&mutex_1) ) {
-			printf("T1 mutex UNlocked\n");
-		} else {
-			printf("T1 mutex NOT UNlocked\n");
-		}
-		for (int j = 0; j < 10; j++) {	
-			printf("t1 [unlocked]. Count = %d\n", j);
-			for (int i = 0; i < 10000; i++) {
-				__NOP();
-			}
-		}
+	acquire_mutex( console_mutex_H );
+	printf("T1 Entry. Dummy number = %d\n", par->dummy_number );
+	printf("T1. Delaying for 3s. Mutex still locked.\n");
+	
+	os_delay(3000);
+	
+	for ( uint32_t i = 0; i < 3; i++ ) {
+		os_unlock_mutex( console_mutex_H );
+		os_delay(1000);
+		acquire_mutex( console_mutex_H );
+		printf("Task 1. Mutex acquired. Count = %d\n", i);
 	}
-	printf("-------	T1 Delay --------------\n");
 	
-	os_delay(1000);
-	
-	printf("-------------------------T1 done----------------------\n");
+	printf("Task 1. Finished. Mutex is still locked.\n");
 }
 
 void t2_func( void * params ) {
-	
 	struct t2_params_t* par = (struct t2_params_t*) params;
-	printf("T2 enter. Dummy number = %d; Dummy Pointer = %p\n", par->dummy_number, (void *) par->dummy_pointer );
 	
-	t3_params.dummy_number = 720;
+	acquire_mutex( console_mutex_H );
+	
+	printf("T2. Entry. Dummy number = %d; Dummy Pointer = %p\n", par->dummy_number, (void *) par->dummy_pointer );
+	printf("T2. Starting task 3\n");
+	
 	task_3_H = os_create_task(&t3_func, &t3_tcb, &t3_params);
 	
-	os_lock_mutex( &mutex_2 );
-	
-	for (;;) {
-		for (int j = 0; j < 20; j++) {		
-			printf("t2 func. Count = %d\n", j);
-			for (int i = 0; i < 10000; i++) {
-				__NOP();
-			}
-		}
-		os_delay(200);
-        
-		printf("----------------- T2, deleting -------------------\n");
-		os_delete_task( 0 );
-		
+	uint32_t count = 0;
+	for ( ;; ) {
+		printf("T3. Delaying for 1s, unlocking.\n");
+		os_unlock_mutex( console_mutex_H );
+		os_delay(1000);
+		acquire_mutex( console_mutex_H );
+		printf("Task 2. Mutex locked. Count = %d\n", count);
+		count++;
 	}
+	
 }
 
 void t3_func( void * params ) {
 	
 	struct t1_params_t* par = (struct t1_params_t*) params;
-	printf("T3 enter. Dummy number = %d\n", par->dummy_number );
 	
-	for ( uint32_t x = 0; x < 10; x++ ) {
-		if ( !os_lock_mutex(&mutex_1) ) {
-			printf("T3 Mutex Locked\n");
-		} else {
-			printf("T3 Mutex NOT Lock\n");
-		}
-		for (int j = 0; j < 5; j++) {		
-			printf("t3 [locked]. Count = %d\n", j);
-			for (int i = 0; i < 10000; i++) {
-				__NOP();
-			}
-		}
-		if ( !os_unlock_mutex(&mutex_1) ) {
-			printf("T3 mutex UNlocked\n");
-		} else {
-			printf("T3 mutex NOT UNlocked\n");
-		}
-		for (int j = 0; j < 5; j++) {		
-			printf("t3 [unlocked]. Count = %d\n", j);
-			for (int i = 0; i < 10000; i++) {
-				__NOP();
-			}
-		}
-	}
-	printf("----------------------T3 3s Delay -------------\n");
+	acquire_mutex( console_mutex_H );
+	printf("T3. Entry. Dummy number = %d\n", par->dummy_number );
+	printf("T3. Delaying for 3s, unlocking.\n");
+	os_unlock_mutex( console_mutex_H );
+	
 	os_delay( 3000 );
-	printf("--------------------- T3 Done -----------------\n");
+	
+	for ( int i = 0; i < 10; i++) {
+		acquire_mutex( console_mutex_H );
+		printf("T3. Locked. Delaying for 0.3s \n");
+		os_delay(300);
+		os_unlock_mutex( console_mutex_H );
+	}
+	
+	acquire_mutex( console_mutex_H );
 }
-
-//	Example ASM
-int32_t add_and_store( int32_t num1, int32_t* num2_p, int32_t* result_p );
 
 int main() {
 	
@@ -219,23 +208,25 @@ int main() {
 	
 	printf("Returned = %d, stored = %d\n", result_ret, result);
 	
+	//	Initialize OS
 	os_init( 0 );
 	
-	mutex_1_H = os_create_mutex( &mutex_1 );
-	mutex_2_H = os_create_mutex( &mutex_2 );
+	//	Create mutexes
+	LED_1_mutex_H = os_create_mutex( &mutex_1 );
+	LED_2_mutex_H = os_create_mutex( &mutex_2 );
+	console_mutex_H = os_create_mutex( &mutex_3 );
 	
-	printf("Creating Tasks\n");
-	
+	//	Assign task parameters
 	t1_params.dummy_number = 69;
-	
-	
-	task_1_H = os_create_task(&t1_func, &t1_tcb, &t1_params);
-	
-	
 	t2_params.dummy_number = 420;
 	t2_params.dummy_pointer = &mutex_1;
+	t3_params.dummy_number = 720;
+	
+	//	Create tasks
+	task_1_H = os_create_task(&t1_func, &t1_tcb, &t1_params);
 	task_2_H = os_create_task(&t2_func, &t2_tcb, &t2_params);
 	
+	//	Starting OS
 	printf("Starting OS\n");
 	os_start();
 	

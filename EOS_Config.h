@@ -33,7 +33,7 @@
 
 /*	If set to 1, on System Calls that cause a premature release (os_block, os_delay, etc), the next call to the scheduler will be skipped
 */
-#define OS_SKIP_NEXT_TASK_SWITCH_AFTER_PREMATURE_RELEASE		1
+#define OS_PRIVILEGED_TASKS														1
 
 
 #endif

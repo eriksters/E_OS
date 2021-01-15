@@ -8,14 +8,6 @@
 static os_state_t state;
 
 
-os_state_t os_get_state( void ) {
-	return state;
-}
-
-void os_set_state( os_state_t target_state ) {
-	state = target_state;
-}
-
 void os_init_call_handler( uint32_t os_tick_frq ) {
 	state = OS_STATE_INIT;
 	
@@ -36,6 +28,7 @@ void os_start_call_handler( void ) {
 	
 	//	Do not start if no tasks have been created
 	if (os_get_task_count() < 1) {
+		state = OS_STATE_DONE;
 		return;
 	}
 	
@@ -49,4 +42,12 @@ void os_start_call_handler( void ) {
 void os_exit_call_handler( void ) {
 	state = OS_STATE_EXIT;
 	os_trigger_task_switch();
+}
+
+os_state_t os_get_state( void ) {
+	return state;
+}
+
+void os_set_state( os_state_t target_state ) {
+	state = target_state;
 }
