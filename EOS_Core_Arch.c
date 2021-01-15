@@ -50,8 +50,6 @@ void os_arch_create_task( void ( *func )( void * ), uint32_t* stack_end, os_Regi
 
 void os_trigger_task_switch( void ) {
 	SCB->ICSR |= 0x1 << 28;
-	__DSB();
-	__ISB();
 } 
 
 __attribute__((weak)) void os_tick_reset( void ) {
